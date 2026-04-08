@@ -81,15 +81,17 @@ namespace FutbolJuego.UI
             if (overallRatingText)
                 overallRatingText.text = $"OVR  {Mathf.RoundToInt(team.GetAverageSquadRating())}";
 
-            if (budgetText && team.finances != null)
-                budgetText.text = FormatCurrency(team.finances.transferBudget);
-
             // Career-specific fields
             var career = ServiceLocator.Get<CareerSystem>()?.ActiveCareer;
+            string currSymbol = career?.CurrencySymbol ?? "€";
+
+            if (budgetText && team.finances != null)
+                budgetText.text = FormatCurrency(team.finances.transferBudget, currSymbol);
+
             if (careerBalanceText)
                 careerBalanceText.text = career != null
                     ? career.FormattedBalance
-                    : FormatCurrency(team.finances?.transferBudget ?? 0);
+                    : FormatCurrency(team.finances?.transferBudget ?? 0, currSymbol);
             if (premiumCoinsText)
                 premiumCoinsText.text = career != null ? $"🪙 {career.premiumCoins}" : "🪙 —";
 
@@ -161,11 +163,11 @@ namespace FutbolJuego.UI
 
         // ── Helpers ────────────────────────────────────────────────────────────
 
-        private static string FormatCurrency(long value)
+        private static string FormatCurrency(long value, string symbol = "€")
         {
-            if (value >= 1_000_000) return $"€{value / 1_000_000f:F1}M";
-            if (value >= 1_000)     return $"€{value / 1_000f:F0}K";
-            return $"€{value}";
+            if (value >= 1_000_000) return $"{symbol}{value / 1_000_000f:F1}M";
+            if (value >= 1_000)     return $"{symbol}{value / 1_000f:F0}K";
+            return $"{symbol}{value}";
         }
 
         private static string ResolveTeamName(List<TeamData> teams, string teamId)

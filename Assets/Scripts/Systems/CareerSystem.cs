@@ -158,16 +158,22 @@ namespace FutbolJuego.Systems
         }
 
         /// <summary>
+        /// Fraction of the league floor budget allocated to smaller clubs that
+        /// don't already have a higher own transfer budget.
+        /// </summary>
+        private const float SmallClubBudgetFraction = 0.5f;
+
+        /// <summary>
         /// Calculates a team-specific starting budget taking the team's own
         /// <see cref="FinanceData.transferBudget"/> and the league default
         /// into account.  Larger clubs receive their own budget; smaller clubs
-        /// receive the league-floor minimum.
+        /// receive the league-floor minimum × <see cref="SmallClubBudgetFraction"/>.
         /// </summary>
         public long CalculateStartingBudget(TeamData team, string leagueId)
         {
             var (_, leagueBudget) = GetLeagueBudgetDefaults(leagueId);
             long teamBudget = team?.finances?.transferBudget ?? 0L;
-            return Math.Max(teamBudget, leagueBudget / 2);
+            return Math.Max(teamBudget, (long)(leagueBudget * SmallClubBudgetFraction));
         }
 
         // ── Persistence ────────────────────────────────────────────────────────

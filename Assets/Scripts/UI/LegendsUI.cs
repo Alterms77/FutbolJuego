@@ -278,6 +278,9 @@ namespace FutbolJuego.UI
 
         // ── Static converters ──────────────────────────────────────────────────
 
+        private const int LegendDeceasedAge = 99; // Sentinel: deceased legends are fielded as all-time greats
+        private const int LegendRetiredAge  = 35; // Default age for living retired legends
+
         /// <summary>
         /// Creates a <see cref="PlayerData"/> from a <see cref="LegendPlayerData"/>
         /// so that the legend can be fielded in a squad.
@@ -290,7 +293,7 @@ namespace FutbolJuego.UI
             {
                 id          = $"legend_{legend.id}",
                 name        = legend.name,
-                age         = legend.birthYear > 0 ? 99 : 35, // legendary age
+                age         = legend.IsDeceased ? LegendDeceasedAge : LegendRetiredAge,
                 nationality = legend.nationality,
                 position    = legend.position,
                 overallRating = legend.overallRating,
