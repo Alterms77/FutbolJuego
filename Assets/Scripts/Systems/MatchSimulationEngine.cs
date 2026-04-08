@@ -52,8 +52,7 @@ namespace FutbolJuego.Systems
             int homeGoals = SampleFromPoisson(homeXG);
             int awayGoals = SampleFromPoisson(awayXG);
 
-            List<MatchEvent> events = GenerateMatchEvents(home, away, homeGoals, awayGoals, homeXG, awayXG);
-            MatchStatistics stats   = CalculateMatchStatistics(home, away, homeXG, awayXG, events);
+            List<MatchEvent> events = GenerateMatchEvents(home, away, homeGoals, awayGoals, homeXG, awayXG);            MatchStatistics stats   = CalculateMatchStatistics(home, away, homeXG, awayXG, events);
 
             return new MatchData
             {
@@ -222,7 +221,7 @@ namespace FutbolJuego.Systems
 
             // ── Goal events ────────────────────────────────────────────────────
 
-            void AddGoals(TeamData team, int goalCount, float xg)
+            void AddGoals(TeamData team, int goalCount)
             {
                 for (int i = 0; i < goalCount; i++)
                 {
@@ -230,20 +229,48 @@ namespace FutbolJuego.Systems
                     var scorer = SelectGoalScorer(team);
                     var assist = SelectAssistProvider(team, scorer);
 
+                    // ~18% of goals come from the penalty spot
+                    bool isPenalty = rng.NextDouble() < 0.18;
+                    string desc    = isPenalty
+                        ? $"{scorer?.name ?? "Unknown"} converts the penalty for {team.shortName}!"
+                        : $"{scorer?.name ?? "Unknown"} scores for {team.shortName}!";
+
                     events.Add(new MatchEvent
                     {
-                        minute          = minute,
-                        type            = MatchEventType.Goal,
-                        teamId          = team.id,
-                        playerId        = scorer?.id,
-                        assistPlayerId  = assist?.id,
-                        description     = $"{scorer?.name ?? "Unknown"} scores for {team.shortName}!"
+                        minute         = minute,
+                        type           = MatchEventType.Goal,
+                        teamId         = team.id,
+                        playerId       = scorer?.id,
+                        assistPlayerId = isPenalty ? null : assist?.id,
+                        description    = desc
                     });
                 }
             }
 
-            AddGoals(home, homeGoals, homeXG);
-            AddGoals(away, awayGoals, awayXG);
+            AddGoals(home, homeGoals);
+            AddGoals(away, awayGoals);
+
+            // ── Missed penalty events (narrative, do not change score) ─────────
+
+            void MaybeAddMissedPenalty(TeamData team)
+            {
+                if (rng.NextDouble() < 0.14f) // ~14% chance of a missed pen per team
+                {
+                    int minute = PickUniqueMinute(usedMinutes, 5, 88);
+                    var taker  = SelectGoalScorer(team);
+                    events.Add(new MatchEvent
+                    {
+                        minute      = minute,
+                        type        = MatchEventType.MissedPenalty,
+                        teamId      = team.id,
+                        playerId    = taker?.id,
+                        description = $"PENALTY MISSED! {taker?.name ?? "Unknown"} fails to convert for {team.shortName}."
+                    });
+                }
+            }
+
+            MaybeAddMissedPenalty(home);
+            MaybeAddMissedPenalty(away);
 
             // ── Yellow cards ──────────────────────────────────────────────────
 
@@ -257,6 +284,42 @@ namespace FutbolJuego.Systems
             if (rng.NextDouble() < 0.08)
                 AddCardEvents(events, rng.NextDouble() < 0.5 ? home : away,
                               1, MatchEventType.RedCard, usedMinutes);
+
+            // ── In-match injuries (max 1 per team) ────────────────────────────
+
+            void TryAddInjury(TeamData team)
+            {
+                var candidates = team.GetAvailablePlayers()
+                    .Where(p => !p.position.IsGoalkeeper())
+                    .ToList();
+
+                foreach (var player in candidates)
+                {
+                    float prob = 0.025f
+                               + player.injuryProneness / 100f * 0.03f
+                               + player.fatigue         / 100f * 0.02f;
+
+                    if (rng.NextDouble() < prob)
+                    {
+                        int minute                  = PickUniqueMinute(usedMinutes, 15, 85);
+                        player.isAvailable         = false;
+                        player.injuryDaysRemaining = rng.Next(7, 28);
+
+                        events.Add(new MatchEvent
+                        {
+                            minute      = minute,
+                            type        = MatchEventType.Injury,
+                            teamId      = team.id,
+                            playerId    = player.id,
+                            description = $"{player.name} is injured and leaves the pitch!"
+                        });
+                        break; // max 1 injury per team per match
+                    }
+                }
+            }
+
+            TryAddInjury(home);
+            TryAddInjury(away);
 
             // ── Substitutions ─────────────────────────────────────────────────
 
@@ -456,6 +519,128 @@ namespace FutbolJuego.Systems
             float avgFatigue = (float)starters.Average(p => p.fatigue);
             // Full rest (0) → 1.0, exhausted (100) → 0.88
             return 1.0f - (avgFatigue / 100f) * 0.12f;
+        }
+
+        // ── Penalty shootout ───────────────────────────────────────────────────
+
+        /// <summary>
+        /// Simulates a full penalty shootout between <paramref name="home"/> and
+        /// <paramref name="away"/> (standard 5 kicks each, then sudden death).
+        /// Returns the completed <see cref="PenaltyShootoutData"/>.
+        /// </summary>
+        public PenaltyShootoutData SimulatePenaltyShootout(TeamData home, TeamData away)
+        {
+            if (home == null) throw new ArgumentNullException(nameof(home));
+            if (away == null) throw new ArgumentNullException(nameof(away));
+
+            var data        = new PenaltyShootoutData();
+            int homePen     = 0;
+            int awayPen     = 0;
+            const int kicks = 5;
+
+            var homeShooters = GetPenaltyShooters(home);
+            var awayShooters = GetPenaltyShooters(away);
+
+            // ── Standard 5 kicks ──────────────────────────────────────────────
+
+            for (int i = 0; i < kicks; i++)
+            {
+                var hKicker    = homeShooters[i % homeShooters.Count];
+                bool hScored   = TakePenaltyKick(hKicker);
+                if (hScored) homePen++;
+                data.kicks.Add(new PenaltyKick
+                {
+                    teamId     = home.id,
+                    playerId   = hKicker.id,
+                    playerName = hKicker.name,
+                    scored     = hScored,
+                    description = hScored
+                        ? $"{hKicker.name} SCORED!"
+                        : $"{hKicker.name} MISSED."
+                });
+
+                var aKicker    = awayShooters[i % awayShooters.Count];
+                bool aScored   = TakePenaltyKick(aKicker);
+                if (aScored) awayPen++;
+                data.kicks.Add(new PenaltyKick
+                {
+                    teamId     = away.id,
+                    playerId   = aKicker.id,
+                    playerName = aKicker.name,
+                    scored     = aScored,
+                    description = aScored
+                        ? $"{aKicker.name} SCORED!"
+                        : $"{aKicker.name} MISSED."
+                });
+            }
+
+            // ── Sudden death ──────────────────────────────────────────────────
+
+            int sdRound = 0;
+            while (homePen == awayPen && sdRound < 20)
+            {
+                int idx = sdRound % Math.Max(1, homeShooters.Count);
+
+                var hKicker  = homeShooters[idx];
+                bool hScored = TakePenaltyKick(hKicker);
+                if (hScored) homePen++;
+                data.kicks.Add(new PenaltyKick
+                {
+                    teamId     = home.id,
+                    playerId   = hKicker.id,
+                    playerName = hKicker.name,
+                    scored     = hScored,
+                    description = hScored ? $"SD: {hKicker.name} SCORED!" : $"SD: {hKicker.name} MISSED."
+                });
+
+                var aKicker  = awayShooters[idx];
+                bool aScored = TakePenaltyKick(aKicker);
+                if (aScored) awayPen++;
+                data.kicks.Add(new PenaltyKick
+                {
+                    teamId     = away.id,
+                    playerId   = aKicker.id,
+                    playerName = aKicker.name,
+                    scored     = aScored,
+                    description = aScored ? $"SD: {aKicker.name} SCORED!" : $"SD: {aKicker.name} MISSED."
+                });
+
+                sdRound++;
+            }
+
+            data.homeScore    = homePen;
+            data.awayScore    = awayPen;
+            data.winnerTeamId = homePen > awayPen ? home.id : away.id;
+            return data;
+        }
+
+        /// <summary>
+        /// Returns the best penalty takers for <paramref name="team"/>,
+        /// ordered by shooting attribute (excluding the goalkeeper).
+        /// </summary>
+        private List<PlayerData> GetPenaltyShooters(TeamData team)
+        {
+            var candidates = team.GetAvailablePlayers()
+                .Where(p => !p.position.IsGoalkeeper())
+                .OrderByDescending(p => p.attributes.shooting)
+                .Take(8)
+                .ToList();
+
+            if (candidates.Count == 0)
+                candidates = team.squad ?? new List<PlayerData>();
+
+            return candidates;
+        }
+
+        /// <summary>
+        /// Simulates a single penalty kick.  Conversion probability is
+        /// 65 % base + up to 25 % from shooting attribute (range 65-90 %).
+        /// </summary>
+        private bool TakePenaltyKick(PlayerData kicker)
+        {
+            float shootingNorm = Mathf.Clamp(kicker?.attributes.shooting ?? 50, 0, 99) / 99f;
+            float probability  = 0.65f + shootingNorm * 0.25f;
+            return rng.NextDouble() < probability;
         }
     }
 }

@@ -80,6 +80,16 @@ namespace FutbolJuego.Data
             return wrapper?.leagues ?? new List<LeagueMetadata>();
         }
 
+        /// <summary>
+        /// Loads all cup competitions from <c>Resources/Data/competitions.json</c>.
+        /// Returns an empty list if the file is missing or no cups are defined.
+        /// </summary>
+        public static List<CupData> LoadAllCups()
+        {
+            var wrapper = JsonHandler.LoadFromResources<CupListWrapper>(LeaguePath);
+            return wrapper?.cups ?? new List<CupData>();
+        }
+
         // ── Wrapper types for JSON arrays ──────────────────────────────────────
 
         [System.Serializable]

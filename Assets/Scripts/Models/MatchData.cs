@@ -20,7 +20,9 @@ namespace FutbolJuego.Models
         Substitution,
         Injury,
         MissedPenalty,
-        Save
+        Save,
+        /// <summary>A penalty kick scored during a shootout (not counted in 90-min score).</summary>
+        PenaltyGoal
     }
 
     // ── MatchData ──────────────────────────────────────────────────────────────
@@ -53,6 +55,10 @@ namespace FutbolJuego.Models
         public MatchType matchType;
         /// <summary>Parent competition identifier.</summary>
         public string competitionId;
+        /// <summary>Whether the match was decided by a penalty shootout.</summary>
+        public bool wentToPenalties;
+        /// <summary>Penalty shootout result; non-null only when <see cref="wentToPenalties"/> is true.</summary>
+        public PenaltyShootoutData penaltyShootout;
     }
 
     // ── MatchStatistics ────────────────────────────────────────────────────────
@@ -115,6 +121,38 @@ namespace FutbolJuego.Models
         public string assistPlayerId;
         /// <summary>Team the primary player belongs to.</summary>
         public string teamId;
+        /// <summary>Human-readable description for the feed.</summary>
+        public string description;
+    }
+
+    // ── PenaltyShootoutData ────────────────────────────────────────────────────
+
+    /// <summary>Full record of a penalty-shootout that followed a draw at 90 minutes.</summary>
+    [Serializable]
+    public class PenaltyShootoutData
+    {
+        /// <summary>Team ID of the shootout winner.</summary>
+        public string winnerTeamId;
+        /// <summary>Goals scored by the home team in the shootout.</summary>
+        public int homeScore;
+        /// <summary>Goals scored by the away team in the shootout.</summary>
+        public int awayScore;
+        /// <summary>Ordered list of all penalty kicks taken.</summary>
+        public List<PenaltyKick> kicks = new List<PenaltyKick>();
+    }
+
+    /// <summary>A single penalty kick taken during a shootout.</summary>
+    [Serializable]
+    public class PenaltyKick
+    {
+        /// <summary>Team the kicker plays for.</summary>
+        public string teamId;
+        /// <summary>Kicker player identifier.</summary>
+        public string playerId;
+        /// <summary>Kicker display name (cached for UI).</summary>
+        public string playerName;
+        /// <summary>Whether the kick resulted in a goal.</summary>
+        public bool scored;
         /// <summary>Human-readable description for the feed.</summary>
         public string description;
     }

@@ -200,5 +200,210 @@ namespace FutbolJuego.Systems
             }
             return prizes;
         }
+
+        // ── CPU matchday simulation ────────────────────────────────────────────
+
+        /// <summary>
+        /// Simulates all CPU vs CPU fixtures on the current matchday of
+        /// <paramref name="league"/>, updates the table, and advances
+        /// <see cref="LeagueData.currentMatchday"/>.
+        ///
+        /// The fixture where <paramref name="playerTeamId"/> plays is skipped
+        /// (the player is expected to play it manually) unless
+        /// <paramref name="forceSimulateAll"/> is <c>true</c>.
+        ///
+        /// Returns the list of all simulated <see cref="MatchData"/> records.
+        /// </summary>
+        public List<MatchData> SimulateMatchday(
+            LeagueData            league,
+            List<TeamData>        allTeams,
+            MatchSimulationEngine engine,
+            string                playerTeamId,
+            bool                  forceSimulateAll = false)
+        {
+            if (league == null || allTeams == null || engine == null)
+                return new List<MatchData>();
+
+            var fixtures  = league.GetMatchdayFixtures(league.currentMatchday);
+            var results   = new List<MatchData>();
+
+            foreach (var fixture in fixtures)
+            {
+                bool isPlayerMatch = fixture.homeTeamId == playerTeamId
+                                  || fixture.awayTeamId == playerTeamId;
+
+                if (isPlayerMatch && !forceSimulateAll) continue;
+                if (!string.IsNullOrEmpty(fixture.matchId))  continue; // already played
+
+                var homeTeam = allTeams.Find(t => t.id == fixture.homeTeamId);
+                var awayTeam = allTeams.Find(t => t.id == fixture.awayTeamId);
+                if (homeTeam == null || awayTeam == null) continue;
+
+                var match = engine.SimulateMatch(homeTeam, awayTeam);
+                match.competitionId = league.id;
+                match.matchType     = MatchType.League;
+
+                ProcessMatchResult(match, league);
+                fixture.matchId = match.id;
+                results.Add(match);
+
+                Debug.Log($"[CompetitionSystem] MD{league.currentMatchday} " +
+                          $"{homeTeam.shortName} {match.homeScore}–{match.awayScore} {awayTeam.shortName}");
+            }
+
+            league.currentMatchday++;
+            return results;
+        }
+
+        /// <summary>
+        /// Returns <c>true</c> when every fixture in the league has been played.
+        /// </summary>
+        public bool IsLeagueSeasonComplete(LeagueData league)
+        {
+            if (league?.fixtures == null || league.fixtures.Count == 0) return false;
+            return league.fixtures.All(f => !string.IsNullOrEmpty(f.matchId));
+        }
+
+        // ── Cup management ─────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Draws the first-round fixtures for <paramref name="cup"/> from
+        /// its <see cref="CupData.participatingTeamIds"/>.
+        /// Call this once before the cup starts.
+        /// </summary>
+        public void InitializeCup(CupData cup)
+        {
+            if (cup?.participatingTeamIds == null || cup.participatingTeamIds.Count < 2)
+                return;
+
+            cup.remainingTeamIds    = new List<string>(cup.participatingTeamIds);
+            cup.currentRound        = 1;
+            cup.currentRoundName    = GetCupRoundName(cup.remainingTeamIds.Count);
+            cup.currentRoundFixtures.Clear();
+
+            GenerateCupRoundFixtures(cup);
+        }
+
+        /// <summary>
+        /// Simulates a single cup fixture, including a penalty shootout if
+        /// the match ends level and <see cref="CupData.usePenaltiesOnDraw"/> is set.
+        /// Returns the completed <see cref="MatchData"/>.
+        /// </summary>
+        public MatchData SimulateCupFixture(
+            FixtureData           fixture,
+            CupData               cup,
+            List<TeamData>        allTeams,
+            MatchSimulationEngine engine)
+        {
+            if (fixture == null || cup == null || allTeams == null || engine == null)
+                return null;
+
+            var homeTeam = allTeams.Find(t => t.id == fixture.homeTeamId);
+            var awayTeam = allTeams.Find(t => t.id == fixture.awayTeamId);
+            if (homeTeam == null || awayTeam == null) return null;
+
+            var match = engine.SimulateMatch(homeTeam, awayTeam, isNeutralVenue: true);
+            match.competitionId = cup.id;
+            match.matchType     = MatchType.Cup;
+
+            // Resolve draw with penalties when configured
+            if (match.homeScore == match.awayScore && cup.usePenaltiesOnDraw)
+            {
+                var shootout       = engine.SimulatePenaltyShootout(homeTeam, awayTeam);
+                match.penaltyShootout = shootout;
+                match.wentToPenalties = true;
+
+                Debug.Log($"[CompetitionSystem] {cup.name} penalties: " +
+                          $"{homeTeam.shortName} {shootout.homeScore}–{shootout.awayScore} {awayTeam.shortName}");
+            }
+
+            fixture.matchId = match.id;
+            return match;
+        }
+
+        /// <summary>
+        /// Determines the winner of each current-round cup fixture from
+        /// <paramref name="results"/>, advances surviving teams, generates
+        /// next-round fixtures, and sets <see cref="CupData.winnerId"/> if
+        /// the final has been played.
+        /// </summary>
+        public void AdvanceCupRound(CupData cup, List<MatchData> results)
+        {
+            if (cup == null || results == null) return;
+
+            var winnerIds = new List<string>();
+
+            foreach (var fixture in cup.currentRoundFixtures)
+            {
+                var match = results.FirstOrDefault(m => m.id == fixture.matchId);
+                if (match == null) continue;
+
+                string winnerId;
+                if (match.wentToPenalties && match.penaltyShootout != null)
+                    winnerId = match.penaltyShootout.winnerTeamId;
+                else
+                    winnerId = match.homeScore >= match.awayScore
+                        ? match.homeTeamId
+                        : match.awayTeamId;
+
+                if (!winnerIds.Contains(winnerId))
+                    winnerIds.Add(winnerId);
+            }
+
+            // Teams that had a bye automatically advance
+            foreach (var teamId in cup.remainingTeamIds)
+            {
+                if (!cup.currentRoundFixtures.Any(
+                        f => f.homeTeamId == teamId || f.awayTeamId == teamId))
+                    if (!winnerIds.Contains(teamId))
+                        winnerIds.Add(teamId);
+            }
+
+            cup.remainingTeamIds = winnerIds;
+            cup.currentRound++;
+
+            if (winnerIds.Count == 1)
+            {
+                cup.winnerId         = winnerIds[0];
+                cup.currentRoundName = "Winner";
+                cup.currentRoundFixtures.Clear();
+                Debug.Log($"[CompetitionSystem] {cup.name} won by {cup.winnerId}.");
+                return;
+            }
+
+            cup.currentRoundName = GetCupRoundName(winnerIds.Count);
+            cup.currentRoundFixtures.Clear();
+            GenerateCupRoundFixtures(cup);
+        }
+
+        // ── Private helpers ────────────────────────────────────────────────────
+
+        private void GenerateCupRoundFixtures(CupData cup)
+        {
+            var shuffled = cup.remainingTeamIds.OrderBy(_ => rng.Next()).ToList();
+
+            for (int i = 0; i + 1 < shuffled.Count; i += 2)
+            {
+                cup.currentRoundFixtures.Add(new FixtureData
+                {
+                    id         = Guid.NewGuid().ToString(),
+                    homeTeamId = shuffled[i],
+                    awayTeamId = shuffled[i + 1],
+                    matchday   = cup.currentRound,
+                    date       = DateTime.UtcNow.AddDays(cup.currentRound * 14)
+                });
+            }
+            // Odd team gets a bye (no fixture generated)
+        }
+
+        private static string GetCupRoundName(int teamCount) => teamCount switch
+        {
+            2  => "Final",
+            4  => "Semi-finals",
+            8  => "Quarter-finals",
+            16 => "Round of 16",
+            32 => "Round of 32",
+            _  => $"Round of {teamCount}"
+        };
     }
 }
