@@ -6,9 +6,39 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/MainMenu.unity
-    guid: 00000000000000000000000000000001
+    path: Assets/Scenes/Bootstrap.unity
+    guid: 3a0000000000000000000000000001a0
   - enabled: 1
-    path: Assets/Scenes/Game.unity
-    guid: 00000000000000000000000000000002
+    path: Assets/Scenes/MainMenu.unity
+    guid: 3a0000000000000000000000000001b0
+  - enabled: 1
+    path: Assets/Scenes/TeamSelection.unity
+    guid: 3a0000000000000000000000000001c0
+  - enabled: 1
+    path: Assets/Scenes/Dashboard.unity
+    guid: 3a0000000000000000000000000001d0
+  - enabled: 1
+    path: Assets/Scenes/Squad.unity
+    guid: 3a0000000000000000000000000001e0
+  - enabled: 1
+    path: Assets/Scenes/Tactics.unity
+    guid: 3a0000000000000000000000000001f0
+  - enabled: 1
+    path: Assets/Scenes/Match.unity
+    guid: 3a0000000000000000000000000002a0
+  - enabled: 1
+    path: Assets/Scenes/TransferMarket.unity
+    guid: 3a0000000000000000000000000002b0
+  - enabled: 1
+    path: Assets/Scenes/Finances.unity
+    guid: 3a0000000000000000000000000002c0
+  - enabled: 1
+    path: Assets/Scenes/Competitions.unity
+    guid: 3a0000000000000000000000000002d0
+  - enabled: 1
+    path: Assets/Scenes/Shop.unity
+    guid: 3a0000000000000000000000000002e0
+  - enabled: 1
+    path: Assets/Scenes/Legends.unity
+    guid: 3a0000000000000000000000000002f0
   m_configObjects: {}
