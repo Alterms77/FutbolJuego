@@ -6,12 +6,13 @@ using TMPro;
 using FutbolJuego.Models;
 using FutbolJuego.Systems;
 using FutbolJuego.Core;
+using FutbolJuego.UI.Components;
 
 namespace FutbolJuego.UI
 {
     /// <summary>
     /// Match-day screen: pre-match preview, live score during animation,
-    /// event feed, and full-time summary.
+    /// minute-by-minute event feed, stats panel, and full-time summary.
     /// </summary>
     public class MatchDayUI : MonoBehaviour
     {
@@ -28,14 +29,28 @@ namespace FutbolJuego.UI
         [SerializeField] private Transform eventFeed;
         [SerializeField] private GameObject eventRowPrefab;
 
+        [Header("Stats Panel")]
+        [SerializeField] private TextMeshProUGUI possessionLabel;
+        [SerializeField] private TextMeshProUGUI xGLabel;
+        [SerializeField] private TextMeshProUGUI shotsLabel;
+
         [Header("Summary")]
         [SerializeField] private GameObject summaryPanel;
         [SerializeField] private TextMeshProUGUI summaryText;
 
         [Header("Buttons")]
         [SerializeField] private Button simulateButton;
+        [SerializeField] private Button returnButton;
 
         private MatchData pendingMatch;
+
+        // ── MonoBehaviour ──────────────────────────────────────────────────────
+
+        private void Awake()
+        {
+            if (simulateButton) simulateButton.onClick.AddListener(OnSimulateButton);
+            if (returnButton)   returnButton.onClick.AddListener(OnReturn);
+        }
 
         // ── Preview ────────────────────────────────────────────────────────────
 
@@ -62,11 +77,31 @@ namespace FutbolJuego.UI
 
         // ── Live updates ───────────────────────────────────────────────────────
 
-        /// <summary>Updates the live score display.</summary>
+        /// <summary>Updates the live score and stats display.</summary>
         public void UpdateLiveScore(MatchData match)
         {
             if (scoreLabel)  scoreLabel.text  = $"{match.homeScore} – {match.awayScore}";
             if (minuteLabel) minuteLabel.text = $"{match.currentMinute}'";
+
+            if (match.statistics != null)
+                UpdateStatsPanel(match.statistics);
+        }
+
+        /// <summary>Updates the live stats panel (possession, xG, shots).</summary>
+        public void UpdateStatsPanel(MatchStatistics stats)
+        {
+            if (possessionLabel)
+                possessionLabel.text =
+                    $"Possession  {stats.homePossession:F0}% – {stats.awayPossession:F0}%";
+
+            if (xGLabel)
+                xGLabel.text =
+                    $"xG  {stats.homeXG:F2} – {stats.awayXG:F2}";
+
+            if (shotsLabel)
+                shotsLabel.text =
+                    $"Shots  {stats.homeShots} ({stats.homeShotsOnTarget} on target) " +
+                    $"– {stats.awayShots} ({stats.awayShotsOnTarget} on target)";
         }
 
         /// <summary>Appends an event row to the live feed.</summary>
@@ -74,10 +109,20 @@ namespace FutbolJuego.UI
         {
             if (eventFeed == null || eventRowPrefab == null) return;
 
-            var row   = Instantiate(eventRowPrefab, eventFeed);
-            var label = row.GetComponentInChildren<TextMeshProUGUI>();
-            if (label)
-                label.text = $"{evt.minute}' — {evt.description}";
+            var row = Instantiate(eventRowPrefab, eventFeed);
+
+            // Try rich MatchEventRow component first
+            var rowComp = row.GetComponent<MatchEventRow>();
+            if (rowComp != null)
+            {
+                rowComp.Setup(evt);
+            }
+            else
+            {
+                var label = row.GetComponentInChildren<TextMeshProUGUI>();
+                if (label)
+                    label.text = $"{evt.minute}' — {evt.description}";
+            }
         }
 
         // ── Full-time summary ──────────────────────────────────────────────────
@@ -135,6 +180,8 @@ namespace FutbolJuego.UI
         }
 
         // ── Helpers ────────────────────────────────────────────────────────────
+
+        private void OnReturn() => SceneNavigator.Instance?.GoToDashboard();
 
         private void SetPanelActive(GameObject active)
         {

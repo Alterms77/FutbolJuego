@@ -14,6 +14,7 @@ namespace FutbolJuego.Data
         private const string PlayersPath     = "Data/players";
         private const string LeaguePath      = "Data/competitions";
         private const string FormationsPath  = "Data/formations";
+        private const string LeagueMetaPath  = "Data/leagues";
 
         // ── Single object loading ──────────────────────────────────────────────
 
@@ -59,6 +60,26 @@ namespace FutbolJuego.Data
             return wrapper?.leagues?.Count > 0 ? wrapper.leagues[0] : null;
         }
 
+        /// <summary>
+        /// Loads all leagues defined in <c>Resources/Data/competitions.json</c>.
+        /// Returns an empty list if the file is missing or malformed.
+        /// </summary>
+        public static List<LeagueData> LoadAllLeagues()
+        {
+            var wrapper = JsonHandler.LoadFromResources<LeagueListWrapper>(LeaguePath);
+            return wrapper?.leagues ?? new List<LeagueData>();
+        }
+
+        /// <summary>
+        /// Loads league display metadata from <c>Resources/Data/leagues.json</c>.
+        /// Returns an empty list if the file is missing or malformed.
+        /// </summary>
+        public static List<LeagueMetadata> LoadLeagueMetadata()
+        {
+            var wrapper = JsonHandler.LoadFromResources<LeagueMetadataListWrapper>(LeagueMetaPath);
+            return wrapper?.leagues ?? new List<LeagueMetadata>();
+        }
+
         // ── Wrapper types for JSON arrays ──────────────────────────────────────
 
         [System.Serializable]
@@ -77,6 +98,12 @@ namespace FutbolJuego.Data
         private class LeagueListWrapper
         {
             public List<LeagueData> leagues;
+        }
+
+        [System.Serializable]
+        private class LeagueMetadataListWrapper
+        {
+            public List<LeagueMetadata> leagues;
         }
     }
 }

@@ -6,6 +6,7 @@ using TMPro;
 using FutbolJuego.Models;
 using FutbolJuego.Systems;
 using FutbolJuego.Core;
+using FutbolJuego.UI.Components;
 
 namespace FutbolJuego.UI
 {
@@ -22,12 +23,16 @@ namespace FutbolJuego.UI
         public long MaxPrice = 0;
         /// <summary>If set, only show this position.</summary>
         public PlayerPosition? Position = null;
+        /// <summary>If set, only show players from this league.</summary>
+        public string LeagueId = null;
     }
 
     // ── TransferMarketUI ───────────────────────────────────────────────────────
 
     /// <summary>
-    /// Transfer-market screen: player listing, bid flow, negotiation overlay.
+    /// Transfer-market screen: player listing with position/price/league filters,
+    /// bid flow, and negotiation overlay.  Supports <see cref="PlayerCard"/>
+    /// prefabs for rich display.
     /// </summary>
     public class TransferMarketUI : MonoBehaviour
     {
@@ -35,16 +40,43 @@ namespace FutbolJuego.UI
         [SerializeField] private Transform playerListContainer;
         [SerializeField] private GameObject playerRowPrefab;
 
+        [Header("Filters")]
+        [SerializeField] private TMP_Dropdown positionFilterDropdown;
+        [SerializeField] private TMP_InputField maxPriceInput;
+        [SerializeField] private Button applyFilterButton;
+        [SerializeField] private Button clearFilterButton;
+
         [Header("Negotiation")]
         [SerializeField] private GameObject negotiationPanel;
         [SerializeField] private TextMeshProUGUI negotiationText;
         [SerializeField] private TMP_InputField bidInput;
+        [SerializeField] private Button confirmBidButton;
+        [SerializeField] private Button cancelBidButton;
 
         [Header("Result")]
         [SerializeField] private TextMeshProUGUI resultMessage;
 
         private List<PlayerData> listedPlayers = new List<PlayerData>();
         private PlayerData selectedForBid;
+
+        // ── MonoBehaviour ──────────────────────────────────────────────────────
+
+        private void Awake()
+        {
+            if (applyFilterButton)  applyFilterButton.onClick.AddListener(OnApplyFilter);
+            if (clearFilterButton)  clearFilterButton.onClick.AddListener(OnClearFilter);
+            if (confirmBidButton)   confirmBidButton.onClick.AddListener(OnConfirmBid);
+            if (cancelBidButton)    cancelBidButton.onClick.AddListener(OnCancelBid);
+
+            if (positionFilterDropdown != null)
+            {
+                positionFilterDropdown.ClearOptions();
+                var options = new List<string> { "All Positions" };
+                foreach (PlayerPosition pos in System.Enum.GetValues(typeof(PlayerPosition)))
+                    options.Add(pos.ToString());
+                positionFilterDropdown.AddOptions(options);
+            }
+        }
 
         // ── Display ────────────────────────────────────────────────────────────
 
@@ -85,9 +117,9 @@ namespace FutbolJuego.UI
             if (negotiationText)
                 negotiationText.text =
                     $"{player.name}\n" +
-                    $"Position: {player.position}  |  OVR: {player.CalculateOverall()}\n" +
+                    $"Position: {player.position}  |  OVR: {player.CalculateOverall()}  |  Rarity: {player.rarity}\n" +
                     $"Age: {player.age}  |  Value: £{player.marketValue:N0}\n" +
-                    $"Wage: £{player.weeklyWage:N0}/wk";
+                    $"Wage: £{player.weeklyWage:N0}/wk  |  Energy: {player.energy}";
 
             if (bidInput) bidInput.text = player.marketValue.ToString();
         }
@@ -129,6 +161,34 @@ namespace FutbolJuego.UI
             if (bidInput) bidInput.text = offer.offerAmount.ToString();
         }
 
+        // ── Filter button handlers ─────────────────────────────────────────────
+
+        private void OnApplyFilter()
+        {
+            var filter = new TransferFilter();
+
+            if (positionFilterDropdown != null && positionFilterDropdown.value > 0)
+            {
+                var positions = (PlayerPosition[])System.Enum.GetValues(typeof(PlayerPosition));
+                int idx = positionFilterDropdown.value - 1;
+                if (idx < positions.Length)
+                    filter.Position = positions[idx];
+            }
+
+            if (maxPriceInput != null &&
+                long.TryParse(maxPriceInput.text, out long maxPrice) && maxPrice > 0)
+                filter.MaxPrice = maxPrice;
+
+            FilterMarket(filter);
+        }
+
+        private void OnClearFilter()
+        {
+            if (positionFilterDropdown) positionFilterDropdown.value = 0;
+            if (maxPriceInput)          maxPriceInput.text           = "";
+            RebuildList(listedPlayers);
+        }
+
         // ── Private helpers ────────────────────────────────────────────────────
 
         private void RebuildList(List<PlayerData> players)
@@ -140,10 +200,20 @@ namespace FutbolJuego.UI
 
             foreach (var player in players)
             {
-                var row   = Instantiate(playerRowPrefab, playerListContainer);
-                var label = row.GetComponentInChildren<TextMeshProUGUI>();
-                if (label)
-                    label.text = $"{player.name}  {player.position}  OVR {player.CalculateOverall()}  £{player.marketValue:N0}";
+                var row = Instantiate(playerRowPrefab, playerListContainer);
+
+                // Try rich PlayerCard component first
+                var card = row.GetComponent<PlayerCard>();
+                if (card != null)
+                {
+                    card.Setup(player);
+                }
+                else
+                {
+                    var label = row.GetComponentInChildren<TextMeshProUGUI>();
+                    if (label)
+                        label.text = $"{player.name}  {player.position}  OVR {player.CalculateOverall()}  £{player.marketValue:N0}";
+                }
 
                 var btn = row.GetComponent<Button>();
                 if (btn)

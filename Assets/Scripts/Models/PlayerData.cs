@@ -82,6 +82,20 @@ namespace FutbolJuego.Models
         /// <summary>Whether the player can be selected for matches.</summary>
         public bool isAvailable = true;
 
+        // ── Card system ────────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Energy level (0-100; 100 = fully energised). Consumed during matches
+        /// and restored by rest/training.
+        /// </summary>
+        public int energy = 100;
+
+        /// <summary>
+        /// Card rarity tier. Set in data or derived from <see cref="overallRating"/>:
+        /// ≤69 Normal, 70-79 Silver, 80-84 Gold, 85-89 Star, ≥90 Legend.
+        /// </summary>
+        public PlayerRarity rarity = PlayerRarity.Normal;
+
         // ── Methods ────────────────────────────────────────────────────────────
 
         /// <summary>
