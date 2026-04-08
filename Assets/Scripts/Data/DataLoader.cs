@@ -115,5 +115,11 @@ namespace FutbolJuego.Data
         {
             public List<LeagueMetadata> leagues;
         }
+
+        [System.Serializable]
+        private class CupListWrapper
+        {
+            public List<CupData> cups;
+        }
     }
 }

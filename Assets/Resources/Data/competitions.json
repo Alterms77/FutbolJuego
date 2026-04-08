@@ -86,5 +86,131 @@
       "table": []
     }
   ],
-  "cups": []
+  "cups": [
+    {
+      "id": "cup-copa-mx",
+      "name": "Copa MX",
+      "leagueId": "league-liga-mx",
+      "usePenaltiesOnDraw": true,
+      "currentRound": 1,
+      "currentRoundName": "Semi-finals",
+      "season": 1,
+      "participatingTeamIds": [
+        "team-america",
+        "team-chivas",
+        "team-cruzazul",
+        "team-tigres",
+        "team-monterrey"
+      ],
+      "remainingTeamIds": [
+        "team-america",
+        "team-chivas",
+        "team-cruzazul",
+        "team-tigres",
+        "team-monterrey"
+      ],
+      "currentRoundFixtures": [],
+      "winnerId": null
+    },
+    {
+      "id": "cup-carabao",
+      "name": "Carabao Cup",
+      "leagueId": "league-premier",
+      "usePenaltiesOnDraw": true,
+      "currentRound": 1,
+      "currentRoundName": "Semi-finals",
+      "season": 1,
+      "participatingTeamIds": [
+        "team-mancity",
+        "team-arsenal",
+        "team-liverpool",
+        "team-chelsea",
+        "team-manutd"
+      ],
+      "remainingTeamIds": [
+        "team-mancity",
+        "team-arsenal",
+        "team-liverpool",
+        "team-chelsea",
+        "team-manutd"
+      ],
+      "currentRoundFixtures": [],
+      "winnerId": null
+    },
+    {
+      "id": "cup-copa-del-rey",
+      "name": "Copa del Rey",
+      "leagueId": "league-laliga",
+      "usePenaltiesOnDraw": true,
+      "currentRound": 1,
+      "currentRoundName": "Semi-finals",
+      "season": 1,
+      "participatingTeamIds": [
+        "team-realmadrid",
+        "team-barcelona",
+        "team-atletico",
+        "team-realsociedad",
+        "team-athletic"
+      ],
+      "remainingTeamIds": [
+        "team-realmadrid",
+        "team-barcelona",
+        "team-atletico",
+        "team-realsociedad",
+        "team-athletic"
+      ],
+      "currentRoundFixtures": [],
+      "winnerId": null
+    },
+    {
+      "id": "cup-coppa-italia",
+      "name": "Coppa Italia",
+      "leagueId": "league-seriea",
+      "usePenaltiesOnDraw": true,
+      "currentRound": 1,
+      "currentRoundName": "Semi-finals",
+      "season": 1,
+      "participatingTeamIds": [
+        "team-inter",
+        "team-milan",
+        "team-juventus",
+        "team-napoli",
+        "team-roma"
+      ],
+      "remainingTeamIds": [
+        "team-inter",
+        "team-milan",
+        "team-juventus",
+        "team-napoli",
+        "team-roma"
+      ],
+      "currentRoundFixtures": [],
+      "winnerId": null
+    },
+    {
+      "id": "cup-copa-brasil",
+      "name": "Copa do Brasil",
+      "leagueId": "league-brasileirao",
+      "usePenaltiesOnDraw": true,
+      "currentRound": 1,
+      "currentRoundName": "Semi-finals",
+      "season": 1,
+      "participatingTeamIds": [
+        "team-flamengo",
+        "team-palmeiras",
+        "team-santos",
+        "team-saopaulo",
+        "team-corinthians"
+      ],
+      "remainingTeamIds": [
+        "team-flamengo",
+        "team-palmeiras",
+        "team-santos",
+        "team-saopaulo",
+        "team-corinthians"
+      ],
+      "currentRoundFixtures": [],
+      "winnerId": null
+    }
+  ]
 }

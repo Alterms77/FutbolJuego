@@ -106,6 +106,9 @@ namespace FutbolJuego.Core
             var competitionSystem = new CompetitionSystem();
             ServiceLocator.Register<CompetitionSystem>(competitionSystem);
 
+            var trophySystem = new TrophySystem();
+            ServiceLocator.Register<TrophySystem>(trophySystem);
+
             var progressionSystem = new ProgressionSystem();
             ServiceLocator.Register<ProgressionSystem>(progressionSystem);
 

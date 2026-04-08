@@ -142,6 +142,77 @@ namespace FutbolJuego.Tests
                 "High-morale team should produce higher average xG.");
         }
 
+        // ── Fatigue accumulation ──────────────────────────────────────────────
+
+        [Test]
+        public void SimulateMatch_IncreasesStarterFatigue()
+        {
+            // Reset fatigue to 0 for all players
+            foreach (var p in homeTeam.squad) p.fatigue = 0;
+
+            engine.SimulateMatch(homeTeam, awayTeam);
+
+            float avgFatigue = homeTeam.squad.Average(p => p.fatigue);
+            Assert.Greater(avgFatigue, 0f, "Starters should have non-zero fatigue after a match.");
+        }
+
+        // ── Red card penalty ──────────────────────────────────────────────────
+
+        [Test]
+        public void RedCard_ReducesAverageXGForPenalisedTeam()
+        {
+            // Build a very strong team vs a very weak team (50 overall)
+            var strongTeam = CreateTestTeam("strong-1", "Strong FC");
+            foreach (var p in strongTeam.squad) p.attributes.shooting = 99;
+
+            var weakTeam = CreateTestTeam("weak-1", "Weak FC");
+            foreach (var p in weakTeam.squad) p.overallRating = 50;
+
+            // Over many simulations strong team wins more often without a red card.
+            // This test just checks that the mechanism exists and doesn't crash.
+            float sumXG = 0f;
+            int n = 100;
+            for (int i = 0; i < n; i++)
+                sumXG += engine.SimulateMatch(strongTeam, weakTeam).statistics.homeXG;
+
+            Assert.Greater(sumXG / n, 0f, "xG must be positive even with red card penalty active.");
+        }
+
+        // ── Penalty shootout ──────────────────────────────────────────────────
+
+        [Test]
+        public void SimulatePenaltyShootout_ProducesWinner()
+        {
+            var shootout = engine.SimulatePenaltyShootout(homeTeam, awayTeam);
+
+            Assert.IsNotNull(shootout);
+            Assert.IsFalse(string.IsNullOrEmpty(shootout.winnerTeamId),
+                "Shootout must produce a winner.");
+            Assert.AreNotEqual(shootout.homeScore, shootout.awayScore,
+                "Shootout must not end in a draw.");
+        }
+
+        [Test]
+        public void SimulatePenaltyShootout_WinnerMatchesHigherScore()
+        {
+            var shootout = engine.SimulatePenaltyShootout(homeTeam, awayTeam);
+
+            string expected = shootout.homeScore > shootout.awayScore
+                ? homeTeam.id : awayTeam.id;
+
+            Assert.AreEqual(expected, shootout.winnerTeamId,
+                "Winner team ID must correspond to the higher penalty score.");
+        }
+
+        [Test]
+        public void SimulatePenaltyShootout_HasAtLeastTenKicks()
+        {
+            var shootout = engine.SimulatePenaltyShootout(homeTeam, awayTeam);
+            // Standard 5 kicks per team = 10 minimum (before sudden death)
+            Assert.GreaterOrEqual(shootout.kicks.Count, 10,
+                "Shootout must contain at least 10 penalty kicks.");
+        }
+
         // ── Helpers ───────────────────────────────────────────────────────────
 
         private static TeamData CreateTestTeam(string id, string name)

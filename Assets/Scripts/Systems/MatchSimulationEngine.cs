@@ -36,37 +36,98 @@ namespace FutbolJuego.Systems
         /// <summary>
         /// Fully simulates a match between <paramref name="home"/> and
         /// <paramref name="away"/> and returns the completed <see cref="MatchData"/>.
+        ///
+        /// Red cards are pre-rolled so their timing can reduce the penalised
+        /// team's xG before goal sampling (a minute-5 red is far more costly
+        /// than one in minute 75).  Fatigue accumulates for both squads.
         /// </summary>
         public MatchData SimulateMatch(TeamData home, TeamData away, bool isNeutralVenue = false)
         {
             if (home == null) throw new ArgumentNullException(nameof(home));
             if (away == null) throw new ArgumentNullException(nameof(away));
 
+            // ── Pre-roll red cards ─────────────────────────────────────────────
+            // 8 % base chance per team; stored as the game-minute they occur
+            // (-1 = no red card this match).
+            const double redCardProb  = 0.08;
+            int homeRedMinute = rng.NextDouble() < redCardProb ? rng.Next(5, 76) : -1;
+            int awayRedMinute = rng.NextDouble() < redCardProb ? rng.Next(5, 76) : -1;
+
+            // ── xG calculation ─────────────────────────────────────────────────
             float homeXG = CalculateExpectedGoals(home, away, isHome: !isNeutralVenue);
             float awayXG = CalculateExpectedGoals(away, home, isHome: false);
 
-            // Clamp xG to sensible range (very weak teams still generate ≥ 0.15)
+            // Apply red-card xG penalty: up to -35 % for an early dismissal
+            homeXG = ApplyRedCardPenalty(homeXG, homeRedMinute);
+            awayXG = ApplyRedCardPenalty(awayXG, awayRedMinute);
+
+            // Clamp xG to sensible range
             homeXG = Mathf.Clamp(homeXG, 0.15f, 4.5f);
             awayXG = Mathf.Clamp(awayXG, 0.15f, 4.5f);
 
             int homeGoals = SampleFromPoisson(homeXG);
             int awayGoals = SampleFromPoisson(awayXG);
 
-            List<MatchEvent> events = GenerateMatchEvents(home, away, homeGoals, awayGoals, homeXG, awayXG);            MatchStatistics stats   = CalculateMatchStatistics(home, away, homeXG, awayXG, events);
+            List<MatchEvent> events = GenerateMatchEvents(
+                home, away, homeGoals, awayGoals, homeXG, awayXG,
+                homeRedMinute, awayRedMinute);
+
+            MatchStatistics stats = CalculateMatchStatistics(home, away, homeXG, awayXG, events);
+
+            // Post-match fatigue accumulation for both squads
+            AccumulateMatchFatigue(home);
+            AccumulateMatchFatigue(away);
 
             return new MatchData
             {
-                id           = Guid.NewGuid().ToString(),
-                homeTeamId   = home.id,
-                awayTeamId   = away.id,
-                homeScore    = homeGoals,
-                awayScore    = awayGoals,
-                matchDate    = DateTime.UtcNow,
-                status       = MatchStatus.Completed,
-                statistics   = stats,
-                events       = events,
+                id            = Guid.NewGuid().ToString(),
+                homeTeamId    = home.id,
+                awayTeamId    = away.id,
+                homeScore     = homeGoals,
+                awayScore     = awayGoals,
+                matchDate     = DateTime.UtcNow,
+                status        = MatchStatus.Completed,
+                statistics    = stats,
+                events        = events,
                 currentMinute = Constants.MatchDurationMinutes
             };
+        }
+
+        // ── Red card helpers ───────────────────────────────────────────────────
+
+        /// <summary>
+        /// Reduces <paramref name="xg"/> by up to 35 % based on how early the
+        /// red card occurs.  A minute-5 red leaves 85/90 ≈ 94 % of the match
+        /// to play at a disadvantage; a minute-75 red leaves only 15/90 ≈ 17 %.
+        /// Formula: xg × (1 − remainingFraction × 0.35)
+        /// </summary>
+        private static float ApplyRedCardPenalty(float xg, int redCardMinute)
+        {
+            if (redCardMinute < 0) return xg;
+            float remainingFraction = Mathf.Clamp01((90f - redCardMinute) / 90f);
+            return xg * (1f - remainingFraction * 0.35f);
+        }
+
+        // ── Post-match fatigue ─────────────────────────────────────────────────
+
+        /// <summary>
+        /// Accumulates match fatigue for <paramref name="team"/>'s players.
+        /// Starters gain 15-25 fatigue; non-selected players recover 3-7.
+        /// </summary>
+        private void AccumulateMatchFatigue(TeamData team)
+        {
+            if (team?.squad == null) return;
+
+            var starters   = team.GetStartingEleven(team.currentTactic);
+            var starterIds = new HashSet<string>(starters.Select(p => p.id));
+
+            foreach (var player in team.squad)
+            {
+                if (starterIds.Contains(player.id))
+                    player.fatigue = Mathf.Min(100, player.fatigue + rng.Next(15, 26));
+                else
+                    player.fatigue = Mathf.Max(0, player.fatigue - rng.Next(3, 8));
+            }
         }
 
         // ── xG calculation ─────────────────────────────────────────────────────
@@ -214,7 +275,8 @@ namespace FutbolJuego.Systems
         private List<MatchEvent> GenerateMatchEvents(
             TeamData home, TeamData away,
             int homeGoals, int awayGoals,
-            float homeXG, float awayXG)
+            float homeXG, float awayXG,
+            int homeRedCardMinute, int awayRedCardMinute)
         {
             var events = new List<MatchEvent>();
             var usedMinutes = new HashSet<int>();
@@ -279,11 +341,33 @@ namespace FutbolJuego.Systems
             AddCardEvents(events, home, homeYellows, MatchEventType.YellowCard, usedMinutes);
             AddCardEvents(events, away, awayYellows, MatchEventType.YellowCard, usedMinutes);
 
-            // ── Red cards (rare) ──────────────────────────────────────────────
+            // ── Red cards (pre-rolled in SimulateMatch) ───────────────────────
+            // A red card after minute 75 is too late to have scored; skip it.
+            void AddPrerolledRedCard(TeamData team, int redMinute)
+            {
+                if (redMinute < 0 || redMinute > 88) return;
 
-            if (rng.NextDouble() < 0.08)
-                AddCardEvents(events, rng.NextDouble() < 0.5 ? home : away,
-                              1, MatchEventType.RedCard, usedMinutes);
+                var squad = team.GetAvailablePlayers()
+                    .Where(p => !p.position.IsGoalkeeper())
+                    .ToList();
+                if (squad.Count == 0) return;
+
+                var carded = squad[rng.Next(squad.Count)];
+                int minute = redMinute;
+                usedMinutes.Add(minute);
+
+                events.Add(new MatchEvent
+                {
+                    minute      = minute,
+                    type        = MatchEventType.RedCard,
+                    teamId      = team.id,
+                    playerId    = carded.id,
+                    description = $"🟥 {carded.name} is SENT OFF! {team.shortName} are down to 10 men!"
+                });
+            }
+
+            AddPrerolledRedCard(home, homeRedCardMinute);
+            AddPrerolledRedCard(away, awayRedCardMinute);
 
             // ── In-match injuries (max 1 per team) ────────────────────────────
 

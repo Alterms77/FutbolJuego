@@ -11,6 +11,17 @@ namespace FutbolJuego.Models
     /// <summary>Competition type of a match.</summary>
     public enum MatchType { League, Cup, Friendly }
 
+    /// <summary>
+    /// How long the match-simulation animation plays in real time.
+    /// The integer value equals the number of real minutes.
+    /// </summary>
+    public enum SimulationSpeed
+    {
+        ThreeMinutes = 3,
+        FourMinutes  = 4,
+        SixMinutes   = 6
+    }
+
     /// <summary>Discrete events that can occur during a match.</summary>
     public enum MatchEventType
     {

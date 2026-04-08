@@ -43,6 +43,7 @@ namespace FutbolJuego.UI.Components
         private static Color GetColorForEventType(MatchEventType type) => type switch
         {
             MatchEventType.Goal         => GoalColor,
+            MatchEventType.PenaltyGoal  => GoalColor,
             MatchEventType.YellowCard   => YellowCard,
             MatchEventType.RedCard      => RedCard,
             _                           => DefaultColor
