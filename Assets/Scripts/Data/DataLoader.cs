@@ -5,8 +5,7 @@ using FutbolJuego.Models;
 namespace FutbolJuego.Data
 {
     /// <summary>
-    /// Loads serialised game data from the Unity Resources/Data/ folder
-    /// and deserialises it into model objects.
+    /// Loads game data from the Unity Resources/Data/ folder.
     /// </summary>
     public class DataLoader
     {
@@ -14,6 +13,8 @@ namespace FutbolJuego.Data
         private const string PlayersPath     = "Data/players";
         private const string LeaguePath      = "Data/competitions";
         private const string FormationsPath  = "Data/formations";
+        private const string LeagueMetaPath  = "Data/leagues";
+        private const string LegendsPath     = "Data/legends";
 
         // ── Single object loading ──────────────────────────────────────────────
 
@@ -59,6 +60,46 @@ namespace FutbolJuego.Data
             return wrapper?.leagues?.Count > 0 ? wrapper.leagues[0] : null;
         }
 
+        /// <summary>
+        /// Loads all leagues defined in <c>Resources/Data/competitions.json</c>.
+        /// Returns an empty list if the file is missing or malformed.
+        /// </summary>
+        public static List<LeagueData> LoadAllLeagues()
+        {
+            var wrapper = JsonHandler.LoadFromResources<LeagueListWrapper>(LeaguePath);
+            return wrapper?.leagues ?? new List<LeagueData>();
+        }
+
+        /// <summary>
+        /// Loads league display metadata from <c>Resources/Data/leagues.json</c>.
+        /// Returns an empty list if the file is missing or malformed.
+        /// </summary>
+        public static List<LeagueMetadata> LoadLeagueMetadata()
+        {
+            var wrapper = JsonHandler.LoadFromResources<LeagueMetadataListWrapper>(LeagueMetaPath);
+            return wrapper?.leagues ?? new List<LeagueMetadata>();
+        }
+
+        /// <summary>
+        /// Loads all cup competitions from <c>Resources/Data/competitions.json</c>.
+        /// Returns an empty list if the file is missing or no cups are defined.
+        /// </summary>
+        public static List<CupData> LoadAllCups()
+        {
+            var wrapper = JsonHandler.LoadFromResources<CupListWrapper>(LeaguePath);
+            return wrapper?.cups ?? new List<CupData>();
+        }
+
+        /// <summary>
+        /// Loads all legend players from <c>Resources/Data/legends.json</c>.
+        /// Returns an empty list if the file is missing or malformed.
+        /// </summary>
+        public static List<LegendPlayerData> LoadAllLegends()
+        {
+            var wrapper = JsonHandler.LoadFromResources<LegendListWrapper>(LegendsPath);
+            return wrapper?.legends ?? new List<LegendPlayerData>();
+        }
+
         // ── Wrapper types for JSON arrays ──────────────────────────────────────
 
         [System.Serializable]
@@ -77,6 +118,24 @@ namespace FutbolJuego.Data
         private class LeagueListWrapper
         {
             public List<LeagueData> leagues;
+        }
+
+        [System.Serializable]
+        private class LeagueMetadataListWrapper
+        {
+            public List<LeagueMetadata> leagues;
+        }
+
+        [System.Serializable]
+        private class CupListWrapper
+        {
+            public List<CupData> cups;
+        }
+
+        [System.Serializable]
+        private class LegendListWrapper
+        {
+            public List<LegendPlayerData> legends;
         }
     }
 }

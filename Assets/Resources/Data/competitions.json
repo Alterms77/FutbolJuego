@@ -1,56 +1,216 @@
 {
   "leagues": [
     {
-      "id": "league-premier",
-      "name": "Premier League",
-      "country": "EN",
+      "id": "league-liga-mx",
+      "name": "Liga MX",
+      "country": "MX",
       "level": 1,
-      "teamIds": ["team-fcm", "team-ar", "team-ccfc", "team-nu"],
+      "teamIds": [
+        "team-america",
+        "team-chivas",
+        "team-cruzazul",
+        "team-tigres",
+        "team-monterrey"
+      ],
       "currentSeason": 1,
       "currentMatchday": 1,
-      "prizePool": {
-        "tiers": [
-          { "position": 1,  "amount": 10000000 },
-          { "position": 2,  "amount": 8000000  },
-          { "position": 3,  "amount": 7000000  },
-          { "position": 4,  "amount": 6500000  },
-          { "position": 5,  "amount": 6000000  },
-          { "position": 10, "amount": 4000000  },
-          { "position": 15, "amount": 2500000  },
-          { "position": 20, "amount": 1000000  }
-        ]
-      },
       "fixtures": [],
       "table": []
     },
     {
-      "id": "league-championship",
-      "name": "Championship",
-      "country": "EN",
-      "level": 2,
-      "teamIds": [],
+      "id": "league-brasileirao",
+      "name": "Brasileirão Série A",
+      "country": "BR",
+      "level": 1,
+      "teamIds": [
+        "team-flamengo",
+        "team-palmeiras",
+        "team-santos",
+        "team-saopaulo",
+        "team-corinthians"
+      ],
       "currentSeason": 1,
       "currentMatchday": 1,
-      "prizePool": {
-        "tiers": [
-          { "position": 1,  "amount": 3000000 },
-          { "position": 2,  "amount": 2500000 },
-          { "position": 3,  "amount": 2000000 },
-          { "position": 10, "amount": 1200000 },
-          { "position": 24, "amount": 500000  }
-        ]
-      },
+      "fixtures": [],
+      "table": []
+    },
+    {
+      "id": "league-laliga",
+      "name": "LaLiga",
+      "country": "ES",
+      "level": 1,
+      "teamIds": [
+        "team-realmadrid",
+        "team-barcelona",
+        "team-atletico",
+        "team-realsociedad",
+        "team-athletic"
+      ],
+      "currentSeason": 1,
+      "currentMatchday": 1,
+      "fixtures": [],
+      "table": []
+    },
+    {
+      "id": "league-premier",
+      "name": "Premier League",
+      "country": "GB",
+      "level": 1,
+      "teamIds": [
+        "team-mancity",
+        "team-arsenal",
+        "team-liverpool",
+        "team-chelsea",
+        "team-manutd"
+      ],
+      "currentSeason": 1,
+      "currentMatchday": 1,
+      "fixtures": [],
+      "table": []
+    },
+    {
+      "id": "league-seriea",
+      "name": "Serie A",
+      "country": "IT",
+      "level": 1,
+      "teamIds": [
+        "team-inter",
+        "team-milan",
+        "team-juventus",
+        "team-napoli",
+        "team-roma"
+      ],
+      "currentSeason": 1,
+      "currentMatchday": 1,
       "fixtures": [],
       "table": []
     }
   ],
   "cups": [
     {
-      "id": "cup-national",
-      "name": "National Cup",
-      "country": "EN",
-      "rounds": ["Round of 32", "Round of 16", "Quarter-Final", "Semi-Final", "Final"],
-      "prizeMoneyFinal": 2000000
+      "id": "cup-copa-mx",
+      "name": "Copa MX",
+      "leagueId": "league-liga-mx",
+      "usePenaltiesOnDraw": true,
+      "currentRound": 1,
+      "currentRoundName": "Round of 5",
+      "season": 1,
+      "participatingTeamIds": [
+        "team-america",
+        "team-chivas",
+        "team-cruzazul",
+        "team-tigres",
+        "team-monterrey"
+      ],
+      "remainingTeamIds": [
+        "team-america",
+        "team-chivas",
+        "team-cruzazul",
+        "team-tigres",
+        "team-monterrey"
+      ],
+      "currentRoundFixtures": [],
+      "winnerId": null
+    },
+    {
+      "id": "cup-carabao",
+      "name": "Carabao Cup",
+      "leagueId": "league-premier",
+      "usePenaltiesOnDraw": true,
+      "currentRound": 1,
+      "currentRoundName": "Round of 5",
+      "season": 1,
+      "participatingTeamIds": [
+        "team-mancity",
+        "team-arsenal",
+        "team-liverpool",
+        "team-chelsea",
+        "team-manutd"
+      ],
+      "remainingTeamIds": [
+        "team-mancity",
+        "team-arsenal",
+        "team-liverpool",
+        "team-chelsea",
+        "team-manutd"
+      ],
+      "currentRoundFixtures": [],
+      "winnerId": null
+    },
+    {
+      "id": "cup-copa-del-rey",
+      "name": "Copa del Rey",
+      "leagueId": "league-laliga",
+      "usePenaltiesOnDraw": true,
+      "currentRound": 1,
+      "currentRoundName": "Round of 5",
+      "season": 1,
+      "participatingTeamIds": [
+        "team-realmadrid",
+        "team-barcelona",
+        "team-atletico",
+        "team-realsociedad",
+        "team-athletic"
+      ],
+      "remainingTeamIds": [
+        "team-realmadrid",
+        "team-barcelona",
+        "team-atletico",
+        "team-realsociedad",
+        "team-athletic"
+      ],
+      "currentRoundFixtures": [],
+      "winnerId": null
+    },
+    {
+      "id": "cup-coppa-italia",
+      "name": "Coppa Italia",
+      "leagueId": "league-seriea",
+      "usePenaltiesOnDraw": true,
+      "currentRound": 1,
+      "currentRoundName": "Round of 5",
+      "season": 1,
+      "participatingTeamIds": [
+        "team-inter",
+        "team-milan",
+        "team-juventus",
+        "team-napoli",
+        "team-roma"
+      ],
+      "remainingTeamIds": [
+        "team-inter",
+        "team-milan",
+        "team-juventus",
+        "team-napoli",
+        "team-roma"
+      ],
+      "currentRoundFixtures": [],
+      "winnerId": null
+    },
+    {
+      "id": "cup-copa-brasil",
+      "name": "Copa do Brasil",
+      "leagueId": "league-brasileirao",
+      "usePenaltiesOnDraw": true,
+      "currentRound": 1,
+      "currentRoundName": "Round of 5",
+      "season": 1,
+      "participatingTeamIds": [
+        "team-flamengo",
+        "team-palmeiras",
+        "team-santos",
+        "team-saopaulo",
+        "team-corinthians"
+      ],
+      "remainingTeamIds": [
+        "team-flamengo",
+        "team-palmeiras",
+        "team-santos",
+        "team-saopaulo",
+        "team-corinthians"
+      ],
+      "currentRoundFixtures": [],
+      "winnerId": null
     }
   ]
 }

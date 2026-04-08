@@ -4,12 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using FutbolJuego.Models;
+using FutbolJuego.UI.Components;
 
 namespace FutbolJuego.UI
 {
     /// <summary>
     /// Displays the player squad list, handles player selection, and provides
-    /// position filtering.
+    /// position filtering.  Supports both simple row prefabs and rich
+    /// <see cref="PlayerCard"/> prefabs.
     /// </summary>
     public class SquadUI : MonoBehaviour
     {
@@ -20,8 +22,26 @@ namespace FutbolJuego.UI
         [SerializeField] private TextMeshProUGUI playerDetailStats;
         [SerializeField] private TextMeshProUGUI playerDetailContract;
 
+        [Header("Filters")]
+        [SerializeField] private TMP_Dropdown positionFilterDropdown;
+
         private List<PlayerData> allPlayers = new List<PlayerData>();
         private PlayerData selectedPlayer;
+
+        // ── MonoBehaviour ──────────────────────────────────────────────────────
+
+        private void Awake()
+        {
+            if (positionFilterDropdown != null)
+            {
+                positionFilterDropdown.ClearOptions();
+                var options = new List<string> { "Todos" };
+                foreach (PlayerPosition pos in System.Enum.GetValues(typeof(PlayerPosition)))
+                    options.Add(pos.ToString());
+                positionFilterDropdown.AddOptions(options);
+                positionFilterDropdown.onValueChanged.AddListener(OnFilterChanged);
+            }
+        }
 
         // ── Display methods ────────────────────────────────────────────────────
 
@@ -68,8 +88,9 @@ namespace FutbolJuego.UI
                     $"PHY {player.attributes.physical}  " +
                     $"INT {player.attributes.intelligence}\n" +
                     $"Age: {player.age}  |  {player.nationality}  |  {player.position}\n" +
-                    $"Morale: {player.morale}  Fatigue: {player.fatigue}  " +
-                    $"{(player.injuryDaysRemaining > 0 ? $"Injured ({player.injuryDaysRemaining}d)" : "Fit")}";
+                    $"Energy: {player.energy}  Morale: {player.morale}  Fatigue: {player.fatigue}  " +
+                    $"{(player.injuryDaysRemaining > 0 ? $"Injured ({player.injuryDaysRemaining}d)" : "Fit")}\n" +
+                    $"Rarity: {player.rarity}";
 
             if (playerDetailContract)
                 playerDetailContract.text =
@@ -79,6 +100,19 @@ namespace FutbolJuego.UI
         }
 
         // ── Private helpers ────────────────────────────────────────────────────
+
+        private void OnFilterChanged(int index)
+        {
+            if (index == 0)
+            {
+                ClearFilter();
+                return;
+            }
+
+            var positions = (PlayerPosition[])System.Enum.GetValues(typeof(PlayerPosition));
+            if (index - 1 < positions.Length)
+                FilterByPosition(positions[index - 1]);
+        }
 
         private void RebuildList(List<PlayerData> players)
         {
@@ -92,10 +126,19 @@ namespace FutbolJuego.UI
             {
                 var row = Instantiate(playerRowPrefab, playerListContainer);
 
-                // Expect the prefab to have a TextMeshProUGUI and a Button
-                var label = row.GetComponentInChildren<TextMeshProUGUI>();
-                if (label)
-                    label.text = $"{player.name}  |  {player.position}  |  OVR {player.CalculateOverall()}";
+                // Try rich PlayerCard component first
+                var card = row.GetComponent<PlayerCard>();
+                if (card != null)
+                {
+                    card.Setup(player);
+                }
+                else
+                {
+                    // Fallback: plain text label
+                    var label = row.GetComponentInChildren<TextMeshProUGUI>();
+                    if (label)
+                        label.text = $"{player.name}  |  {player.position}  |  OVR {player.CalculateOverall()}  |  ⚡{player.energy}";
+                }
 
                 var btn = row.GetComponent<Button>();
                 if (btn)
