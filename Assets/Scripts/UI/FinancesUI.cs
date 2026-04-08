@@ -1,5 +1,6 @@
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using FutbolJuego.Models;
 
@@ -24,6 +25,20 @@ namespace FutbolJuego.UI
 
         [Header("Budget")]
         [SerializeField] private TextMeshProUGUI budgetAllocationText;
+
+        [Header("Navigation")]
+        [SerializeField] private Button backButton;
+
+        // ── MonoBehaviour ──────────────────────────────────────────────────────
+
+        private void Awake()
+        {
+            if (backButton) backButton.onClick.AddListener(OnBack);
+        }
+
+        // ── Navigation ─────────────────────────────────────────────────────────
+
+        public void OnBack() => FutbolJuego.Core.SceneNavigator.Instance?.GoToDashboard();
 
         // ── Display methods ────────────────────────────────────────────────────
 

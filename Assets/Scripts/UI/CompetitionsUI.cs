@@ -48,6 +48,9 @@ namespace FutbolJuego.UI
         [SerializeField] private Button tabCupsButton;
         [SerializeField] private Button tabTrophiesButton;
 
+        [Header("Navigation")]
+        [SerializeField] private Button backButton;
+
         // ── Private state ──────────────────────────────────────────────────────
 
         private List<LeagueData> leagues = new List<LeagueData>();
@@ -76,6 +79,7 @@ namespace FutbolJuego.UI
             if (tabCupsButton)    tabCupsButton.onClick.AddListener(ShowCupsTab);
             if (tabTrophiesButton)tabTrophiesButton.onClick.AddListener(ShowTrophiesTab);
             if (trophySearchButton) trophySearchButton.onClick.AddListener(OnTrophySearch);
+            if (backButton) backButton.onClick.AddListener(OnBack);
 
             ShowLeagueTab();
         }
@@ -266,5 +270,7 @@ namespace FutbolJuego.UI
         {
             if (panel) panel.SetActive(visible);
         }
+
+        private void OnBack() => FutbolJuego.Core.SceneNavigator.Instance?.GoToDashboard();
     }
 }

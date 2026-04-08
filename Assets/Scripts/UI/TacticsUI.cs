@@ -33,6 +33,9 @@ namespace FutbolJuego.UI
         [SerializeField] private TextMeshProUGUI predictionText;
         [SerializeField] private GameObject predictionPanel;
 
+        [Header("Navigation")]
+        [SerializeField] private Button backButton;
+
         private TacticData currentTactic;
         private List<PlayerData> currentSquad = new List<PlayerData>();
 
@@ -40,6 +43,7 @@ namespace FutbolJuego.UI
 
         private void Start()
         {
+            if (backButton) backButton.onClick.AddListener(OnBack);
             if (pressingSlider)      pressingSlider.onValueChanged.AddListener(v      => OnTacticParameterChanged("pressing",      (int)v));
             if (tempoSlider)         tempoSlider.onValueChanged.AddListener(v          => OnTacticParameterChanged("tempo",         (int)v));
             if (widthSlider)         widthSlider.onValueChanged.AddListener(v          => OnTacticParameterChanged("width",         (int)v));
@@ -197,5 +201,7 @@ namespace FutbolJuego.UI
             PlayerRarity.AllTimeGreat => UITheme.RarityAllTimeGreat,
             _                         => UITheme.RarityNormal
         };
+
+        private void OnBack() => FutbolJuego.Core.SceneNavigator.Instance?.GoToDashboard();
     }
 }

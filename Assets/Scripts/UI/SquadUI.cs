@@ -25,6 +25,9 @@ namespace FutbolJuego.UI
         [Header("Filters")]
         [SerializeField] private TMP_Dropdown positionFilterDropdown;
 
+        [Header("Navigation")]
+        [SerializeField] private Button backButton;
+
         private List<PlayerData> allPlayers = new List<PlayerData>();
         private PlayerData selectedPlayer;
 
@@ -32,6 +35,7 @@ namespace FutbolJuego.UI
 
         private void Awake()
         {
+            if (backButton) backButton.onClick.AddListener(OnBack);
             if (positionFilterDropdown != null)
             {
                 positionFilterDropdown.ClearOptions();
@@ -42,6 +46,10 @@ namespace FutbolJuego.UI
                 positionFilterDropdown.onValueChanged.AddListener(OnFilterChanged);
             }
         }
+
+        // ── Navigation ─────────────────────────────────────────────────────────
+
+        public void OnBack() => FutbolJuego.Core.SceneNavigator.Instance?.GoToDashboard();
 
         // ── Display methods ────────────────────────────────────────────────────
 

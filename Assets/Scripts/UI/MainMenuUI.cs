@@ -29,11 +29,19 @@ namespace FutbolJuego.UI
 
         // ── Button callbacks (called by Unity UI) ──────────────────────────────
 
-        /// <summary>Starts a new game session.</summary>
+        /// <summary>Starts a new game — navigates to team selection.</summary>
         public void OnPlayButton()
         {
-            Debug.Log("[MainMenuUI] Play pressed.");
+            Debug.Log("[MainMenuUI] Nueva Partida pressed.");
             GameManager.Instance?.StartGame();
+            SceneNavigator.Instance?.GoToTeamSelection();
+        }
+
+        /// <summary>Continues an existing career — navigates to dashboard.</summary>
+        public void OnContinueButton()
+        {
+            Debug.Log("[MainMenuUI] Continuar pressed.");
+            SceneNavigator.Instance?.GoToDashboard();
         }
 
         /// <summary>Opens the settings overlay.</summary>
