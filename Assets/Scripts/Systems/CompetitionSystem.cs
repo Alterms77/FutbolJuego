@@ -340,11 +340,27 @@ namespace FutbolJuego.Systems
 
                 string winnerId;
                 if (match.wentToPenalties && match.penaltyShootout != null)
+                {
                     winnerId = match.penaltyShootout.winnerTeamId;
-                else
-                    winnerId = match.homeScore >= match.awayScore
+                }
+                else if (match.homeScore != match.awayScore)
+                {
+                    // Clear winner on the day
+                    winnerId = match.homeScore > match.awayScore
                         ? match.homeTeamId
                         : match.awayTeamId;
+                }
+                else
+                {
+                    // Draw with no penalty tie-break (e.g. usePenaltiesOnDraw = false).
+                    // Replay situations are not modelled; award a coin-flip winner so the
+                    // cup can always progress.
+                    winnerId = rng.NextDouble() < 0.5
+                        ? match.homeTeamId
+                        : match.awayTeamId;
+                    Debug.Log($"[CompetitionSystem] {cup.name} draw resolved by coin-flip " +
+                              $"({winnerId} advances).");
+                }
 
                 if (!winnerIds.Contains(winnerId))
                     winnerIds.Add(winnerId);

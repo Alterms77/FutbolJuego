@@ -120,8 +120,9 @@ namespace FutbolJuego.UI
         public void UpdateLiveScore(int homeScore, int awayScore, int minute,
                                     int homeReds, int awayReds)
         {
-            string homeSuffix = homeReds > 0 ? " (10)" : string.Empty;
-            string awaySuffix = awayReds > 0 ? " (10)" : string.Empty;
+            // Show accurate remaining player count (11 minus cards received)
+            string homeSuffix = homeReds > 0 ? $" ({11 - homeReds})" : string.Empty;
+            string awaySuffix = awayReds > 0 ? $" ({11 - awayReds})" : string.Empty;
 
             if (scoreLabel)
                 scoreLabel.text = $"{homeScore}{homeSuffix}  –  {awayScore}{awaySuffix}";
@@ -206,11 +207,9 @@ namespace FutbolJuego.UI
                 foreach (Transform child in eventFeed)
                     Destroy(child.gameObject);
 
-            // Real-time seconds allocated per game minute
-            // 3 min → 180 s / 90 = 2.00 s/min
-            // 4 min → 240 s / 90 = 2.67 s/min
-            // 6 min → 360 s / 90 = 4.00 s/min
-            float secondsPerMinute = (int)selectedSpeed * 60f / Constants.MatchDurationMinutes;
+            // Real-time seconds allocated per game minute.
+            // Using a helper avoids relying on the enum integer value.
+            float secondsPerMinute = SecondsPerMinuteFor(selectedSpeed);
 
             // Build a minute → events look-up for O(1) access in the loop
             var byMinute = new Dictionary<int, List<MatchEvent>>();
@@ -319,5 +318,18 @@ namespace FutbolJuego.UI
             if (livePanel)     livePanel.SetActive(active == livePanel);
             if (summaryPanel)  summaryPanel.SetActive(active == summaryPanel);
         }
+
+        /// <summary>
+        /// Maps each <see cref="SimulationSpeed"/> to the real-time seconds
+        /// that should elapse per game minute so the animation fills the
+        /// chosen total duration exactly.
+        /// </summary>
+        private static float SecondsPerMinuteFor(SimulationSpeed speed) => speed switch
+        {
+            SimulationSpeed.ThreeMinutes => 3f * 60f / Constants.MatchDurationMinutes, // 2.00 s/min
+            SimulationSpeed.FourMinutes  => 4f * 60f / Constants.MatchDurationMinutes, // 2.67 s/min
+            SimulationSpeed.SixMinutes   => 6f * 60f / Constants.MatchDurationMinutes, // 4.00 s/min
+            _                            => 4f * 60f / Constants.MatchDurationMinutes
+        };
     }
 }

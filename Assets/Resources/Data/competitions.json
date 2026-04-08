@@ -93,7 +93,7 @@
       "leagueId": "league-liga-mx",
       "usePenaltiesOnDraw": true,
       "currentRound": 1,
-      "currentRoundName": "Semi-finals",
+      "currentRoundName": "Round of 5",
       "season": 1,
       "participatingTeamIds": [
         "team-america",
@@ -118,7 +118,7 @@
       "leagueId": "league-premier",
       "usePenaltiesOnDraw": true,
       "currentRound": 1,
-      "currentRoundName": "Semi-finals",
+      "currentRoundName": "Round of 5",
       "season": 1,
       "participatingTeamIds": [
         "team-mancity",
@@ -143,7 +143,7 @@
       "leagueId": "league-laliga",
       "usePenaltiesOnDraw": true,
       "currentRound": 1,
-      "currentRoundName": "Semi-finals",
+      "currentRoundName": "Round of 5",
       "season": 1,
       "participatingTeamIds": [
         "team-realmadrid",
@@ -168,7 +168,7 @@
       "leagueId": "league-seriea",
       "usePenaltiesOnDraw": true,
       "currentRound": 1,
-      "currentRoundName": "Semi-finals",
+      "currentRoundName": "Round of 5",
       "season": 1,
       "participatingTeamIds": [
         "team-inter",
@@ -193,7 +193,7 @@
       "leagueId": "league-brasileirao",
       "usePenaltiesOnDraw": true,
       "currentRound": 1,
-      "currentRoundName": "Semi-finals",
+      "currentRoundName": "Round of 5",
       "season": 1,
       "participatingTeamIds": [
         "team-flamengo",

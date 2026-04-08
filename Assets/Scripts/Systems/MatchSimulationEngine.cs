@@ -104,7 +104,8 @@ namespace FutbolJuego.Systems
         private static float ApplyRedCardPenalty(float xg, int redCardMinute)
         {
             if (redCardMinute < 0) return xg;
-            float remainingFraction = Mathf.Clamp01((90f - redCardMinute) / 90f);
+            float matchLen          = Constants.MatchDurationMinutes;
+            float remainingFraction = Mathf.Clamp01((matchLen - redCardMinute) / matchLen);
             return xg * (1f - remainingFraction * 0.35f);
         }
 
@@ -342,10 +343,10 @@ namespace FutbolJuego.Systems
             AddCardEvents(events, away, awayYellows, MatchEventType.YellowCard, usedMinutes);
 
             // ── Red cards (pre-rolled in SimulateMatch) ───────────────────────
-            // A red card after minute 75 is too late to have scored; skip it.
+            // Align ceiling with generation range rng.Next(5, 76) — both use minute < 76.
             void AddPrerolledRedCard(TeamData team, int redMinute)
             {
-                if (redMinute < 0 || redMinute > 88) return;
+                if (redMinute < 0 || redMinute >= 76) return;
 
                 var squad = team.GetAvailablePlayers()
                     .Where(p => !p.position.IsGoalkeeper())
@@ -659,9 +660,9 @@ namespace FutbolJuego.Systems
             }
 
             // ── Sudden death ──────────────────────────────────────────────────
-
+            const int MaxSuddenDeathRounds = 20;
             int sdRound = 0;
-            while (homePen == awayPen && sdRound < 20)
+            while (homePen == awayPen && sdRound < MaxSuddenDeathRounds)
             {
                 int idx = sdRound % Math.Max(1, homeShooters.Count);
 
