@@ -1,0 +1,56 @@
+{
+  "leagues": [
+    {
+      "id": "league-premier",
+      "name": "Premier League",
+      "country": "EN",
+      "level": 1,
+      "teamIds": ["team-fcm", "team-ar", "team-ccfc", "team-nu"],
+      "currentSeason": 1,
+      "currentMatchday": 1,
+      "prizePool": {
+        "tiers": [
+          { "position": 1,  "amount": 10000000 },
+          { "position": 2,  "amount": 8000000  },
+          { "position": 3,  "amount": 7000000  },
+          { "position": 4,  "amount": 6500000  },
+          { "position": 5,  "amount": 6000000  },
+          { "position": 10, "amount": 4000000  },
+          { "position": 15, "amount": 2500000  },
+          { "position": 20, "amount": 1000000  }
+        ]
+      },
+      "fixtures": [],
+      "table": []
+    },
+    {
+      "id": "league-championship",
+      "name": "Championship",
+      "country": "EN",
+      "level": 2,
+      "teamIds": [],
+      "currentSeason": 1,
+      "currentMatchday": 1,
+      "prizePool": {
+        "tiers": [
+          { "position": 1,  "amount": 3000000 },
+          { "position": 2,  "amount": 2500000 },
+          { "position": 3,  "amount": 2000000 },
+          { "position": 10, "amount": 1200000 },
+          { "position": 24, "amount": 500000  }
+        ]
+      },
+      "fixtures": [],
+      "table": []
+    }
+  ],
+  "cups": [
+    {
+      "id": "cup-national",
+      "name": "National Cup",
+      "country": "EN",
+      "rounds": ["Round of 32", "Round of 16", "Quarter-Final", "Semi-Final", "Final"],
+      "prizeMoneyFinal": 2000000
+    }
+  ]
+}

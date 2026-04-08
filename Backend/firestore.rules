@@ -1,0 +1,87 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Helper functions ──────────────────────────────────────────────────────
+
+    /// Returns true if the request comes from a signed-in user.
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    /// Returns true if the signed-in user owns this resource.
+    function isOwner(uid) {
+      return isAuthenticated() && request.auth.uid == uid;
+    }
+
+    /// Returns true if the caller has the 'admin' custom claim.
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.admin == true;
+    }
+
+    // ── User data ─────────────────────────────────────────────────────────────
+    // Structure: users/{userId}/profile/data
+    //            users/{userId}/gameState/data
+    //            users/{userId}/rewards/daily
+
+    match /users/{userId}/{subcollection}/{docId} {
+      // Users can read and write only their own documents.
+      allow read, write: if isOwner(userId);
+      // Admins can read all user data (for support / moderation).
+      allow read: if isAdmin();
+    }
+
+    // ── Leaderboards ──────────────────────────────────────────────────────────
+    // Structure: leaderboards/{type}/entries/{entryId}
+    // Public read; write only via Cloud Functions (server-side trust).
+
+    match /leaderboards/{type}/entries/{entryId} {
+      // Anyone can read the leaderboard (even unauthenticated for browse).
+      allow read: if true;
+      // Only the Cloud Functions service account may write (enforced via admin SDK).
+      allow write: if false;
+    }
+
+    // ── Live events ───────────────────────────────────────────────────────────
+    // Structure: liveEvents/{eventId}
+    // Public read; admin / Cloud Functions write only.
+
+    match /liveEvents/{eventId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ── Weekly challenges ─────────────────────────────────────────────────────
+    // Structure: weeklyChallenge/{docId}
+    // Public read; written only by the scheduled Cloud Function.
+
+    match /weeklyChallenge/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ── Match results ─────────────────────────────────────────────────────────
+    // Structure: matches/{matchId}
+    // Authenticated read; write only via validateMatchResult Cloud Function.
+
+    match /matches/{matchId} {
+      allow read: if isAuthenticated();
+      // Clients cannot write directly; only the Cloud Function can.
+      allow write: if false;
+    }
+
+    // ── Global game config ────────────────────────────────────────────────────
+    // Structure: config/{docId}
+    // Public read; admin write only.
+
+    match /config/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ── Catch-all: deny everything else ──────────────────────────────────────
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
