@@ -71,6 +71,15 @@ namespace FutbolJuego.Models
         public System.Collections.Generic.List<string> previousTeamIds
             = new System.Collections.Generic.List<string>();
 
+        // ── Manager trophies ───────────────────────────────────────────────────
+
+        /// <summary>Total league titles won as a manager across all clubs.</summary>
+        public int managerLeagueTitles;
+        /// <summary>Total domestic cup titles won as a manager across all clubs.</summary>
+        public int managerCupTitles;
+        /// <summary>Total continental titles won as a manager across all clubs.</summary>
+        public int managerContinentalTitles;
+
         // ── Helpers ────────────────────────────────────────────────────────────
 
         /// <summary>

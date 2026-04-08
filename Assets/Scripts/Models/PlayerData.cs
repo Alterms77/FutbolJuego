@@ -90,6 +90,16 @@ namespace FutbolJuego.Models
         /// <summary>Accumulated performance stats for the current season.</summary>
         public PerformanceStats seasonStats = new PerformanceStats();
 
+        // ── Career stats ───────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Permanent career record: total goals, assists, championships, etc.
+        /// Incremented at the end of each season by
+        /// <see cref="FutbolJuego.Systems.SeasonSystem.AdvanceSeason"/>.
+        /// Never reset.
+        /// </summary>
+        public PlayerCareerStats careerStats = new PlayerCareerStats();
+
         // ── Match-day state ────────────────────────────────────────────────────
 
         /// <summary>Player morale (0-100; 50 = neutral).</summary>
@@ -201,6 +211,48 @@ namespace FutbolJuego.Models
                     BumpStat(ref attributes.intelligence,0.15f);
                     break;
             }
+
+            CalculateOverall();
+        }
+
+        // ── Retirement ─────────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Minimum age at which a player can be retired by the manager.
+        /// Players below this age cannot be retired.
+        /// </summary>
+        public const int RetirementAge = 35;
+
+        /// <summary>
+        /// <c>true</c> when the player has reached or passed the retirement age
+        /// and the manager can choose to retire them.
+        /// </summary>
+        public bool IsRetirable => age >= RetirementAge;
+
+        // ── Season rollover ────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Advances the player by one in-game season:
+        /// <list type="number">
+        ///   <item>Increments <see cref="age"/> by 1.</item>
+        ///   <item>Accumulates <see cref="seasonStats"/> into <see cref="careerStats"/>.</item>
+        ///   <item>Resets <see cref="seasonStats"/> for the new season.</item>
+        ///   <item>Recalculates <see cref="overallRating"/> and syncs contract years.</item>
+        /// </list>
+        /// Called by <see cref="FutbolJuego.Systems.SeasonSystem.AdvanceSeason"/>.
+        /// </summary>
+        public void AdvanceSeason()
+        {
+            age++;
+
+            careerStats  ??= new PlayerCareerStats();
+            seasonStats  ??= new PerformanceStats();
+
+            careerStats.AccumulateSeason(seasonStats);
+            seasonStats.Reset();
+
+            // Reduce remaining contract years
+            if (contractYears > 0) contractYears--;
 
             CalculateOverall();
         }

@@ -112,6 +112,9 @@ namespace FutbolJuego.Core
             var playerRatingSystem = new PlayerRatingSystem();
             ServiceLocator.Register<PlayerRatingSystem>(playerRatingSystem);
 
+            var seasonSystem = new SeasonSystem(playerRatingSystem);
+            ServiceLocator.Register<SeasonSystem>(seasonSystem);
+
             var careerSystem = new CareerSystem();
             ServiceLocator.Register<CareerSystem>(careerSystem);
 

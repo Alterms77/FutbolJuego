@@ -223,24 +223,46 @@ namespace FutbolJuego.Systems
 
         // ── Market value ───────────────────────────────────────────────────────
 
+        // Value curve anchor points (base, no league or category multipliers):
+        //   OVR 45  →  €   5 000 000  (cheapest Regular)
+        //   OVR 95  →  € 600 000 000  (AllTimeGreat baseline)
+        //
+        // Formula:  value = MinValue * exp( K * (OVR - 45) )
+        //   where   K = ln(600_000_000 / 5_000_000) / (95 - 45)
+        //             = ln(120) / 50
+        //             ≈ 0.09574
+
+        private const float ValuationBaseMin     = 5_000_000f;       // €5M at OVR 45
+        private const float ValuationCurveK      = 0.09574f;         // slope: ln(600M/5M)/50
+        private const long  ValuationAbsoluteMin = 5_000_000L;       // hard floor
+        private const long  ValuationAbsoluteMax = 1_200_000_000L;   // €1.2B hard cap
+
         /// <summary>
-        /// Calculates a player's market value using overall rating, age, potential,
-        /// and an optional league-tier multiplier.
+        /// Calculates a player's market value based on overall rating, age, potential,
+        /// rating category, and an optional league-tier multiplier.
         ///
-        /// Base curve: OVR 60 ≈ €1 M, OVR 85 ≈ €50 M, OVR 99+ ≈ €200 M+.
+        /// <para><b>Base curve (no multipliers):</b></para>
+        /// <list type="bullet">
+        ///   <item>OVR 45 (lowest Regular)   → €5 M</item>
+        ///   <item>OVR 70 (Silver)            → ~€55 M</item>
+        ///   <item>OVR 80 (Gold)              → ~€143 M</item>
+        ///   <item>OVR 90 (Legend)            → ~€372 M</item>
+        ///   <item>OVR 95 (AllTimeGreat)      → €600 M  (×1 league, ×3 cat = €1.8 B but capped)</item>
+        /// </list>
+        ///
+        /// Category premium (prestige on top of OVR): HistoricLegend ×3, ModernLegend ×1.8, Regular ×1.
+        /// Age multiplier: peaks at 26-29, depreciates steeply after 33.
+        /// League multiplier: from <see cref="LeagueValueMultipliers"/>.
+        /// Minimum: €5 M.  Maximum (hard cap): €1.2 B.
         /// </summary>
-        /// <param name="player">The player to value.</param>
-        /// <param name="leagueId">
-        /// Optional league identifier.  If null, the neutral multiplier (1.0) is used.
-        /// </param>
         public long CalculateMarketValue(PlayerData player, string leagueId = null)
         {
             if (player == null) return 0;
 
             int overall = player.CalculateOverall();
 
-            // Base exponential curve
-            float baseValue = Mathf.Pow(1.12f, overall - 50) * 500_000f;
+            // Exponential curve anchored at OVR 45 = €5M, OVR 95 = €600M
+            float baseValue = ValuationBaseMin * Mathf.Exp(ValuationCurveK * (overall - 45));
 
             // Age multiplier
             float ageMult = player.age switch
@@ -254,10 +276,10 @@ namespace FutbolJuego.Systems
                 _    => 0.40f
             };
 
-            // Potential bonus
-            float potBonus = 1.0f + Mathf.Max(0f, player.potential - overall) * 0.005f;
+            // Potential bonus (up to +15% for a young player far below potential)
+            float potBonus = 1.0f + Mathf.Max(0f, player.potential - overall) * 0.003f;
 
-            // Category premium: legend tiers carry a prestige premium
+            // Category premium
             float catBonus = player.ratingCategory switch
             {
                 PlayerRatingCategory.HistoricLegend => 3.0f,
@@ -272,6 +294,10 @@ namespace FutbolJuego.Systems
                 leagueMult = lm;
 
             long value = (long)(baseValue * ageMult * potBonus * catBonus * leagueMult);
+
+            // Apply floor and cap
+            value = Math.Max(value, ValuationAbsoluteMin);
+            value = Math.Min(value, ValuationAbsoluteMax);
 
             // Update cached field
             player.marketValue = value;

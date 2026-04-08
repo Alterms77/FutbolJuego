@@ -35,7 +35,7 @@ namespace FutbolJuego.UI
             if (positionFilterDropdown != null)
             {
                 positionFilterDropdown.ClearOptions();
-                var options = new List<string> { "All" };
+                var options = new List<string> { "Todos" };
                 foreach (PlayerPosition pos in System.Enum.GetValues(typeof(PlayerPosition)))
                     options.Add(pos.ToString());
                 positionFilterDropdown.AddOptions(options);
