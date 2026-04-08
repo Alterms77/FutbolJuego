@@ -56,5 +56,9 @@ namespace FutbolJuego.UI
         /// <summary>Border colour for Legend-rarity player cards.</summary>
         public static readonly UnityEngine.Color RarityLegend =
             new UnityEngine.Color(1f, 0.2f, 0.2f);
+
+        /// <summary>Border colour for AllTimeGreat-rarity player cards (holographic rainbow approximation).</summary>
+        public static readonly UnityEngine.Color RarityAllTimeGreat =
+            new UnityEngine.Color(1f, 0.84f, 0.2f);
     }
 }

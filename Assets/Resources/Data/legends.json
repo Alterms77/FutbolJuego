@@ -91,7 +91,7 @@
       "era": "S1970s",
       "tier": "AllTimeGreat",
       "iconicClub": "Bayern München",
-      "iconicLeagueId": "league-laliga",
+      "iconicLeagueId": "",
       "legacyDescription": "El Káiser. Ganó el Mundial como jugador y como entrenador. Redefinió el rol del defensa.",
       "premiumCoinCost": 2200,
       "attributes": { "speed": 78, "shooting": 72, "passing": 88, "defense": 96, "physical": 80, "intelligence": 97, "goalkeeping": 5 }

@@ -49,7 +49,7 @@ namespace FutbolJuego.Systems
             // ── Pre-roll red cards ─────────────────────────────────────────────
             // 8 % base chance per team; stored as the game-minute they occur
             // (-1 = no red card this match).
-            // rng.Next(5, 76) generates values in [5, 75] (exclusive upper bound),
+            // rng.Next(5, 76) generates values in [5, 75] inclusive (upper arg is exclusive),
             // matching the guard in AddPrerolledRedCard which rejects minutes >= 76.
             const double redCardProb  = 0.08;
             int homeRedMinute = rng.NextDouble() < redCardProb ? rng.Next(5, 76) : -1;

@@ -45,7 +45,7 @@ namespace FutbolJuego.UI.Components
 
         // ── Helpers ────────────────────────────────────────────────────────────
 
-        private static string FormatValue(int value)
+        private static string FormatValue(long value)
         {
             if (value >= 1_000_000) return $"€{value / 1_000_000f:F1}M";
             if (value >= 1_000)     return $"€{value / 1_000f:F0}K";
@@ -57,8 +57,9 @@ namespace FutbolJuego.UI.Components
             PlayerRarity.Silver => UITheme.RaritySilver,
             PlayerRarity.Gold   => UITheme.RarityGold,
             PlayerRarity.Star   => UITheme.RarityStar,
-            PlayerRarity.Legend => UITheme.RarityLegend,
-            _                   => UITheme.RarityNormal
+            PlayerRarity.Legend       => UITheme.RarityLegend,
+            PlayerRarity.AllTimeGreat => UITheme.RarityAllTimeGreat,
+            _                         => UITheme.RarityNormal
         };
     }
 }

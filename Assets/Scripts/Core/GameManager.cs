@@ -109,6 +109,9 @@ namespace FutbolJuego.Core
             var trophySystem = new TrophySystem();
             ServiceLocator.Register<TrophySystem>(trophySystem);
 
+            var playerRatingSystem = new PlayerRatingSystem();
+            ServiceLocator.Register<PlayerRatingSystem>(playerRatingSystem);
+
             var careerSystem = new CareerSystem();
             ServiceLocator.Register<CareerSystem>(careerSystem);
 

@@ -68,8 +68,27 @@ namespace FutbolJuego.Models
         public int weeklyWage;
         /// <summary>Contract expiry date in UTC.</summary>
         public DateTime contractExpiry;
+        /// <summary>Remaining contract years (convenience field, mirrors contractExpiry).</summary>
+        public int contractYears;
         /// <summary>Current market valuation in transfer currency.</summary>
-        public int marketValue;
+        public long marketValue;
+
+        // ── Rating category ────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Classification that determines the overall rating floor and ceiling.
+        /// <list type="bullet">
+        ///   <item><see cref="PlayerRatingCategory.Regular"/> — floor 45, ceiling 98.</item>
+        ///   <item><see cref="PlayerRatingCategory.ModernLegend"/> — floor 88, ceiling 95 (e.g. Agüero, Riquelme).</item>
+        ///   <item><see cref="PlayerRatingCategory.HistoricLegend"/> — floor 95, ceiling 100 (e.g. Maradona, Pelé).</item>
+        /// </list>
+        /// </summary>
+        public PlayerRatingCategory ratingCategory = PlayerRatingCategory.Regular;
+
+        // ── Season stats ───────────────────────────────────────────────────────
+
+        /// <summary>Accumulated performance stats for the current season.</summary>
+        public PerformanceStats seasonStats = new PerformanceStats();
 
         // ── Match-day state ────────────────────────────────────────────────────
 
@@ -92,20 +111,22 @@ namespace FutbolJuego.Models
 
         /// <summary>
         /// Card rarity tier. Set in data or derived from <see cref="overallRating"/>:
-        /// ≤69 Normal, 70-79 Silver, 80-84 Gold, 85-89 Star, ≥90 Legend.
+        /// ≤69 Normal, 70-79 Silver, 80-84 Gold, 85-89 Star, 90-94 Legend, ≥95 AllTimeGreat.
         /// </summary>
         public PlayerRarity rarity = PlayerRarity.Normal;
 
         // ── Methods ────────────────────────────────────────────────────────────
 
         /// <summary>
-        /// Calculates an overall rating (0-99) using position-specific
-        /// attribute weights.
+        /// Calculates an overall rating using position-specific attribute weights,
+        /// clamped to the floor and ceiling defined by <see cref="ratingCategory"/>.
         /// </summary>
         public int CalculateOverall()
         {
-            float raw = attributes.GetWeightedOverall(position);
-            overallRating = Mathf.Clamp(Mathf.RoundToInt(raw), 0, 99);
+            float raw    = attributes.GetWeightedOverall(position);
+            int   floor  = ratingCategory.GetFloor();
+            int   ceiling = ratingCategory.GetCeiling();
+            overallRating = Mathf.Clamp(Mathf.RoundToInt(raw), floor, ceiling);
             return overallRating;
         }
 

@@ -190,11 +190,12 @@ namespace FutbolJuego.UI
 
         private static Color RarityToColor(PlayerRarity rarity) => rarity switch
         {
-            PlayerRarity.Silver => UITheme.RaritySilver,
-            PlayerRarity.Gold   => UITheme.RarityGold,
-            PlayerRarity.Star   => UITheme.RarityStar,
-            PlayerRarity.Legend => UITheme.RarityLegend,
-            _                   => UITheme.RarityNormal
+            PlayerRarity.Silver       => UITheme.RaritySilver,
+            PlayerRarity.Gold         => UITheme.RarityGold,
+            PlayerRarity.Star         => UITheme.RarityStar,
+            PlayerRarity.Legend       => UITheme.RarityLegend,
+            PlayerRarity.AllTimeGreat => UITheme.RarityAllTimeGreat,
+            _                         => UITheme.RarityNormal
         };
     }
 }

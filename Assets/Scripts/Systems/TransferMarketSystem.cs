@@ -19,7 +19,7 @@ namespace FutbolJuego.Systems
         /// <summary>Player being offered for.</summary>
         public PlayerData player;
         /// <summary>Bid amount.</summary>
-        public int offerAmount;
+        public long offerAmount;
         /// <summary>Whether the bid was accepted.</summary>
         public bool isAccepted;
     }
@@ -79,34 +79,19 @@ namespace FutbolJuego.Systems
         // ── Valuation ──────────────────────────────────────────────────────────
 
         /// <summary>
-        /// Calculates a player's market value using overall rating, age, and
-        /// potential.  Peaks at age 26-29.
+        /// Calculates a player's market value using overall rating, age, potential,
+        /// and an optional league-tier multiplier (higher leagues = higher values).
+        ///
+        /// Delegates to <see cref="PlayerRatingSystem.CalculateMarketValue"/> so
+        /// the valuation formula is shared across both systems.
         /// </summary>
-        public int CalculatePlayerValue(PlayerData player)
+        /// <param name="player">The player to value.</param>
+        /// <param name="leagueId">Optional league id — see <see cref="PlayerRatingSystem.LeagueValueMultipliers"/>.</param>
+        public long CalculatePlayerValue(PlayerData player, string leagueId = null)
         {
             if (player == null) return 0;
-
-            int overall = player.CalculateOverall();
-
-            // Base exponential value curve (60 OVR ≈ £1 M, 85 OVR ≈ £50 M, 99 ≈ £150 M)
-            float baseValue = Mathf.Pow(1.12f, overall - 50) * 500_000f;
-
-            // Age modifier: younger = higher value, older = depreciating
-            float ageMultiplier = player.age switch
-            {
-                < 20 => 1.30f,
-                < 23 => 1.15f,
-                < 27 => 1.05f,
-                < 30 => 1.00f,
-                < 33 => 0.85f,
-                < 35 => 0.65f,
-                _    => 0.40f
-            };
-
-            // Potential bonus (if scout: up to 20% uplift for high potential)
-            float potentialBonus = 1.0f + Mathf.Max(0f, player.potential - overall) * 0.005f;
-
-            return (int)(baseValue * ageMultiplier * potentialBonus);
+            var ratingSystem = new PlayerRatingSystem();
+            return ratingSystem.CalculateMarketValue(player, leagueId);
         }
 
         /// <summary>
@@ -116,11 +101,11 @@ namespace FutbolJuego.Systems
         /// Returns <c>true</c> on success.
         /// </summary>
         public bool AttemptTransfer(TeamData buyer, TeamData seller,
-                                    PlayerData player, int offerAmount)
+                                    PlayerData player, long offerAmount)
         {
             if (buyer == null || seller == null || player == null) return false;
 
-            int playerValue = CalculatePlayerValue(player);
+            long playerValue = CalculatePlayerValue(player);
 
             // Seller accepts if offer ≥ 90% of value (or they want to sell)
             bool sellerAccepts = offerAmount >= playerValue * 0.9f;
@@ -144,38 +129,105 @@ namespace FutbolJuego.Systems
                 return false;
             }
 
-            // Execute
-            seller.squad?.Remove(player);
-            buyer.squad ??= new List<PlayerData>();
-            buyer.squad.Add(player);
-
-            buyer.finances.AddTransaction(new FinanceTransaction
-            {
-                date        = DateTime.UtcNow,
-                type        = FinanceTransactionType.Transfer,
-                amount      = -offerAmount,
-                description = $"Signed {player.name} from {seller.name}"
-            });
-
-            seller.finances.AddTransaction(new FinanceTransaction
-            {
-                date        = DateTime.UtcNow,
-                type        = FinanceTransactionType.Transfer,
-                amount      = offerAmount,
-                description = $"Sold {player.name} to {buyer.name}"
-            });
-
-            buyer.finances.transferBudget  -= offerAmount;
-            seller.finances.transferBudget += (long)(offerAmount * 0.8f); // 80% reinvestable
-
-            Debug.Log($"[Transfer] {player.name} moved from {seller.name} to {buyer.name} for {offerAmount:N0}");
+            ExecuteTransfer(buyer, seller, player, offerAmount);
             return true;
         }
 
         /// <summary>
-        /// Generates a random player with an overall within [minOverall, maxOverall].
-        /// Optionally forces a specific position.
+        /// Buys <paramref name="player"/> for the career's managed team, deducting the
+        /// fee from <see cref="CareerData.inGameBalance"/>.
+        /// Returns <c>true</c> on success.
         /// </summary>
+        /// <param name="buyerTeam">The managed team making the purchase.</param>
+        /// <param name="career">Active career (provides balance and leagueId).</param>
+        /// <param name="player">Player to buy.</param>
+        /// <param name="offerAmount">Fee offered (in the career currency unit).</param>
+        public bool BuyPlayerForCareer(TeamData buyerTeam, CareerData career,
+                                       PlayerData player, long offerAmount)
+        {
+            if (buyerTeam == null || career == null || player == null) return false;
+
+            long value = CalculatePlayerValue(player, career.managedLeagueId);
+
+            if (offerAmount < value * 0.9f)
+            {
+                Debug.Log($"[Transfer] Offer {offerAmount:N0} too low for {player.name} (value {value:N0}).");
+                return false;
+            }
+
+            if (career.inGameBalance < offerAmount)
+            {
+                Debug.Log($"[Transfer] Insufficient career balance ({career.inGameBalance:N0}) for {player.name}.");
+                return false;
+            }
+
+            if (buyerTeam.squad != null && buyerTeam.squad.Count >= Utils.Constants.MaxSquadSize)
+            {
+                Debug.Log($"[Transfer] Squad is full — cannot buy {player.name}.");
+                return false;
+            }
+
+            career.inGameBalance -= offerAmount;
+            buyerTeam.squad      ??= new List<PlayerData>();
+            buyerTeam.squad.Add(player);
+
+            if (buyerTeam.finances != null)
+            {
+                buyerTeam.finances.AddTransaction(new FinanceTransaction
+                {
+                    date        = DateTime.UtcNow,
+                    type        = FinanceTransactionType.Transfer,
+                    amount      = -offerAmount,
+                    description = $"Fichado: {player.name}"
+                });
+                buyerTeam.finances.transferBudget -= offerAmount;
+            }
+
+            PlayerRatingSystem.SyncRarity(player);
+            Debug.Log($"[Transfer] Bought {player.name} for {career.CurrencySymbol}{offerAmount:N0}. " +
+                      $"Remaining balance: {career.FormattedBalance}.");
+            return true;
+        }
+
+        /// <summary>
+        /// Sells <paramref name="player"/> from the career's managed team, crediting
+        /// 80% of the market value to <see cref="CareerData.inGameBalance"/>.
+        /// Returns the amount received, or 0 if the sale failed.
+        /// </summary>
+        /// <param name="sellerTeam">The managed team selling the player.</param>
+        /// <param name="career">Active career (provides balance and leagueId).</param>
+        /// <param name="player">Player to sell.</param>
+        public long SellPlayerFromCareer(TeamData sellerTeam, CareerData career, PlayerData player)
+        {
+            if (sellerTeam == null || career == null || player == null) return 0;
+            if (sellerTeam.squad == null || !sellerTeam.squad.Contains(player))
+            {
+                Debug.LogWarning($"[Transfer] {player.name} is not in squad.");
+                return 0;
+            }
+
+            long value    = CalculatePlayerValue(player, career.managedLeagueId);
+            long proceeds = (long)(value * 0.80f); // 80% fee recovery
+
+            sellerTeam.squad.Remove(player);
+            career.inGameBalance += proceeds;
+
+            if (sellerTeam.finances != null)
+            {
+                sellerTeam.finances.AddTransaction(new FinanceTransaction
+                {
+                    date        = DateTime.UtcNow,
+                    type        = FinanceTransactionType.Transfer,
+                    amount      = proceeds,
+                    description = $"Vendido: {player.name}"
+                });
+                sellerTeam.finances.transferBudget += proceeds;
+            }
+
+            Debug.Log($"[Transfer] Sold {player.name} for {career.CurrencySymbol}{proceeds:N0}. " +
+                      $"New balance: {career.FormattedBalance}.");
+            return proceeds;
+        }
         public PlayerData GenerateRandomPlayer(int minOverall, int maxOverall,
                                                PlayerPosition? position = null)
         {
@@ -218,10 +270,10 @@ namespace FutbolJuego.Systems
 
             foreach (var player in available.Take(5))
             {
-                int value = CalculatePlayerValue(player);
+                long value = CalculatePlayerValue(player);
                 if (value > budget) continue;
 
-                int offer = (int)(value * (0.90f + (float)rng.NextDouble() * 0.15f));
+                long offer = (long)(value * (0.90f + (float)rng.NextDouble() * 0.15f));
                 offers.Add(new TransferOffer
                 {
                     buyerTeamId  = aiTeam.id,
@@ -378,6 +430,36 @@ namespace FutbolJuego.Systems
         {
             var positions = (PlayerPosition[])Enum.GetValues(typeof(PlayerPosition));
             return positions[rng.Next(positions.Length)];
+        }
+
+        private static void ExecuteTransfer(TeamData buyer, TeamData seller,
+                                            PlayerData player, long fee)
+        {
+            seller.squad?.Remove(player);
+            buyer.squad ??= new List<PlayerData>();
+            buyer.squad.Add(player);
+
+            buyer.finances.AddTransaction(new FinanceTransaction
+            {
+                date        = DateTime.UtcNow,
+                type        = FinanceTransactionType.Transfer,
+                amount      = -fee,
+                description = $"Signed {player.name} from {seller.name}"
+            });
+
+            seller.finances.AddTransaction(new FinanceTransaction
+            {
+                date        = DateTime.UtcNow,
+                type        = FinanceTransactionType.Transfer,
+                amount      = fee,
+                description = $"Sold {player.name} to {buyer.name}"
+            });
+
+            buyer.finances.transferBudget  -= fee;
+            seller.finances.transferBudget += (long)(fee * 0.8f); // 80% reinvestable
+
+            PlayerRatingSystem.SyncRarity(player);
+            Debug.Log($"[Transfer] {player.name} moved: {seller.name} → {buyer.name} for {fee:N0}");
         }
     }
 }

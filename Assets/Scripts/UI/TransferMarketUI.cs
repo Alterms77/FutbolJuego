@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -6,6 +7,7 @@ using TMPro;
 using FutbolJuego.Models;
 using FutbolJuego.Systems;
 using FutbolJuego.Core;
+using FutbolJuego.Data;
 using FutbolJuego.UI.Components;
 
 namespace FutbolJuego.UI
@@ -18,7 +20,7 @@ namespace FutbolJuego.UI
         /// <summary>Minimum overall rating (inclusive).</summary>
         public int MinOverall = 0;
         /// <summary>Maximum overall rating (inclusive).</summary>
-        public int MaxOverall = 99;
+        public int MaxOverall = 100;
         /// <summary>Maximum market value. 0 = no limit.</summary>
         public long MaxPrice = 0;
         /// <summary>If set, only show this position.</summary>
@@ -30,15 +32,34 @@ namespace FutbolJuego.UI
     // ── TransferMarketUI ───────────────────────────────────────────────────────
 
     /// <summary>
-    /// Transfer-market screen: player listing with position/price/league filters,
-    /// bid flow, and negotiation overlay.  Supports <see cref="PlayerCard"/>
-    /// prefabs for rich display.
+    /// Transfer-market screen: two tabs (Buy / Sell), position/price/league
+    /// filters, bid flow, and sell confirmation overlay.
+    ///
+    /// <list type="bullet">
+    ///   <item><b>Buy tab</b> — shows market players; deducts from
+    ///         <see cref="CareerData.inGameBalance"/>.</item>
+    ///   <item><b>Sell tab</b> — shows the managed squad; credits
+    ///         <see cref="CareerData.inGameBalance"/> on sale.</item>
+    /// </list>
+    ///
+    /// The currency symbol (€ / $) is always taken from the active
+    /// <see cref="CareerData.CurrencySymbol"/>.
     /// </summary>
     public class TransferMarketUI : MonoBehaviour
     {
+        // ── Tabs ───────────────────────────────────────────────────────────────
+
+        [Header("Tabs")]
+        [SerializeField] private Button buyTabButton;
+        [SerializeField] private Button sellTabButton;
+
+        // ── Player list ────────────────────────────────────────────────────────
+
         [Header("List")]
         [SerializeField] private Transform playerListContainer;
         [SerializeField] private GameObject playerRowPrefab;
+
+        // ── Filters ────────────────────────────────────────────────────────────
 
         [Header("Filters")]
         [SerializeField] private TMP_Dropdown positionFilterDropdown;
@@ -46,18 +67,38 @@ namespace FutbolJuego.UI
         [SerializeField] private Button applyFilterButton;
         [SerializeField] private Button clearFilterButton;
 
-        [Header("Negotiation")]
+        // ── Buy negotiation panel ──────────────────────────────────────────────
+
+        [Header("Buy Negotiation")]
         [SerializeField] private GameObject negotiationPanel;
         [SerializeField] private TextMeshProUGUI negotiationText;
         [SerializeField] private TMP_InputField bidInput;
         [SerializeField] private Button confirmBidButton;
         [SerializeField] private Button cancelBidButton;
 
-        [Header("Result")]
+        // ── Sell confirmation panel ────────────────────────────────────────────
+
+        [Header("Sell Confirmation")]
+        [SerializeField] private GameObject sellPanel;
+        [SerializeField] private TextMeshProUGUI sellDetailText;
+        [SerializeField] private Button confirmSellButton;
+        [SerializeField] private Button cancelSellButton;
+
+        // ── Balance + result display ───────────────────────────────────────────
+
+        [Header("Status")]
+        [SerializeField] private TextMeshProUGUI balanceText;
         [SerializeField] private TextMeshProUGUI resultMessage;
 
-        private List<PlayerData> listedPlayers = new List<PlayerData>();
-        private PlayerData selectedForBid;
+        [Header("Navigation")]
+        [SerializeField] private Button backButton;
+
+        // ── Private state ──────────────────────────────────────────────────────
+
+        private List<PlayerData> listedPlayers  = new List<PlayerData>();
+        private PlayerData       selectedForBid;
+        private PlayerData       selectedForSell;
+        private bool             isBuyMode = true;
 
         // ── MonoBehaviour ──────────────────────────────────────────────────────
 
@@ -67,15 +108,72 @@ namespace FutbolJuego.UI
             if (clearFilterButton)  clearFilterButton.onClick.AddListener(OnClearFilter);
             if (confirmBidButton)   confirmBidButton.onClick.AddListener(OnConfirmBid);
             if (cancelBidButton)    cancelBidButton.onClick.AddListener(OnCancelBid);
+            if (confirmSellButton)  confirmSellButton.onClick.AddListener(OnConfirmSell);
+            if (cancelSellButton)   cancelSellButton.onClick.AddListener(OnCancelSell);
+            if (buyTabButton)       buyTabButton.onClick.AddListener(ShowBuyTab);
+            if (sellTabButton)      sellTabButton.onClick.AddListener(ShowSellTab);
+            if (backButton)         backButton.onClick.AddListener(OnBack);
 
             if (positionFilterDropdown != null)
             {
                 positionFilterDropdown.ClearOptions();
-                var options = new List<string> { "All Positions" };
-                foreach (PlayerPosition pos in System.Enum.GetValues(typeof(PlayerPosition)))
+                var options = new List<string> { "Todas las posiciones" };
+                foreach (PlayerPosition pos in Enum.GetValues(typeof(PlayerPosition)))
                     options.Add(pos.ToString());
                 positionFilterDropdown.AddOptions(options);
             }
+        }
+
+        private void Start()
+        {
+            ShowBuyTab();
+        }
+
+        // ── Tab switching ──────────────────────────────────────────────────────
+
+        /// <summary>Shows the Buy tab (market players).</summary>
+        public void ShowBuyTab()
+        {
+            isBuyMode = true;
+            var market = ServiceLocator.Get<TransferMarketSystem>();
+            listedPlayers = market?.GetAvailableFreePlayers(30) ?? new List<PlayerData>();
+
+            // Refresh values with career league
+            var career = ServiceLocator.Get<CareerSystem>()?.ActiveCareer;
+            if (career != null)
+            {
+                var ratingSystem = ServiceLocator.Get<PlayerRatingSystem>();
+                foreach (var p in listedPlayers)
+                    ratingSystem?.CalculateMarketValue(p, career.managedLeagueId);
+            }
+
+            RebuildList(listedPlayers);
+            RefreshBalance();
+        }
+
+        /// <summary>Shows the Sell tab (squad players).</summary>
+        public void ShowSellTab()
+        {
+            isBuyMode = false;
+            var career = ServiceLocator.Get<CareerSystem>()?.ActiveCareer;
+            var teams  = DataLoader.LoadAllTeams();
+            TeamData managedTeam = null;
+
+            if (career != null)
+                managedTeam = teams?.Find(t => t.id == career.managedTeamId);
+
+            listedPlayers = managedTeam?.squad ?? new List<PlayerData>();
+
+            // Refresh market values
+            if (career != null)
+            {
+                var ratingSystem = ServiceLocator.Get<PlayerRatingSystem>();
+                foreach (var p in listedPlayers)
+                    ratingSystem?.CalculateMarketValue(p, career.managedLeagueId);
+            }
+
+            RebuildList(listedPlayers);
+            RefreshBalance();
         }
 
         // ── Display ────────────────────────────────────────────────────────────
@@ -106,20 +204,24 @@ namespace FutbolJuego.UI
             RebuildList(filtered);
         }
 
-        // ── Bid flow ───────────────────────────────────────────────────────────
+        // ── Buy flow ───────────────────────────────────────────────────────────
 
         /// <summary>Opens the bid panel for <paramref name="player"/>.</summary>
         public void OnPlayerBidButton(PlayerData player)
         {
-            selectedForBid = player;
-            if (negotiationPanel) negotiationPanel.SetActive(true);
+            if (!isBuyMode) { OnPlayerSellButton(player); return; }
 
+            selectedForBid = player;
+            string symbol  = GetCurrencySymbol();
+
+            if (negotiationPanel) negotiationPanel.SetActive(true);
             if (negotiationText)
                 negotiationText.text =
                     $"{player.name}\n" +
-                    $"Position: {player.position}  |  OVR: {player.CalculateOverall()}  |  Rarity: {player.rarity}\n" +
-                    $"Age: {player.age}  |  Value: £{player.marketValue:N0}\n" +
-                    $"Wage: £{player.weeklyWage:N0}/wk  |  Energy: {player.energy}";
+                    $"Posición: {player.position}  |  OVR: {player.CalculateOverall()}  " +
+                    $"|  {player.rarity}  |  {player.ratingCategory.GetLabel()}\n" +
+                    $"Edad: {player.age}  |  Valor: {symbol}{player.marketValue:N0}\n" +
+                    $"Salario: {symbol}{player.weeklyWage:N0}/sem";
 
             if (bidInput) bidInput.text = player.marketValue.ToString();
         }
@@ -129,21 +231,32 @@ namespace FutbolJuego.UI
         {
             if (selectedForBid == null) return;
 
-            if (!int.TryParse(bidInput?.text ?? "", out int offer) || offer <= 0)
+            if (!long.TryParse(bidInput?.text ?? "", out long offer) || offer <= 0)
             {
-                ShowResult("Invalid bid amount.");
+                ShowResult("Cantidad de oferta no válida.");
                 return;
             }
 
-            var transferSystem = ServiceLocator.Get<TransferMarketSystem>();
-            bool success = transferSystem.AttemptTransfer(null, null, selectedForBid, offer);
+            var career       = ServiceLocator.Get<CareerSystem>()?.ActiveCareer;
+            var transferSys  = ServiceLocator.Get<TransferMarketSystem>();
+            var teams        = DataLoader.LoadAllTeams();
+            TeamData managed = career != null ? teams?.Find(t => t.id == career.managedTeamId) : null;
 
+            bool success = career != null && managed != null
+                ? transferSys.BuyPlayerForCareer(managed, career, selectedForBid, offer)
+                : transferSys.AttemptTransfer(null, null, selectedForBid, offer);
+
+            string symbol = GetCurrencySymbol();
             ShowResult(success
-                ? $"Transfer complete! Signed {selectedForBid.name} for £{offer:N0}."
-                : $"Bid rejected. Try a higher offer.");
+                ? $"✅ Fichado {selectedForBid.name} por {symbol}{offer:N0}."
+                : $"❌ Oferta rechazada. Prueba con una oferta mayor.");
 
-            if (success && negotiationPanel)
-                negotiationPanel.SetActive(false);
+            if (success)
+            {
+                if (negotiationPanel) negotiationPanel.SetActive(false);
+                RefreshBalance();
+                ShowBuyTab();
+            }
         }
 
         /// <summary>Cancels the negotiation overlay.</summary>
@@ -161,6 +274,69 @@ namespace FutbolJuego.UI
             if (bidInput) bidInput.text = offer.offerAmount.ToString();
         }
 
+        // ── Sell flow ──────────────────────────────────────────────────────────
+
+        /// <summary>Opens the sell confirmation panel for <paramref name="player"/>.</summary>
+        public void OnPlayerSellButton(PlayerData player)
+        {
+            selectedForSell = player;
+            var career      = ServiceLocator.Get<CareerSystem>()?.ActiveCareer;
+            string symbol   = GetCurrencySymbol();
+
+            var ratingSystem = ServiceLocator.Get<PlayerRatingSystem>();
+            long value    = ratingSystem?.CalculateMarketValue(player, career?.managedLeagueId)
+                            ?? player.marketValue;
+            long proceeds = (long)(value * 0.80f);
+
+            if (sellPanel) sellPanel.SetActive(true);
+            if (sellDetailText)
+                sellDetailText.text =
+                    $"¿Vender a {player.name}?\n\n" +
+                    $"Posición: {player.position}  |  OVR: {player.CalculateOverall()}  " +
+                    $"|  Edad: {player.age}\n" +
+                    $"Valor de mercado: {symbol}{value:N0}\n" +
+                    $"Recibirás: {symbol}{proceeds:N0} (80%)";
+        }
+
+        /// <summary>Confirms the sale of the selected player.</summary>
+        public void OnConfirmSell()
+        {
+            if (selectedForSell == null) return;
+
+            var career      = ServiceLocator.Get<CareerSystem>()?.ActiveCareer;
+            var transferSys = ServiceLocator.Get<TransferMarketSystem>();
+            var teams       = DataLoader.LoadAllTeams();
+            TeamData managed = career != null ? teams?.Find(t => t.id == career.managedTeamId) : null;
+
+            if (career == null || managed == null)
+            {
+                ShowResult("Inicia una carrera para vender jugadores.");
+                if (sellPanel) sellPanel.SetActive(false);
+                return;
+            }
+
+            long proceeds = transferSys.SellPlayerFromCareer(managed, career, selectedForSell);
+            string symbol = GetCurrencySymbol();
+
+            ShowResult(proceeds > 0
+                ? $"✅ {selectedForSell.name} vendido por {symbol}{proceeds:N0}."
+                : "❌ La venta no pudo completarse.");
+
+            if (proceeds > 0)
+            {
+                if (sellPanel) sellPanel.SetActive(false);
+                RefreshBalance();
+                ShowSellTab();
+            }
+        }
+
+        /// <summary>Cancels the sell overlay.</summary>
+        public void OnCancelSell()
+        {
+            selectedForSell = null;
+            if (sellPanel) sellPanel.SetActive(false);
+        }
+
         // ── Filter button handlers ─────────────────────────────────────────────
 
         private void OnApplyFilter()
@@ -169,7 +345,7 @@ namespace FutbolJuego.UI
 
             if (positionFilterDropdown != null && positionFilterDropdown.value > 0)
             {
-                var positions = (PlayerPosition[])System.Enum.GetValues(typeof(PlayerPosition));
+                var positions = (PlayerPosition[])Enum.GetValues(typeof(PlayerPosition));
                 int idx = positionFilterDropdown.value - 1;
                 if (idx < positions.Length)
                     filter.Position = positions[idx];
@@ -198,6 +374,8 @@ namespace FutbolJuego.UI
             foreach (Transform child in playerListContainer)
                 Destroy(child.gameObject);
 
+            string symbol = GetCurrencySymbol();
+
             foreach (var player in players)
             {
                 var row = Instantiate(playerRowPrefab, playerListContainer);
@@ -212,7 +390,13 @@ namespace FutbolJuego.UI
                 {
                     var label = row.GetComponentInChildren<TextMeshProUGUI>();
                     if (label)
-                        label.text = $"{player.name}  {player.position}  OVR {player.CalculateOverall()}  £{player.marketValue:N0}";
+                    {
+                        string action = isBuyMode ? "Fichar" : "Vender";
+                        label.text =
+                            $"{player.name}  {player.position}  " +
+                            $"OVR {player.CalculateOverall()}  {player.rarity}  " +
+                            $"Edad {player.age}  {symbol}{player.marketValue:N0}  [{action}]";
+                    }
                 }
 
                 var btn = row.GetComponent<Button>();
@@ -224,9 +408,27 @@ namespace FutbolJuego.UI
             }
         }
 
+        private void RefreshBalance()
+        {
+            var career = ServiceLocator.Get<CareerSystem>()?.ActiveCareer;
+            if (balanceText)
+                balanceText.text = career != null
+                    ? $"Presupuesto: {career.FormattedBalance}  |  🪙 {career.premiumCoins}"
+                    : "Presupuesto: —";
+        }
+
         private void ShowResult(string message)
         {
             if (resultMessage) resultMessage.text = message;
         }
+
+        private static string GetCurrencySymbol()
+        {
+            var career = ServiceLocator.Get<CareerSystem>()?.ActiveCareer;
+            return career?.CurrencySymbol ?? "€";
+        }
+
+        private void OnBack() => SceneNavigator.Instance?.GoToDashboard();
     }
 }
+
