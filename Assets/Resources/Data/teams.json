@@ -1,0 +1,228 @@
+{
+  "teams": [
+    {
+      "id": "team-fcm",
+      "name": "FC Metropolitan",
+      "shortName": "FCM",
+      "city": "Metropolitan City",
+      "country": "EN",
+      "morale": 72,
+      "leaguePosition": 1,
+      "wins": 0, "draws": 0, "losses": 0,
+      "goalsFor": 0, "goalsAgainst": 0,
+      "finances": {
+        "balance": 45000000,
+        "weeklyWageBill": 0,
+        "stadiumRevenue": 850000,
+        "sponsorRevenue": 120000,
+        "prizeMoneyRevenue": 0,
+        "transferBudget": 20000000,
+        "wageBudget": 200000,
+        "transactionHistory": []
+      },
+      "infrastructure": {
+        "stadium": { "name": "Metropolitan Arena", "capacity": 55000, "condition": 92, "upgradeLevel": 4, "ticketPrice": 55.0, "attendanceRate": 0.88 },
+        "trainingFacility": { "level": 4 },
+        "youthAcademy": { "level": 4 },
+        "medicalCenter": { "level": 4 }
+      },
+      "currentTactic": {
+        "formation": "F433",
+        "playStyle": "Possession",
+        "pressing": 65, "tempo": 60, "width": 55, "defensiveLine": 65,
+        "captainId": "fcm-p01",
+        "positionAssignments": []
+      },
+      "squad": [
+        { "id": "fcm-p01", "name": "Lorenzo Rosetti",    "age": 30, "nationality": "IT", "position": "GK",  "overallRating": 84, "potential": 85, "consistency": 88, "injuryProneness": 18, "weeklyWage": 55000, "marketValue": 12000000, "morale": 75, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 52, "shooting": 20, "passing": 65, "defense": 50, "physical": 78, "intelligence": 80, "goalkeeping": 86 } },
+        { "id": "fcm-p02", "name": "Marcus Blackwell",   "age": 27, "nationality": "EN", "position": "CB",  "overallRating": 83, "potential": 85, "consistency": 85, "injuryProneness": 22, "weeklyWage": 60000, "marketValue": 28000000, "morale": 72, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 74, "shooting": 45, "passing": 72, "defense": 86, "physical": 85, "intelligence": 82, "goalkeeping": 20 } },
+        { "id": "fcm-p03", "name": "Sergio Delgado",     "age": 29, "nationality": "ES", "position": "CB",  "overallRating": 82, "potential": 82, "consistency": 87, "injuryProneness": 20, "weeklyWage": 58000, "marketValue": 22000000, "morale": 70, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 70, "shooting": 40, "passing": 74, "defense": 85, "physical": 83, "intelligence": 81, "goalkeeping": 20 } },
+        { "id": "fcm-p04", "name": "James Thornton",     "age": 25, "nationality": "EN", "position": "LB",  "overallRating": 80, "potential": 86, "consistency": 80, "injuryProneness": 25, "weeklyWage": 45000, "marketValue": 24000000, "morale": 68, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 84, "shooting": 58, "passing": 79, "defense": 80, "physical": 76, "intelligence": 78, "goalkeeping": 20 } },
+        { "id": "fcm-p05", "name": "Rui Fonseca",        "age": 26, "nationality": "PT", "position": "RB",  "overallRating": 81, "potential": 84, "consistency": 82, "injuryProneness": 22, "weeklyWage": 48000, "marketValue": 26000000, "morale": 72, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 83, "shooting": 55, "passing": 80, "defense": 81, "physical": 77, "intelligence": 79, "goalkeeping": 20 } },
+        { "id": "fcm-p06", "name": "Antoine Leclerc",    "age": 28, "nationality": "FR", "position": "CDM", "overallRating": 84, "potential": 85, "consistency": 88, "injuryProneness": 18, "weeklyWage": 65000, "marketValue": 32000000, "morale": 75, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 72, "shooting": 62, "passing": 82, "defense": 86, "physical": 83, "intelligence": 86, "goalkeeping": 20 } },
+        { "id": "fcm-p07", "name": "David Okeke",        "age": 24, "nationality": "NG", "position": "CM",  "overallRating": 81, "potential": 90, "consistency": 78, "injuryProneness": 28, "weeklyWage": 42000, "marketValue": 38000000, "morale": 70, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 78, "shooting": 72, "passing": 83, "defense": 72, "physical": 80, "intelligence": 84, "goalkeeping": 20 } },
+        { "id": "fcm-p08", "name": "Lukasz Nowak",       "age": 27, "nationality": "PL", "position": "CM",  "overallRating": 82, "potential": 83, "consistency": 84, "injuryProneness": 20, "weeklyWage": 52000, "marketValue": 27000000, "morale": 68, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 75, "shooting": 74, "passing": 84, "defense": 75, "physical": 78, "intelligence": 83, "goalkeeping": 20 } },
+        { "id": "fcm-p09", "name": "Hiroshi Tanaka",     "age": 26, "nationality": "JP", "position": "LW",  "overallRating": 83, "potential": 87, "consistency": 82, "injuryProneness": 24, "weeklyWage": 58000, "marketValue": 35000000, "morale": 73, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 90, "shooting": 82, "passing": 80, "defense": 52, "physical": 72, "intelligence": 82, "goalkeeping": 20 } },
+        { "id": "fcm-p10", "name": "Carlos Mendoza",     "age": 28, "nationality": "AR", "position": "ST",  "overallRating": 86, "potential": 87, "consistency": 85, "injuryProneness": 26, "weeklyWage": 85000, "marketValue": 52000000, "morale": 75, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 82, "shooting": 90, "passing": 74, "defense": 42, "physical": 84, "intelligence": 86, "goalkeeping": 20 } },
+        { "id": "fcm-p11", "name": "Kwame Asante",       "age": 25, "nationality": "GH", "position": "RW",  "overallRating": 82, "potential": 89, "consistency": 80, "injuryProneness": 28, "weeklyWage": 50000, "marketValue": 36000000, "morale": 70, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 91, "shooting": 80, "passing": 78, "defense": 50, "physical": 74, "intelligence": 80, "goalkeeping": 20 } },
+        { "id": "fcm-p12", "name": "Erik Johansson",     "age": 22, "nationality": "SE", "position": "GK",  "overallRating": 74, "potential": 85, "consistency": 72, "injuryProneness": 18, "weeklyWage": 22000, "marketValue": 8000000,  "morale": 60, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 48, "shooting": 15, "passing": 58, "defense": 42, "physical": 70, "intelligence": 72, "goalkeeping": 76 } },
+        { "id": "fcm-p13", "name": "Fabio Marchetti",    "age": 23, "nationality": "IT", "position": "CB",  "overallRating": 74, "potential": 83, "consistency": 74, "injuryProneness": 24, "weeklyWage": 24000, "marketValue": 12000000, "morale": 62, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 68, "shooting": 38, "passing": 68, "defense": 77, "physical": 78, "intelligence": 74, "goalkeeping": 20 } },
+        { "id": "fcm-p14", "name": "Thomas Mueller",     "age": 21, "nationality": "DE", "position": "CM",  "overallRating": 72, "potential": 86, "consistency": 70, "injuryProneness": 22, "weeklyWage": 18000, "marketValue": 10000000, "morale": 65, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 72, "shooting": 68, "passing": 75, "defense": 62, "physical": 70, "intelligence": 76, "goalkeeping": 20 } },
+        { "id": "fcm-p15", "name": "Alex Petrov",        "age": 24, "nationality": "RS", "position": "CDM", "overallRating": 76, "potential": 82, "consistency": 76, "injuryProneness": 20, "weeklyWage": 28000, "marketValue": 14000000, "morale": 65, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 70, "shooting": 58, "passing": 76, "defense": 80, "physical": 78, "intelligence": 78, "goalkeeping": 20 } },
+        { "id": "fcm-p16", "name": "Jaime Torres",       "age": 30, "nationality": "CO", "position": "ST",  "overallRating": 78, "potential": 78, "consistency": 80, "injuryProneness": 30, "weeklyWage": 45000, "marketValue": 10000000, "morale": 65, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 78, "shooting": 82, "passing": 68, "defense": 38, "physical": 80, "intelligence": 78, "goalkeeping": 20 } },
+        { "id": "fcm-p17", "name": "Piotr Wisniewski",   "age": 26, "nationality": "PL", "position": "LB",  "overallRating": 76, "potential": 79, "consistency": 78, "injuryProneness": 22, "weeklyWage": 30000, "marketValue": 10000000, "morale": 68, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 80, "shooting": 52, "passing": 75, "defense": 76, "physical": 72, "intelligence": 74, "goalkeeping": 20 } },
+        { "id": "fcm-p18", "name": "Ousmane Diallo",     "age": 20, "nationality": "SN", "position": "LW",  "overallRating": 70, "potential": 88, "consistency": 68, "injuryProneness": 26, "weeklyWage": 15000, "marketValue": 8000000,  "morale": 62, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 88, "shooting": 72, "passing": 70, "defense": 45, "physical": 65, "intelligence": 70, "goalkeeping": 20 } },
+        { "id": "fcm-p19", "name": "Yannick Brand",      "age": 19, "nationality": "DE", "position": "ST",  "overallRating": 66, "potential": 87, "consistency": 62, "injuryProneness": 24, "weeklyWage": 10000, "marketValue": 6000000,  "morale": 60, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 82, "shooting": 72, "passing": 60, "defense": 35, "physical": 74, "intelligence": 68, "goalkeeping": 20 } },
+        { "id": "fcm-p20", "name": "Nuno Carvalho",      "age": 28, "nationality": "PT", "position": "RB",  "overallRating": 77, "potential": 78, "consistency": 80, "injuryProneness": 20, "weeklyWage": 32000, "marketValue": 11000000, "morale": 68, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 80, "shooting": 54, "passing": 77, "defense": 78, "physical": 74, "intelligence": 76, "goalkeeping": 20 } }
+      ]
+    },
+    {
+      "id": "team-ar",
+      "name": "Athletic Rovers",
+      "shortName": "ARO",
+      "city": "Riverside",
+      "country": "EN",
+      "morale": 60,
+      "leaguePosition": 8,
+      "wins": 0, "draws": 0, "losses": 0,
+      "goalsFor": 0, "goalsAgainst": 0,
+      "finances": {
+        "balance": 12000000,
+        "weeklyWageBill": 0,
+        "stadiumRevenue": 280000,
+        "sponsorRevenue": 45000,
+        "prizeMoneyRevenue": 0,
+        "transferBudget": 5000000,
+        "wageBudget": 70000,
+        "transactionHistory": []
+      },
+      "infrastructure": {
+        "stadium": { "name": "Riverside Park", "capacity": 22000, "condition": 78, "upgradeLevel": 2, "ticketPrice": 35.0, "attendanceRate": 0.72 },
+        "trainingFacility": { "level": 2 },
+        "youthAcademy": { "level": 3 },
+        "medicalCenter": { "level": 2 }
+      },
+      "currentTactic": {
+        "formation": "F442",
+        "playStyle": "Direct",
+        "pressing": 55, "tempo": 55, "width": 60, "defensiveLine": 50,
+        "captainId": "ar-p01",
+        "positionAssignments": []
+      },
+      "squad": [
+        { "id": "ar-p01", "name": "Stefan Varga",       "age": 31, "nationality": "CZ", "position": "GK",  "overallRating": 75, "potential": 76, "consistency": 82, "injuryProneness": 20, "weeklyWage": 18000, "marketValue": 3000000,  "morale": 65, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 45, "shooting": 15, "passing": 58, "defense": 44, "physical": 72, "intelligence": 72, "goalkeeping": 78 } },
+        { "id": "ar-p02", "name": "Glen Harrison",      "age": 28, "nationality": "EN", "position": "CB",  "overallRating": 75, "potential": 76, "consistency": 80, "injuryProneness": 24, "weeklyWage": 16000, "marketValue": 4500000,  "morale": 62, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 68, "shooting": 38, "passing": 66, "defense": 78, "physical": 80, "intelligence": 72, "goalkeeping": 20 } },
+        { "id": "ar-p03", "name": "Owen Richards",      "age": 26, "nationality": "EN", "position": "CB",  "overallRating": 74, "potential": 77, "consistency": 78, "injuryProneness": 26, "weeklyWage": 14000, "marketValue": 4000000,  "morale": 60, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 66, "shooting": 36, "passing": 64, "defense": 77, "physical": 78, "intelligence": 70, "goalkeeping": 20 } },
+        { "id": "ar-p04", "name": "Callum Shaw",        "age": 24, "nationality": "EN", "position": "LB",  "overallRating": 72, "potential": 79, "consistency": 74, "injuryProneness": 28, "weeklyWage": 12000, "marketValue": 4500000,  "morale": 62, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 78, "shooting": 50, "passing": 72, "defense": 72, "physical": 70, "intelligence": 70, "goalkeeping": 20 } },
+        { "id": "ar-p05", "name": "Rodrigo Alves",      "age": 27, "nationality": "BR", "position": "RB",  "overallRating": 73, "potential": 74, "consistency": 76, "injuryProneness": 24, "weeklyWage": 13000, "marketValue": 3800000,  "morale": 62, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 76, "shooting": 48, "passing": 70, "defense": 74, "physical": 72, "intelligence": 70, "goalkeeping": 20 } },
+        { "id": "ar-p06", "name": "Ben Clarke",         "age": 29, "nationality": "EN", "position": "CM",  "overallRating": 74, "potential": 74, "consistency": 82, "injuryProneness": 20, "weeklyWage": 15000, "marketValue": 3500000,  "morale": 65, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 68, "shooting": 64, "passing": 76, "defense": 68, "physical": 74, "intelligence": 76, "goalkeeping": 20 } },
+        { "id": "ar-p07", "name": "Jordan Hayes",       "age": 25, "nationality": "EN", "position": "CM",  "overallRating": 72, "potential": 78, "consistency": 74, "injuryProneness": 26, "weeklyWage": 11000, "marketValue": 4000000,  "morale": 60, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 70, "shooting": 62, "passing": 74, "defense": 65, "physical": 72, "intelligence": 74, "goalkeeping": 20 } },
+        { "id": "ar-p08", "name": "Felix Wagner",       "age": 26, "nationality": "DE", "position": "LM",  "overallRating": 74, "potential": 77, "consistency": 76, "injuryProneness": 26, "weeklyWage": 14000, "marketValue": 4500000,  "morale": 62, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 80, "shooting": 70, "passing": 72, "defense": 52, "physical": 68, "intelligence": 72, "goalkeeping": 20 } },
+        { "id": "ar-p09", "name": "Tom Whitfield",      "age": 27, "nationality": "EN", "position": "RM",  "overallRating": 73, "potential": 74, "consistency": 76, "injuryProneness": 24, "weeklyWage": 13000, "marketValue": 4000000,  "morale": 60, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 79, "shooting": 68, "passing": 70, "defense": 50, "physical": 68, "intelligence": 70, "goalkeeping": 20 } },
+        { "id": "ar-p10", "name": "Diego Castro",       "age": 28, "nationality": "UY", "position": "ST",  "overallRating": 76, "potential": 77, "consistency": 78, "injuryProneness": 28, "weeklyWage": 22000, "marketValue": 7000000,  "morale": 65, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 74, "shooting": 80, "passing": 64, "defense": 38, "physical": 76, "intelligence": 76, "goalkeeping": 20 } },
+        { "id": "ar-p11", "name": "Patrick O'Brien",    "age": 26, "nationality": "EN", "position": "ST",  "overallRating": 74, "potential": 78, "consistency": 74, "injuryProneness": 28, "weeklyWage": 18000, "marketValue": 5500000,  "morale": 60, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 72, "shooting": 78, "passing": 62, "defense": 36, "physical": 78, "intelligence": 72, "goalkeeping": 20 } },
+        { "id": "ar-p12", "name": "Sam Pickford",       "age": 23, "nationality": "EN", "position": "GK",  "overallRating": 66, "potential": 76, "consistency": 66, "injuryProneness": 20, "weeklyWage": 8000,  "marketValue": 1800000,  "morale": 55, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 40, "shooting": 12, "passing": 52, "defense": 38, "physical": 65, "intelligence": 66, "goalkeeping": 68 } },
+        { "id": "ar-p13", "name": "Lewis Cooper",       "age": 22, "nationality": "EN", "position": "CB",  "overallRating": 65, "potential": 75, "consistency": 64, "injuryProneness": 28, "weeklyWage": 7000,  "marketValue": 2000000,  "morale": 55, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 62, "shooting": 32, "passing": 58, "defense": 68, "physical": 72, "intelligence": 62, "goalkeeping": 20 } },
+        { "id": "ar-p14", "name": "Marco Bianchi",      "age": 28, "nationality": "IT", "position": "CDM", "overallRating": 71, "potential": 72, "consistency": 76, "injuryProneness": 22, "weeklyWage": 12000, "marketValue": 2800000,  "morale": 58, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 62, "shooting": 50, "passing": 70, "defense": 75, "physical": 72, "intelligence": 74, "goalkeeping": 20 } },
+        { "id": "ar-p15", "name": "Jack Nolan",         "age": 24, "nationality": "EN", "position": "LB",  "overallRating": 68, "potential": 74, "consistency": 68, "injuryProneness": 26, "weeklyWage": 9000,  "marketValue": 2500000,  "morale": 58, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 74, "shooting": 44, "passing": 66, "defense": 68, "physical": 66, "intelligence": 65, "goalkeeping": 20 } },
+        { "id": "ar-p16", "name": "Nathan Ford",        "age": 20, "nationality": "EN", "position": "LW",  "overallRating": 64, "potential": 80, "consistency": 62, "injuryProneness": 28, "weeklyWage": 5000,  "marketValue": 2200000,  "morale": 55, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 82, "shooting": 62, "passing": 62, "defense": 40, "physical": 60, "intelligence": 64, "goalkeeping": 20 } },
+        { "id": "ar-p17", "name": "Pavel Horak",        "age": 26, "nationality": "CZ", "position": "RB",  "overallRating": 70, "potential": 71, "consistency": 74, "injuryProneness": 22, "weeklyWage": 10000, "marketValue": 2400000,  "morale": 58, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 74, "shooting": 46, "passing": 68, "defense": 72, "physical": 68, "intelligence": 68, "goalkeeping": 20 } },
+        { "id": "ar-p18", "name": "Emeka Obi",          "age": 21, "nationality": "NG", "position": "ST",  "overallRating": 66, "potential": 82, "consistency": 62, "injuryProneness": 26, "weeklyWage": 6000,  "marketValue": 2800000,  "morale": 55, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 80, "shooting": 70, "passing": 58, "defense": 32, "physical": 72, "intelligence": 64, "goalkeeping": 20 } },
+        { "id": "ar-p19", "name": "Ryan Kent",          "age": 27, "nationality": "EN", "position": "CM",  "overallRating": 70, "potential": 71, "consistency": 72, "injuryProneness": 24, "weeklyWage": 11000, "marketValue": 2600000,  "morale": 58, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 68, "shooting": 60, "passing": 72, "defense": 62, "physical": 68, "intelligence": 72, "goalkeeping": 20 } },
+        { "id": "ar-p20", "name": "Hugo Sousa",         "age": 22, "nationality": "PT", "position": "CAM", "overallRating": 67, "potential": 79, "consistency": 64, "injuryProneness": 26, "weeklyWage": 7500,  "marketValue": 3000000,  "morale": 55, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 72, "shooting": 68, "passing": 72, "defense": 44, "physical": 62, "intelligence": 72, "goalkeeping": 20 } }
+      ]
+    },
+    {
+      "id": "team-ccfc",
+      "name": "Capital City FC",
+      "shortName": "CCF",
+      "city": "Capital City",
+      "country": "EN",
+      "morale": 55,
+      "leaguePosition": 13,
+      "wins": 0, "draws": 0, "losses": 0,
+      "goalsFor": 0, "goalsAgainst": 0,
+      "finances": {
+        "balance": 7000000,
+        "weeklyWageBill": 0,
+        "stadiumRevenue": 160000,
+        "sponsorRevenue": 28000,
+        "prizeMoneyRevenue": 0,
+        "transferBudget": 2500000,
+        "wageBudget": 45000,
+        "transactionHistory": []
+      },
+      "infrastructure": {
+        "stadium": { "name": "Capital Ground", "capacity": 18000, "condition": 70, "upgradeLevel": 1, "ticketPrice": 28.0, "attendanceRate": 0.65 },
+        "trainingFacility": { "level": 2 },
+        "youthAcademy": { "level": 2 },
+        "medicalCenter": { "level": 1 }
+      },
+      "currentTactic": {
+        "formation": "F4231",
+        "playStyle": "CounterAttack",
+        "pressing": 45, "tempo": 50, "width": 50, "defensiveLine": 42,
+        "captainId": "ccfc-p01",
+        "positionAssignments": []
+      },
+      "squad": [
+        { "id": "ccfc-p01", "name": "Danny Walsh",     "age": 33, "nationality": "EN", "position": "GK",  "overallRating": 72, "potential": 72, "consistency": 80, "injuryProneness": 22, "weeklyWage": 10000, "marketValue": 1000000,  "morale": 58, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 40, "shooting": 12, "passing": 54, "defense": 40, "physical": 68, "intelligence": 70, "goalkeeping": 74 } },
+        { "id": "ccfc-p02", "name": "Matt Saunders",   "age": 27, "nationality": "EN", "position": "CB",  "overallRating": 70, "potential": 72, "consistency": 74, "injuryProneness": 26, "weeklyWage": 9000,  "marketValue": 1800000,  "morale": 55, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 62, "shooting": 34, "passing": 62, "defense": 73, "physical": 74, "intelligence": 68, "goalkeeping": 20 } },
+        { "id": "ccfc-p03", "name": "Gary Stone",      "age": 29, "nationality": "EN", "position": "CB",  "overallRating": 70, "potential": 70, "consistency": 76, "injuryProneness": 24, "weeklyWage": 9000,  "marketValue": 1500000,  "morale": 55, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 60, "shooting": 32, "passing": 60, "defense": 73, "physical": 76, "intelligence": 68, "goalkeeping": 20 } },
+        { "id": "ccfc-p04", "name": "Lee Murphy",      "age": 25, "nationality": "EN", "position": "LB",  "overallRating": 68, "potential": 72, "consistency": 70, "injuryProneness": 28, "weeklyWage": 8000,  "marketValue": 1800000,  "morale": 52, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 72, "shooting": 44, "passing": 66, "defense": 68, "physical": 64, "intelligence": 64, "goalkeeping": 20 } },
+        { "id": "ccfc-p05", "name": "Ali Hassan",      "age": 26, "nationality": "MA", "position": "RB",  "overallRating": 69, "potential": 72, "consistency": 70, "injuryProneness": 26, "weeklyWage": 8500,  "marketValue": 2000000,  "morale": 55, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 74, "shooting": 44, "passing": 66, "defense": 70, "physical": 66, "intelligence": 65, "goalkeeping": 20 } },
+        { "id": "ccfc-p06", "name": "Carl Haines",     "age": 28, "nationality": "EN", "position": "CDM", "overallRating": 70, "potential": 71, "consistency": 74, "injuryProneness": 22, "weeklyWage": 10000, "marketValue": 1600000,  "morale": 55, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 60, "shooting": 50, "passing": 68, "defense": 74, "physical": 70, "intelligence": 70, "goalkeeping": 20 } },
+        { "id": "ccfc-p07", "name": "Dean Fowler",     "age": 27, "nationality": "EN", "position": "CDM", "overallRating": 68, "potential": 69, "consistency": 72, "injuryProneness": 24, "weeklyWage": 8000,  "marketValue": 1200000,  "morale": 52, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 58, "shooting": 48, "passing": 66, "defense": 72, "physical": 68, "intelligence": 68, "goalkeeping": 20 } },
+        { "id": "ccfc-p08", "name": "Ivan Popov",      "age": 24, "nationality": "BG", "position": "CAM", "overallRating": 70, "potential": 76, "consistency": 70, "injuryProneness": 28, "weeklyWage": 9000,  "marketValue": 3000000,  "morale": 55, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 68, "shooting": 68, "passing": 74, "defense": 42, "physical": 60, "intelligence": 74, "goalkeeping": 20 } },
+        { "id": "ccfc-p09", "name": "Scott Barnes",    "age": 25, "nationality": "EN", "position": "LW",  "overallRating": 68, "potential": 72, "consistency": 68, "injuryProneness": 28, "weeklyWage": 8000,  "marketValue": 2200000,  "morale": 52, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 76, "shooting": 64, "passing": 66, "defense": 42, "physical": 60, "intelligence": 66, "goalkeeping": 20 } },
+        { "id": "ccfc-p10", "name": "Adam Price",      "age": 25, "nationality": "EN", "position": "RW",  "overallRating": 68, "potential": 72, "consistency": 68, "injuryProneness": 26, "weeklyWage": 8000,  "marketValue": 2200000,  "morale": 52, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 75, "shooting": 63, "passing": 65, "defense": 42, "physical": 60, "intelligence": 66, "goalkeeping": 20 } },
+        { "id": "ccfc-p11", "name": "Kieran Doyle",    "age": 27, "nationality": "EN", "position": "ST",  "overallRating": 72, "potential": 73, "consistency": 74, "injuryProneness": 30, "weeklyWage": 14000, "marketValue": 3500000,  "morale": 58, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 70, "shooting": 76, "passing": 60, "defense": 34, "physical": 72, "intelligence": 70, "goalkeeping": 20 } },
+        { "id": "ccfc-p12", "name": "Ross Taylor",     "age": 22, "nationality": "EN", "position": "GK",  "overallRating": 60, "potential": 70, "consistency": 58, "injuryProneness": 22, "weeklyWage": 4500,  "marketValue": 600000,   "morale": 48, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 36, "shooting": 10, "passing": 48, "defense": 34, "physical": 60, "intelligence": 60, "goalkeeping": 62 } },
+        { "id": "ccfc-p13", "name": "Tyler Evans",     "age": 21, "nationality": "EN", "position": "CB",  "overallRating": 62, "potential": 72, "consistency": 60, "injuryProneness": 28, "weeklyWage": 5000,  "marketValue": 1000000,  "morale": 50, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 58, "shooting": 28, "passing": 55, "defense": 65, "physical": 68, "intelligence": 60, "goalkeeping": 20 } },
+        { "id": "ccfc-p14", "name": "Aaron King",      "age": 20, "nationality": "EN", "position": "CM",  "overallRating": 60, "potential": 74, "consistency": 58, "injuryProneness": 26, "weeklyWage": 4000,  "marketValue": 900000,   "morale": 50, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 62, "shooting": 52, "passing": 64, "defense": 54, "physical": 62, "intelligence": 62, "goalkeeping": 20 } },
+        { "id": "ccfc-p15", "name": "Tobi Adesanya",   "age": 19, "nationality": "NG", "position": "ST",  "overallRating": 60, "potential": 80, "consistency": 56, "injuryProneness": 26, "weeklyWage": 3500,  "marketValue": 1200000,  "morale": 48, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 78, "shooting": 64, "passing": 55, "defense": 30, "physical": 65, "intelligence": 60, "goalkeeping": 20 } },
+        { "id": "ccfc-p16", "name": "Jake Simmons",    "age": 28, "nationality": "EN", "position": "LB",  "overallRating": 65, "potential": 65, "consistency": 70, "injuryProneness": 24, "weeklyWage": 7000,  "marketValue": 800000,   "morale": 50, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 68, "shooting": 40, "passing": 62, "defense": 66, "physical": 62, "intelligence": 62, "goalkeeping": 20 } },
+        { "id": "ccfc-p17", "name": "Mikel Artola",    "age": 25, "nationality": "ES", "position": "CM",  "overallRating": 67, "potential": 70, "consistency": 68, "injuryProneness": 24, "weeklyWage": 7500,  "marketValue": 1500000,  "morale": 52, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 65, "shooting": 56, "passing": 70, "defense": 60, "physical": 64, "intelligence": 68, "goalkeeping": 20 } },
+        { "id": "ccfc-p18", "name": "Damien Roy",      "age": 26, "nationality": "FR", "position": "LW",  "overallRating": 66, "potential": 70, "consistency": 66, "injuryProneness": 28, "weeklyWage": 7000,  "marketValue": 1600000,  "morale": 52, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 74, "shooting": 62, "passing": 64, "defense": 40, "physical": 58, "intelligence": 64, "goalkeeping": 20 } },
+        { "id": "ccfc-p19", "name": "Kristjan Sigurd",  "age": 23, "nationality": "NO", "position": "RB",  "overallRating": 64, "potential": 72, "consistency": 62, "injuryProneness": 26, "weeklyWage": 6000,  "marketValue": 1400000,  "morale": 50, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 70, "shooting": 42, "passing": 62, "defense": 64, "physical": 62, "intelligence": 62, "goalkeeping": 20 } },
+        { "id": "ccfc-p20", "name": "Lucas Reid",      "age": 28, "nationality": "EN", "position": "ST",  "overallRating": 68, "potential": 68, "consistency": 70, "injuryProneness": 30, "weeklyWage": 10000, "marketValue": 1200000,  "morale": 52, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 68, "shooting": 72, "passing": 56, "defense": 32, "physical": 68, "intelligence": 66, "goalkeeping": 20 } }
+      ]
+    },
+    {
+      "id": "team-nu",
+      "name": "Northern United",
+      "shortName": "NOU",
+      "city": "Northgate",
+      "country": "EN",
+      "morale": 42,
+      "leaguePosition": 18,
+      "wins": 0, "draws": 0, "losses": 0,
+      "goalsFor": 0, "goalsAgainst": 0,
+      "finances": {
+        "balance": 3500000,
+        "weeklyWageBill": 0,
+        "stadiumRevenue": 90000,
+        "sponsorRevenue": 15000,
+        "prizeMoneyRevenue": 0,
+        "transferBudget": 1000000,
+        "wageBudget": 30000,
+        "transactionHistory": []
+      },
+      "infrastructure": {
+        "stadium": { "name": "Northern Ground", "capacity": 12000, "condition": 58, "upgradeLevel": 1, "ticketPrice": 22.0, "attendanceRate": 0.58 },
+        "trainingFacility": { "level": 1 },
+        "youthAcademy": { "level": 1 },
+        "medicalCenter": { "level": 1 }
+      },
+      "currentTactic": {
+        "formation": "F532",
+        "playStyle": "ParkTheBus",
+        "pressing": 30, "tempo": 40, "width": 40, "defensiveLine": 30,
+        "captainId": "nu-p01",
+        "positionAssignments": []
+      },
+      "squad": [
+        { "id": "nu-p01", "name": "Phil Garner",      "age": 34, "nationality": "EN", "position": "GK",  "overallRating": 65, "potential": 65, "consistency": 74, "injuryProneness": 26, "weeklyWage": 7000, "marketValue": 400000,  "morale": 44, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 36, "shooting": 10, "passing": 50, "defense": 36, "physical": 62, "intelligence": 64, "goalkeeping": 67 } },
+        { "id": "nu-p02", "name": "Alan Ford",        "age": 30, "nationality": "EN", "position": "CB",  "overallRating": 65, "potential": 65, "consistency": 70, "injuryProneness": 28, "weeklyWage": 6500, "marketValue": 500000,  "morale": 42, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 58, "shooting": 30, "passing": 56, "defense": 68, "physical": 70, "intelligence": 62, "goalkeeping": 20 } },
+        { "id": "nu-p03", "name": "Craig Booth",      "age": 28, "nationality": "EN", "position": "CB",  "overallRating": 64, "potential": 64, "consistency": 68, "injuryProneness": 28, "weeklyWage": 6000, "marketValue": 450000,  "morale": 42, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 56, "shooting": 28, "passing": 54, "defense": 67, "physical": 68, "intelligence": 60, "goalkeeping": 20 } },
+        { "id": "nu-p04", "name": "Shane Dunn",       "age": 26, "nationality": "EN", "position": "CB",  "overallRating": 63, "potential": 66, "consistency": 66, "injuryProneness": 28, "weeklyWage": 5500, "marketValue": 400000,  "morale": 42, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 56, "shooting": 26, "passing": 52, "defense": 66, "physical": 66, "intelligence": 60, "goalkeeping": 20 } },
+        { "id": "nu-p05", "name": "Bobby Walsh",      "age": 27, "nationality": "EN", "position": "LB",  "overallRating": 62, "potential": 63, "consistency": 66, "injuryProneness": 30, "weeklyWage": 5000, "marketValue": 350000,  "morale": 40, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 66, "shooting": 38, "passing": 58, "defense": 63, "physical": 58, "intelligence": 58, "goalkeeping": 20 } },
+        { "id": "nu-p06", "name": "Ian Barker",       "age": 29, "nationality": "EN", "position": "RB",  "overallRating": 62, "potential": 62, "consistency": 66, "injuryProneness": 28, "weeklyWage": 5000, "marketValue": 350000,  "morale": 40, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 64, "shooting": 36, "passing": 56, "defense": 63, "physical": 58, "intelligence": 58, "goalkeeping": 20 } },
+        { "id": "nu-p07", "name": "Dave Moss",        "age": 29, "nationality": "EN", "position": "CM",  "overallRating": 64, "potential": 64, "consistency": 68, "injuryProneness": 26, "weeklyWage": 6000, "marketValue": 400000,  "morale": 42, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 58, "shooting": 52, "passing": 64, "defense": 58, "physical": 62, "intelligence": 64, "goalkeeping": 20 } },
+        { "id": "nu-p08", "name": "Pete Mills",       "age": 27, "nationality": "EN", "position": "CM",  "overallRating": 63, "potential": 65, "consistency": 66, "injuryProneness": 28, "weeklyWage": 5500, "marketValue": 380000,  "morale": 40, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 56, "shooting": 50, "passing": 62, "defense": 56, "physical": 60, "intelligence": 62, "goalkeeping": 20 } },
+        { "id": "nu-p09", "name": "Ray Gibson",       "age": 28, "nationality": "EN", "position": "CDM", "overallRating": 65, "potential": 65, "consistency": 70, "injuryProneness": 24, "weeklyWage": 6000, "marketValue": 420000,  "morale": 42, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 54, "shooting": 44, "passing": 60, "defense": 68, "physical": 64, "intelligence": 64, "goalkeeping": 20 } },
+        { "id": "nu-p10", "name": "Liam Hadley",      "age": 26, "nationality": "EN", "position": "LW",  "overallRating": 62, "potential": 66, "consistency": 62, "injuryProneness": 30, "weeklyWage": 5000, "marketValue": 400000,  "morale": 40, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 70, "shooting": 56, "passing": 58, "defense": 36, "physical": 54, "intelligence": 58, "goalkeeping": 20 } },
+        { "id": "nu-p11", "name": "Wayne Cross",      "age": 29, "nationality": "EN", "position": "ST",  "overallRating": 67, "potential": 67, "consistency": 70, "injuryProneness": 32, "weeklyWage": 9000, "marketValue": 600000,  "morale": 44, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 64, "shooting": 70, "passing": 54, "defense": 30, "physical": 68, "intelligence": 64, "goalkeeping": 20 } },
+        { "id": "nu-p12", "name": "Kyle Dixon",       "age": 21, "nationality": "EN", "position": "GK",  "overallRating": 54, "potential": 65, "consistency": 52, "injuryProneness": 24, "weeklyWage": 3000, "marketValue": 200000,  "morale": 36, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 32, "shooting": 8,  "passing": 44, "defense": 30, "physical": 54, "intelligence": 54, "goalkeeping": 56 } },
+        { "id": "nu-p13", "name": "Shaun Bell",       "age": 23, "nationality": "EN", "position": "CB",  "overallRating": 58, "potential": 66, "consistency": 56, "injuryProneness": 30, "weeklyWage": 4000, "marketValue": 300000,  "morale": 38, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 52, "shooting": 24, "passing": 50, "defense": 61, "physical": 62, "intelligence": 56, "goalkeeping": 20 } },
+        { "id": "nu-p14", "name": "Robbie Grant",     "age": 24, "nationality": "EN", "position": "RW",  "overallRating": 60, "potential": 66, "consistency": 58, "injuryProneness": 28, "weeklyWage": 4500, "marketValue": 380000,  "morale": 40, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 68, "shooting": 56, "passing": 56, "defense": 34, "physical": 52, "intelligence": 56, "goalkeeping": 20 } },
+        { "id": "nu-p15", "name": "Leon Ward",        "age": 22, "nationality": "EN", "position": "ST",  "overallRating": 59, "potential": 70, "consistency": 56, "injuryProneness": 28, "weeklyWage": 3500, "marketValue": 400000,  "morale": 38, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 70, "shooting": 62, "passing": 50, "defense": 28, "physical": 62, "intelligence": 58, "goalkeeping": 20 } },
+        { "id": "nu-p16", "name": "Nick Holmes",      "age": 26, "nationality": "EN", "position": "LB",  "overallRating": 60, "potential": 61, "consistency": 62, "injuryProneness": 28, "weeklyWage": 4500, "marketValue": 250000,  "morale": 38, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 62, "shooting": 34, "passing": 56, "defense": 61, "physical": 56, "intelligence": 56, "goalkeeping": 20 } },
+        { "id": "nu-p17", "name": "Tom Fletcher",     "age": 25, "nationality": "EN", "position": "CM",  "overallRating": 60, "potential": 63, "consistency": 60, "injuryProneness": 26, "weeklyWage": 4500, "marketValue": 280000,  "morale": 40, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 56, "shooting": 48, "passing": 60, "defense": 52, "physical": 58, "intelligence": 60, "goalkeeping": 20 } },
+        { "id": "nu-p18", "name": "Jamie Payne",      "age": 20, "nationality": "EN", "position": "CAM", "overallRating": 58, "potential": 72, "consistency": 54, "injuryProneness": 26, "weeklyWage": 3000, "marketValue": 350000,  "morale": 38, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 62, "shooting": 58, "passing": 62, "defense": 36, "physical": 54, "intelligence": 60, "goalkeeping": 20 } },
+        { "id": "nu-p19", "name": "Damon Price",      "age": 28, "nationality": "EN", "position": "RB",  "overallRating": 60, "potential": 60, "consistency": 62, "injuryProneness": 28, "weeklyWage": 4000, "marketValue": 220000,  "morale": 38, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 60, "shooting": 34, "passing": 54, "defense": 62, "physical": 56, "intelligence": 56, "goalkeeping": 20 } },
+        { "id": "nu-p20", "name": "Chris Lamb",       "age": 30, "nationality": "EN", "position": "ST",  "overallRating": 63, "potential": 63, "consistency": 66, "injuryProneness": 32, "weeklyWage": 7000, "marketValue": 350000,  "morale": 40, "fatigue": 0, "injuryDaysRemaining": 0, "isAvailable": true, "attributes": { "speed": 60, "shooting": 66, "passing": 50, "defense": 28, "physical": 64, "intelligence": 60, "goalkeeping": 20 } }
+      ]
+    }
+  ]
+}
