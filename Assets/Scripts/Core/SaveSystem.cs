@@ -31,10 +31,24 @@ namespace FutbolJuego.Core
         public string teamDataJson;
         /// <summary>JSON-serialised <see cref="Models.LeagueData"/> for the active competition.</summary>
         public string leagueDataJson;
+        /// <summary>
+        /// JSON-serialised <see cref="Models.CareerData"/> for the active career.
+        /// Null when the player has not yet started a career.
+        /// </summary>
+        public string careerDataJson;
         /// <summary>FutCoins (premium currency) balance.</summary>
         public int premiumCurrency;
         /// <summary>Soft currency balance.</summary>
         public long coins;
+        /// <summary>
+        /// In-game financial balance in the career's chosen currency (EUR / USD).
+        /// </summary>
+        public long inGameBalance;
+        /// <summary>
+        /// Serialised <see cref="Models.CurrencyType"/> enum value
+        /// ("EUR" or "USD") for the current career.
+        /// </summary>
+        public string currencyType;
         /// <summary>Last day the daily reward was claimed (1-7 weekly cycle).</summary>
         public int lastDailyRewardDay;
         /// <summary>UTC date of last daily reward claim.</summary>

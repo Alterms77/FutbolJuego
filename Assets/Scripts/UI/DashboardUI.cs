@@ -5,6 +5,7 @@ using TMPro;
 using FutbolJuego.Core;
 using FutbolJuego.Data;
 using FutbolJuego.Models;
+using FutbolJuego.Systems;
 
 namespace FutbolJuego.UI
 {
@@ -33,6 +34,14 @@ namespace FutbolJuego.UI
         [SerializeField] private Button financesButton;
         [SerializeField] private Button competitionsButton;
         [SerializeField] private Button shopButton;
+        [SerializeField] private Button legendsButton;
+        [SerializeField] private Button resignButton;
+
+        // ── Career info ────────────────────────────────────────────────────────
+
+        [Header("Career Info")]
+        [SerializeField] private TextMeshProUGUI careerBalanceText;
+        [SerializeField] private TextMeshProUGUI premiumCoinsText;
 
         // ── MonoBehaviour ──────────────────────────────────────────────────────
 
@@ -45,6 +54,8 @@ namespace FutbolJuego.UI
             if (financesButton)      financesButton.onClick.AddListener(OnFinances);
             if (competitionsButton)  competitionsButton.onClick.AddListener(OnCompetitions);
             if (shopButton)          shopButton.onClick.AddListener(OnShop);
+            if (legendsButton)       legendsButton.onClick.AddListener(OnLegends);
+            if (resignButton)        resignButton.onClick.AddListener(OnResign);
         }
 
         private void Start()
@@ -72,6 +83,15 @@ namespace FutbolJuego.UI
 
             if (budgetText && team.finances != null)
                 budgetText.text = FormatCurrency(team.finances.transferBudget);
+
+            // Career-specific fields
+            var career = ServiceLocator.Get<CareerSystem>()?.ActiveCareer;
+            if (careerBalanceText)
+                careerBalanceText.text = career != null
+                    ? career.FormattedBalance
+                    : FormatCurrency(team.finances?.transferBudget ?? 0);
+            if (premiumCoinsText)
+                premiumCoinsText.text = career != null ? $"🪙 {career.premiumCoins}" : "🪙 —";
 
             var leagues = DataLoader.LoadAllLeagues();
             LeagueData myLeague = null;
@@ -130,6 +150,14 @@ namespace FutbolJuego.UI
         private void OnFinances()       => SceneNavigator.Instance?.GoToFinances();
         private void OnCompetitions()   => SceneNavigator.Instance?.GoToCompetitions();
         private void OnShop()           => SceneNavigator.Instance?.GoToShop();
+        private void OnLegends()        => SceneNavigator.Instance?.GoToLegends();
+
+        private void OnResign()
+        {
+            var careerSystem = ServiceLocator.Get<CareerSystem>();
+            careerSystem?.ResignFromTeam();
+            SceneNavigator.Instance?.GoToTeamSelection();
+        }
 
         // ── Helpers ────────────────────────────────────────────────────────────
 

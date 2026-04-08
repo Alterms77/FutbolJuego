@@ -25,6 +25,8 @@ namespace FutbolJuego.Core
         public const string SCENE_FINANCES        = "Finances";
         public const string SCENE_COMPETITIONS    = "Competitions";
         public const string SCENE_SHOP            = "Shop";
+        public const string SCENE_LEGENDS         = "Legends";
+        public const string SCENE_TEAM_SELECTION  = "TeamSelection";
 
         // ── Singleton ─────────────────────────────────────────────────────────
 
@@ -85,5 +87,11 @@ namespace FutbolJuego.Core
 
         /// <summary>Loads the <c>Shop</c> scene.</summary>
         public void GoToShop() => GoTo(SCENE_SHOP);
+
+        /// <summary>Loads the <c>Legends</c> hall scene.</summary>
+        public void GoToLegends() => GoTo(SCENE_LEGENDS);
+
+        /// <summary>Loads the <c>TeamSelection</c> scene.</summary>
+        public void GoToTeamSelection() => GoTo(SCENE_TEAM_SELECTION);
     }
 }

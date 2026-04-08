@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using FutbolJuego.Core;
+using FutbolJuego.Models;
+using FutbolJuego.Systems;
 
 namespace FutbolJuego.UI
 {
@@ -25,17 +27,24 @@ namespace FutbolJuego.UI
         CoinPack,
         PlayerPack,
         StadiumUpgrade,
-        TrainingBoost
+        TrainingBoost,
+        CurrencyPack
     }
 
     // ── ShopUI ─────────────────────────────────────────────────────────────────
 
     /// <summary>
-    /// Shop scene controller.  Displays purchasable packs and coin bundles,
-    /// connecting to the <see cref="EconomySystem"/> to process payments.
+    /// Shop scene controller.  Displays purchasable packs, coin bundles, and
+    /// currency packs (premium coins → in-game EUR/USD), connecting to the
+    /// <see cref="EconomySystem"/> and <see cref="CurrencySystem"/> for processing.
     /// </summary>
     public class ShopUI : MonoBehaviour
     {
+        [Header("Tabs")]
+        [SerializeField] private Button tabCoinsButton;
+        [SerializeField] private Button tabCurrencyButton;
+        [SerializeField] private Button tabPacksButton;
+
         [Header("Shop Items")]
         [SerializeField] private Transform itemContainer;
         [SerializeField] private GameObject itemCardPrefab;
@@ -43,36 +52,83 @@ namespace FutbolJuego.UI
         [Header("Feedback")]
         [SerializeField] private TextMeshProUGUI feedbackText;
         [SerializeField] private TextMeshProUGUI balanceText;
+        [SerializeField] private TextMeshProUGUI exchangeRateText;
 
         [Header("Navigation")]
         [SerializeField] private Button backButton;
 
-        // Default catalogue shown when no external data is provided.
-        private static readonly List<ShopItem> DefaultCatalogue = new List<ShopItem>
+        // Default coin / pack catalogue
+        private static readonly List<ShopItem> CoinCatalogue = new List<ShopItem>
         {
-            new ShopItem { id = "coin-500",       displayName = "500 Coins",          description = "Small coin bundle",   price = 99,     itemType = ShopItemType.CoinPack       },
-            new ShopItem { id = "coin-1200",      displayName = "1 200 Coins",         description = "Popular coin bundle", price = 199,    itemType = ShopItemType.CoinPack       },
-            new ShopItem { id = "coin-3000",      displayName = "3 000 Coins",         description = "Best value bundle",   price = 449,    itemType = ShopItemType.CoinPack       },
-            new ShopItem { id = "pack-basic",     displayName = "Basic Player Pack",   description = "3 random players",   price = 500,    itemType = ShopItemType.PlayerPack     },
-            new ShopItem { id = "pack-premium",   displayName = "Premium Player Pack", description = "5 players (1 Gold+)", price = 1200,   itemType = ShopItemType.PlayerPack     },
-            new ShopItem { id = "pack-elite",     displayName = "Elite Player Pack",   description = "3 Gold / Star cards", price = 2500,   itemType = ShopItemType.PlayerPack     },
-            new ShopItem { id = "training-boost", displayName = "Training Boost",      description = "+20% training gains for 7 days", price = 300, itemType = ShopItemType.TrainingBoost },
+            new ShopItem { id = "coin-500",    displayName = "500 Monedas",   description = "Paquete pequeño",  price = 99,  itemType = ShopItemType.CoinPack },
+            new ShopItem { id = "coin-1200",   displayName = "1 200 Monedas", description = "Paquete popular",  price = 199, itemType = ShopItemType.CoinPack },
+            new ShopItem { id = "coin-3000",   displayName = "3 000 Monedas", description = "Mejor valor",      price = 449, itemType = ShopItemType.CoinPack },
+        };
+
+        private static readonly List<ShopItem> PackCatalogue = new List<ShopItem>
+        {
+            new ShopItem { id = "pack-basic",   displayName = "Pack Básico",   description = "3 jugadores al azar",   price = 500,  itemType = ShopItemType.PlayerPack   },
+            new ShopItem { id = "pack-premium", displayName = "Pack Premium",  description = "5 jugadores (1 Gold+)", price = 1200, itemType = ShopItemType.PlayerPack   },
+            new ShopItem { id = "pack-elite",   displayName = "Pack Élite",    description = "3 cartas Gold/Estrella",price = 2500, itemType = ShopItemType.PlayerPack   },
+            new ShopItem { id = "training-boost",displayName="Boost Entreno", description = "+20% ganancias 7 días", price = 300,  itemType = ShopItemType.TrainingBoost },
         };
 
         // ── MonoBehaviour ──────────────────────────────────────────────────────
 
         private void Awake()
         {
-            if (backButton) backButton.onClick.AddListener(OnBack);
+            if (backButton)        backButton.onClick.AddListener(OnBack);
+            if (tabCoinsButton)    tabCoinsButton.onClick.AddListener(ShowCoinTab);
+            if (tabCurrencyButton) tabCurrencyButton.onClick.AddListener(ShowCurrencyTab);
+            if (tabPacksButton)    tabPacksButton.onClick.AddListener(ShowPackTab);
         }
 
         private void Start()
         {
-            BuildCatalogue(DefaultCatalogue);
+            ShowCoinTab();
             RefreshBalance();
         }
 
-        // ── Public API ─────────────────────────────────────────────────────────
+        // ── Tabs ───────────────────────────────────────────────────────────────
+
+        /// <summary>Shows coin bundle items.</summary>
+        public void ShowCoinTab()    => BuildCatalogue(CoinCatalogue);
+
+        /// <summary>Shows player pack items.</summary>
+        public void ShowPackTab()    => BuildCatalogue(PackCatalogue);
+
+        /// <summary>Shows currency exchange packs (premium coins → EUR/USD).</summary>
+        public void ShowCurrencyTab()
+        {
+            var career = ServiceLocator.Get<CareerSystem>()?.ActiveCareer;
+            string symbol = career?.CurrencySymbol ?? "€";
+            bool   isEur  = career?.currencyType != CurrencyType.USD;
+
+            // Build dynamic ShopItems from CurrencySystem.AvailablePacks
+            var items = new List<ShopItem>();
+            foreach (var pack in CurrencySystem.AvailablePacks)
+            {
+                long amount = isEur ? pack.eurAmount : pack.usdAmount;
+                items.Add(new ShopItem
+                {
+                    id          = pack.id,
+                    displayName = pack.displayName,
+                    description = $"{symbol} {amount:N0} para transferencias",
+                    price       = pack.premiumCoinCost,
+                    itemType    = ShopItemType.CurrencyPack
+                });
+            }
+
+            BuildCatalogue(items);
+
+            // Show the exchange rate
+            long rate = isEur ? CurrencySystem.EurPerPremiumCoin : CurrencySystem.UsdPerPremiumCoin;
+            if (exchangeRateText)
+                exchangeRateText.text =
+                    $"1 moneda premium = {symbol} {rate:N0}";
+        }
+
+        // ── Catalogue builder ──────────────────────────────────────────────────
 
         /// <summary>Rebuilds the item grid from <paramref name="catalogue"/>.</summary>
         public void BuildCatalogue(List<ShopItem> catalogue)
@@ -81,6 +137,8 @@ namespace FutbolJuego.UI
 
             foreach (Transform child in itemContainer)
                 Destroy(child.gameObject);
+
+            if (exchangeRateText) exchangeRateText.text = string.Empty;
 
             foreach (var item in catalogue)
             {
@@ -107,19 +165,39 @@ namespace FutbolJuego.UI
         {
             if (item == null) return;
 
-            // Shop purchases (real-money packs / coin bundles) are platform-specific.
-            // This stub logs the intent; wire up a payment provider (IAP, ads, etc.)
-            // in a platform-specific service when integrating into production.
-            Debug.Log($"[ShopUI] Purchase requested: {item.displayName} ({item.price} coins)");
-            ShowFeedback($"Opening purchase flow for {item.displayName}…");
+            if (item.itemType == ShopItemType.CurrencyPack)
+            {
+                var career    = ServiceLocator.Get<CareerSystem>()?.ActiveCareer;
+                var currSystem = ServiceLocator.Get<CurrencySystem>();
+
+                if (career == null || currSystem == null)
+                {
+                    ShowFeedback("Inicia una carrera para comprar divisas.");
+                    return;
+                }
+
+                bool success = currSystem.RedeemPack(career, item.id);
+                ShowFeedback(success
+                    ? $"✅ {item.displayName} canjeado. Nuevo saldo: {career.FormattedBalance}"
+                    : "❌ Monedas insuficientes.");
+                RefreshBalance();
+                return;
+            }
+
+            // Non-currency items: platform IAP stub
+            Debug.Log($"[ShopUI] Purchase: {item.displayName} ({item.price} 🪙)");
+            ShowFeedback($"Abriendo flujo de compra para {item.displayName}…");
         }
 
         // ── Helpers ────────────────────────────────────────────────────────────
 
         private void RefreshBalance()
         {
-            // Balance display is a future integration point with an IAP/coin service.
-            if (balanceText) balanceText.text = "Balance: —";
+            var career = ServiceLocator.Get<CareerSystem>()?.ActiveCareer;
+            if (balanceText)
+                balanceText.text = career != null
+                    ? $"🪙 {career.premiumCoins}  |  {career.FormattedBalance}"
+                    : "Balance: —";
         }
 
         private void ShowFeedback(string message)
@@ -130,3 +208,4 @@ namespace FutbolJuego.UI
         private void OnBack() => SceneNavigator.Instance?.GoToDashboard();
     }
 }
+
