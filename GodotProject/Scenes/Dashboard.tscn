@@ -1,0 +1,36 @@
+[gd_scene load_steps=2 format=3 uid="uid://dashboard"]
+[ext_resource type="Script" path="res://Scripts/UI/DashboardUI.cs" id="1_script"]
+[node name="Dashboard" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_script")
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+[node name="ClubNameLabel" type="Label" parent="VBox"]
+text = "Club Name"
+[node name="BalanceLabel" type="Label" parent="VBox"]
+text = "Balance: $0"
+[node name="SeasonLabel" type="Label" parent="VBox"]
+text = "Season 1"
+[node name="MoraleLabel" type="Label" parent="VBox"]
+text = "Morale: 50"
+[node name="RankingLabel" type="Label" parent="VBox"]
+text = "Ranking: 1"
+[node name="Buttons" type="HBoxContainer" parent="VBox"]
+[node name="SquadButton" type="Button" parent="Buttons"]
+text = "Squad"
+[node name="TacticsButton" type="Button" parent="Buttons"]
+text = "Tactics"
+[node name="MatchButton" type="Button" parent="Buttons"]
+text = "Match"
+[node name="TransferButton" type="Button" parent="Buttons"]
+text = "Transfers"
+[node name="FinancesButton" type="Button" parent="Buttons"]
+text = "Finances"
+[node name="TrainingButton" type="Button" parent="Buttons"]
+text = "Training"
