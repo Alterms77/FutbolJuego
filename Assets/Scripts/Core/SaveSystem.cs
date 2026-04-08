@@ -51,7 +51,8 @@ namespace FutbolJuego.Core
     {
         private const string SaveFileName   = "futboljuego_save.json";
         private const string BackupSuffix   = ".bak";
-        private const string EncryptionKey  = "FJ_AES_KEY_STUB_32BYTES_XXXXX123"; // 32-char placeholder
+        // Key is derived at runtime from a device-specific identifier — never hardcoded.
+        private static readonly byte[] EncryptionKey = DeriveKey();
 
         /// <summary>Interval in real-time seconds between automatic saves.</summary>
         public float AutoSaveIntervalSeconds { get; set; } = 300f; // 5 minutes
@@ -168,24 +169,59 @@ namespace FutbolJuego.Core
         // ── Encryption helpers ─────────────────────────────────────────────────
 
         /// <summary>
-        /// XOR-based obfuscation stub.  Replace with AES-256 before shipping.
+        /// Derives a 256-bit AES key from a device-unique identifier so that
+        /// no secret is ever stored in the binary.
+        /// </summary>
+        private static byte[] DeriveKey()
+        {
+            // Use a device-specific seed (SystemInfo is available in Unity).
+            // The device identifier is combined with a fixed salt so that the key
+            // is consistent across app restarts on the same device but unique
+            // per device.
+            string seed = SystemInfo.deviceUniqueIdentifier + "_FJ_SAVE_V1";
+            using var sha = System.Security.Cryptography.SHA256.Create();
+            return sha.ComputeHash(Encoding.UTF8.GetBytes(seed));
+        }
+
+        /// <summary>
+        /// Encrypts <paramref name="plainText"/> with AES-256-CBC and returns
+        /// a Base64 string containing the IV prepended to the cipher bytes.
         /// </summary>
         private string Encrypt(string plainText)
         {
-            // Stub: Base64 obfuscation only — swap for real AES in production.
-            return Convert.ToBase64String(Encoding.UTF8.GetBytes(plainText));
+            byte[] plainBytes = Encoding.UTF8.GetBytes(plainText);
+            using var aes = System.Security.Cryptography.Aes.Create();
+            aes.Key  = EncryptionKey;
+            aes.Mode = System.Security.Cryptography.CipherMode.CBC;
+            aes.GenerateIV();
+            using var enc      = aes.CreateEncryptor();
+            byte[] cipherBytes = enc.TransformFinalBlock(plainBytes, 0, plainBytes.Length);
+            // Prepend the 16-byte IV so Decrypt can recover it.
+            byte[] output = new byte[aes.IV.Length + cipherBytes.Length];
+            Buffer.BlockCopy(aes.IV, 0, output, 0, aes.IV.Length);
+            Buffer.BlockCopy(cipherBytes, 0, output, aes.IV.Length, cipherBytes.Length);
+            return Convert.ToBase64String(output);
         }
 
-        /// <summary>Decodes data produced by <see cref="Encrypt"/>.</summary>
+        /// <summary>Decrypts data produced by <see cref="Encrypt"/>.</summary>
         private string Decrypt(string cipherText)
         {
             try
             {
-                return Encoding.UTF8.GetString(Convert.FromBase64String(cipherText));
+                byte[] data = Convert.FromBase64String(cipherText);
+                using var aes = System.Security.Cryptography.Aes.Create();
+                aes.Key  = EncryptionKey;
+                aes.Mode = System.Security.Cryptography.CipherMode.CBC;
+                byte[] iv = new byte[16];
+                Buffer.BlockCopy(data, 0, iv, 0, 16);
+                aes.IV   = iv;
+                using var dec = aes.CreateDecryptor();
+                byte[] plain  = dec.TransformFinalBlock(data, 16, data.Length - 16);
+                return Encoding.UTF8.GetString(plain);
             }
             catch
             {
-                // Possibly un-encrypted legacy save — return raw
+                // Fallback: try reading as plain UTF-8 (legacy un-encrypted saves).
                 return cipherText;
             }
         }

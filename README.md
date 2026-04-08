@@ -42,7 +42,7 @@ See [Docs/ARCHITECTURE.md](Docs/ARCHITECTURE.md) for full system diagram.
 
 ## Key Features
 - ⚽ **Poisson xG simulation** with home advantage, morale, fatigue
-- 🔮 **Monte Carlo predictor** — 1 000-run win/draw/loss probability
+- 🔮 **Monte Carlo predictor** — 1,000-run win/draw/loss probability
 - 💰 **Full economy** — wages, revenue, infrastructure upgrades
 - 🤖 **AI opponents** — 4 difficulty tiers with tactical adaptation
 - ☁️ **Firebase backend** — cloud saves, leaderboards, live events

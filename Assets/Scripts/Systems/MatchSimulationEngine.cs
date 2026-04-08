@@ -15,7 +15,23 @@ namespace FutbolJuego.Systems
     {
         private readonly System.Random rng = new System.Random();
 
-        // ── Public entry point ─────────────────────────────────────────────────
+        // Pre-computed e^(-λ) lookup for λ values 0.0–4.5 in steps of 0.05
+        // to avoid repeated Math.Exp calls during Monte Carlo simulations.
+        private static readonly Dictionary<int, double> PoissonLCache = BuildPoissonLCache();
+        private static Dictionary<int, double> BuildPoissonLCache()
+        {
+            var cache = new Dictionary<int, double>();
+            for (int i = 0; i <= 90; i++) // 0.05 * i → 0.0 to 4.5
+                cache[i] = Math.Exp(-0.05 * i);
+            return cache;
+        }
+        private static double GetPoissonL(float lambda)
+        {
+            int key = Mathf.RoundToInt(lambda / 0.05f);
+            if (PoissonLCache.TryGetValue(key, out double val)) return val;
+            return Math.Exp(-lambda); // fallback for out-of-range values
+        }
+
 
         /// <summary>
         /// Fully simulates a match between <paramref name="home"/> and

@@ -20,7 +20,7 @@
 
 ## Phase 3 – Beta (Months 7-9)
 - Expert AI difficulty & tactical adaptation
-- Match Predictor tool (Monte Carlo)
+- Match Predictor Tool (Monte Carlo)
 - Live events & weekly challenges
 - Season Pass monetisation
 - Rewarded ads integration
