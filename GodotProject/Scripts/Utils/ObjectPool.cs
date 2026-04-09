@@ -56,10 +56,9 @@ namespace FutbolJuego.Utils
     /// </summary>
     public partial class NodePool<T> : Node where T : Node
     {
-        [Tooltip("Prefab to pool.")]
-        [Export] private T prefab;
+        [Export] private Node prefabNode;
+        private T prefab => prefabNode as T;
 
-        [Tooltip("Objects to create during _Ready.")]
         [Export] private int prewarmCount = 10;
 
         private readonly Queue<T> pool = new Queue<T>();
