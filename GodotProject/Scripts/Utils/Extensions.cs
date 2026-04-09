@@ -63,7 +63,7 @@ namespace FutbolJuego.Utils
         }
 
         /// <summary>Clamps the value to [0, 1].</summary>
-        public static float Clamp01(this float value) => Mathf.Clamp01(value);
+        public static float Clamp01(this float value) => Mathf.Clamp(value, 0f, 1f);
     }
 
     /// <summary>Extension methods for <see cref="PlayerData"/>.</summary>

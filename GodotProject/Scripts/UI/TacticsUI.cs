@@ -165,8 +165,8 @@ namespace FutbolJuego.UI
                 pitchContainer.AddChild(dot);
 
                 dot.Position = new Vector2(
-                    (pos.x / 100f) * pitchContainer.Size.X - pitchContainer.Size.X * 0.5f,
-                    (pos.y / 100f) * pitchContainer.Size.Y - pitchContainer.Size.Y * 0.5f);
+                    (pos.X / 100f) * pitchContainer.Size.X - pitchContainer.Size.X * 0.5f,
+                    (pos.Y / 100f) * pitchContainer.Size.Y - pitchContainer.Size.Y * 0.5f);
 
                 PlayerData assignedPlayer = null;
                 if (assignmentCount > i && currentTactic.positionAssignments[i] != null)

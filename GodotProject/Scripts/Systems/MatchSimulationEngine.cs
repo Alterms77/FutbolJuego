@@ -107,7 +107,7 @@ namespace FutbolJuego.Systems
         {
             if (redCardMinute < 0) return xg;
             float matchLen          = Constants.MatchDurationMinutes;
-            float remainingFraction = Mathf.Clamp01((matchLen - redCardMinute) / matchLen);
+            float remainingFraction = Mathf.Clamp((matchLen - redCardMinute) / matchLen, 0f, 1f);
             return xg * (1f - remainingFraction * 0.35f);
         }
 

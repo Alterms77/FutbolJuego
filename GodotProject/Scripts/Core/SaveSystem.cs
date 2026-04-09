@@ -247,7 +247,7 @@ namespace FutbolJuego.Core
         private static async Task WriteFileAsync(string path, string content)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(content);
-            using var fs = new FileStream(path, FileMode.Create, FileAccess.Write,
+            using var fs = new FileStream(path, FileMode.Create, System.IO.FileAccess.Write,
                                           FileShare.None, bufferSize: 4096, useAsync: true);
             await fs.WriteAsync(bytes, 0, bytes.Length);
         }
@@ -257,7 +257,7 @@ namespace FutbolJuego.Core
             if (!File.Exists(path)) return null;
             try
             {
-                using var fs = new FileStream(path, FileMode.Open, FileAccess.Read,
+                using var fs = new FileStream(path, FileMode.Open, System.IO.FileAccess.Read,
                                               FileShare.Read, bufferSize: 4096, useAsync: true);
                 byte[] bytes = new byte[fs.Length];
                 await fs.ReadAsync(bytes, 0, bytes.Length);

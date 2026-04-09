@@ -12,7 +12,7 @@ namespace FutbolJuego.Systems
     public class EventReward
     {
         /// <summary>Type of currency awarded.</summary>
-        public CurrencyType currencyType;
+        public RewardCurrencyType currencyType;
         /// <summary>Amount of currency.</summary>
         public int amount;
         /// <summary>Optional: item/asset reward ID.</summary>
@@ -51,7 +51,7 @@ namespace FutbolJuego.Systems
         /// <summary>Day number in the 7-day weekly cycle (1-7).</summary>
         public int day;
         /// <summary>Type of currency awarded.</summary>
-        public CurrencyType currencyType;
+        public RewardCurrencyType currencyType;
         /// <summary>Amount of currency.</summary>
         public int amount;
     }
@@ -89,13 +89,13 @@ namespace FutbolJuego.Systems
 
         private static readonly DailyReward[] WeeklyRewards =
         {
-            new DailyReward { day = 1, currencyType = CurrencyType.Coins,           amount = 500   },
-            new DailyReward { day = 2, currencyType = CurrencyType.Coins,           amount = 750   },
-            new DailyReward { day = 3, currencyType = CurrencyType.PremiumCurrency, amount = 10    },
-            new DailyReward { day = 4, currencyType = CurrencyType.Coins,           amount = 1000  },
-            new DailyReward { day = 5, currencyType = CurrencyType.Coins,           amount = 1500  },
-            new DailyReward { day = 6, currencyType = CurrencyType.PremiumCurrency, amount = 25    },
-            new DailyReward { day = 7, currencyType = CurrencyType.PremiumCurrency, amount = 50    },
+            new DailyReward { day = 1, currencyType = RewardCurrencyType.Coins,           amount = 500   },
+            new DailyReward { day = 2, currencyType = RewardCurrencyType.Coins,           amount = 750   },
+            new DailyReward { day = 3, currencyType = RewardCurrencyType.PremiumCurrency, amount = 10    },
+            new DailyReward { day = 4, currencyType = RewardCurrencyType.Coins,           amount = 1000  },
+            new DailyReward { day = 5, currencyType = RewardCurrencyType.Coins,           amount = 1500  },
+            new DailyReward { day = 6, currencyType = RewardCurrencyType.PremiumCurrency, amount = 25    },
+            new DailyReward { day = 7, currencyType = RewardCurrencyType.PremiumCurrency, amount = 50    },
         };
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace FutbolJuego.Systems
                 targetValue = 10,
                 currentProgress = 0,
                 isClaimed   = false,
-                reward      = new EventReward { currencyType = CurrencyType.PremiumCurrency, amount = 30 }
+                reward      = new EventReward { currencyType = RewardCurrencyType.PremiumCurrency, amount = 30 }
             };
         }
     }
