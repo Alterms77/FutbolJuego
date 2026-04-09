@@ -16,10 +16,11 @@ SceneNavigator="*res://Scripts/Core/SceneNavigator.cs"
 
 [display]
 
-window/size/viewport_width=1280
-window/size/viewport_height=720
+window/size/viewport_width=390
+window/size/viewport_height=844
 window/size/resizable=true
 window/stretch/mode="canvas_items"
+gui/theme/custom="res://Themes/GameTheme.tres"
 
 [rendering]
 

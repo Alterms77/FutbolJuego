@@ -45,6 +45,8 @@ namespace FutbolJuego.Models
         public string nationality;
         /// <summary>Primary playing position.</summary>
         public PlayerPosition position;
+        /// <summary>Preferred flank ("L", "R", or null for central positions).</summary>
+        public string preferredSide;
         /// <summary>Cached overall rating (0-99). Recalculate with <see cref="CalculateOverall"/>.</summary>
         public int overallRating;
 

@@ -1,0 +1,129 @@
+[gd_resource type="Theme" load_steps=12 format=3 uid="uid://gametheme"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
+bg_color = Color(0.11, 0.13, 0.20, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+bg_color = Color(0.145, 0.173, 0.247, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_left = 10
+corner_radius_bottom_right = 10
+content_margin_left = 12.0
+content_margin_right = 12.0
+content_margin_top = 10.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
+bg_color = Color(0.145, 0.173, 0.247, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_left = 8
+corner_radius_bottom_right = 8
+content_margin_left = 14.0
+content_margin_right = 14.0
+content_margin_top = 9.0
+content_margin_bottom = 9.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_hover"]
+bg_color = Color(0.18, 0.22, 0.31, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_left = 8
+corner_radius_bottom_right = 8
+content_margin_left = 14.0
+content_margin_right = 14.0
+content_margin_top = 9.0
+content_margin_bottom = 9.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_pressed"]
+bg_color = Color(0.0, 0.6, 0.48, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_left = 8
+corner_radius_bottom_right = 8
+content_margin_left = 14.0
+content_margin_right = 14.0
+content_margin_top = 9.0
+content_margin_bottom = 9.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_input"]
+bg_color = Color(0.145, 0.173, 0.247, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_left = 6
+corner_radius_bottom_right = 6
+content_margin_left = 10.0
+content_margin_right = 10.0
+content_margin_top = 6.0
+content_margin_bottom = 6.0
+border_color = Color(0.20, 0.25, 0.35, 1)
+border_width_left = 1
+border_width_right = 1
+border_width_top = 1
+border_width_bottom = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_progress_bg"]
+bg_color = Color(0.18, 0.22, 0.31, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_left = 4
+corner_radius_bottom_right = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_progress_fill"]
+bg_color = Color(0, 0.722, 0.58, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_left = 4
+corner_radius_bottom_right = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_scroll"]
+bg_color = Color(0.20, 0.25, 0.35, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_left = 3
+corner_radius_bottom_right = 3
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_empty"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_option"]
+bg_color = Color(0.145, 0.173, 0.247, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_left = 8
+corner_radius_bottom_right = 8
+content_margin_left = 10.0
+content_margin_right = 10.0
+content_margin_top = 6.0
+content_margin_bottom = 6.0
+
+[resource]
+Panel/styles/panel = SubResource("StyleBoxFlat_bg")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_card")
+Button/styles/normal = SubResource("StyleBoxFlat_btn")
+Button/styles/hover = SubResource("StyleBoxFlat_btn_hover")
+Button/styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+Button/styles/focus = SubResource("StyleBoxFlat_btn")
+Button/styles/disabled = SubResource("StyleBoxFlat_btn")
+Button/colors/font_color = Color(1, 1, 1, 1)
+Button/colors/font_hover_color = Color(1, 1, 1, 1)
+Button/colors/font_pressed_color = Color(1, 1, 1, 1)
+Button/colors/font_focus_color = Color(1, 1, 1, 1)
+Button/colors/font_disabled_color = Color(0.54, 0.56, 0.63, 1)
+Label/colors/font_color = Color(1, 1, 1, 1)
+LineEdit/styles/normal = SubResource("StyleBoxFlat_input")
+LineEdit/styles/focus = SubResource("StyleBoxFlat_input")
+LineEdit/colors/font_color = Color(1, 1, 1, 1)
+LineEdit/colors/caret_color = Color(0, 0.722, 0.58, 1)
+LineEdit/colors/selection_color = Color(0, 0.722, 0.58, 0.4)
+OptionButton/styles/normal = SubResource("StyleBoxFlat_option")
+OptionButton/styles/hover = SubResource("StyleBoxFlat_btn_hover")
+OptionButton/styles/pressed = SubResource("StyleBoxFlat_option")
+OptionButton/styles/focus = SubResource("StyleBoxFlat_option")
+OptionButton/colors/font_color = Color(1, 1, 1, 1)
+OptionButton/colors/font_hover_color = Color(1, 1, 1, 1)
+ProgressBar/styles/background = SubResource("StyleBoxFlat_progress_bg")
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_progress_fill")
+ScrollBar/styles/scroll = SubResource("StyleBoxFlat_scroll")
+VScrollBar/styles/scroll = SubResource("StyleBoxFlat_scroll")
+HScrollBar/styles/scroll = SubResource("StyleBoxFlat_scroll")

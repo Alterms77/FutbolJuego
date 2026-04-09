@@ -20,6 +20,17 @@ namespace FutbolJuego.UI
         public override void _Ready()
         {
             GameManager.OnStateChanged += HandleStateChanged;
+            // Style the new-game button with teal accent
+            var newGameBtn = GetNodeOrNull<Button>("BG/MainPanel/NewGameButton");
+            if (newGameBtn != null)
+            {
+                var sb = UITheme.MakeCardStyle(UITheme.AccentTeal, 26);
+                sb.ContentMarginTop    = 14f;
+                sb.ContentMarginBottom = 14f;
+                newGameBtn.AddThemeStyleboxOverride("normal",   sb);
+                newGameBtn.AddThemeStyleboxOverride("hover",    UITheme.MakeCardStyle(UITheme.AccentTealDark, 26));
+                newGameBtn.AddThemeStyleboxOverride("pressed",  UITheme.MakeCardStyle(UITheme.AccentTealDark, 26));
+            }
         }
 
         public override void _ExitTree()

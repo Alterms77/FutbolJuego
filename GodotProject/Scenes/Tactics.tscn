@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://tactics"]
+[gd_scene load_steps=3 format=3 uid="uid://tactics"]
 
 [ext_resource type="Script" path="res://Scripts/UI/TacticsUI.cs" id="1_script"]
+[ext_resource type="PackedScene" path="res://Scenes/Prefabs/PlayerDot.tscn" id="2_dot"]
 
 [node name="Tactics" type="Control"]
 layout_mode = 3
@@ -8,69 +9,244 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1_script")
-formationDropdown = NodePath("VBox/FormationDropdown")
-pitchContainer = NodePath("VBox/PitchContainer")
-pressingSlider = NodePath("VBox/Sliders/PressingSlider")
-tempoSlider = NodePath("VBox/Sliders/TempoSlider")
-widthSlider = NodePath("VBox/Sliders/WidthSlider")
-defensiveLineSlider = NodePath("VBox/Sliders/DefensiveLineSlider")
-predictionPanel = NodePath("VBox/PredictionPanel")
-predictionText = NodePath("VBox/PredictionPanel/PredictionText")
-backButton = NodePath("VBox/BackButton")
+playerDotPrefab = ExtResource("2_dot")
+formationDropdown = NodePath("BG/VBox/Header/FormationDrop")
+pitchContainer = NodePath("BG/VBox/Pitch")
+pressingSlider = NodePath("BG/VBox/SlidersPanel/SlidersGrid/PressingBar")
+tempoSlider = NodePath("BG/VBox/SlidersPanel/SlidersGrid/TempoBar")
+widthSlider = NodePath("BG/VBox/SlidersPanel/SlidersGrid/WidthBar")
+defensiveLineSlider = NodePath("BG/VBox/SlidersPanel/SlidersGrid/DefLineBar")
+predictionPanel = NodePath("BG/VBox/BottomBar/PredictionPanel")
+predictionText = NodePath("BG/VBox/BottomBar/PredictionPanel/PredText")
+backButton = NodePath("BG/VBox/Header/BackButton")
+formationLabel = NodePath("BG/VBox/ControlCards/FormationCard/FormationVBox/FormationLabel")
+pressingLabel = NodePath("BG/VBox/ControlCards/PressingCard/PressingVBox/PressingLabel")
+playMatchButton = NodePath("BG/VBox/BottomBar/PlayButton")
+teamRatingLabel = NodePath("BG/VBox/BottomBar/RatingCard/RatingRow/TeamOVR")
+opponentRatingLabel = NodePath("BG/VBox/BottomBar/RatingCard/RatingRow/OppOVR")
+substituteContainer = NodePath("BG/VBox/SubsScroll/SubsList")
 
-[node name="VBox" type="VBoxContainer" parent="."]
-layout_mode = 3
+[node name="BG" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.11, 0.13, 0.20, 1)
+
+[node name="VBox" type="VBoxContainer" parent="BG"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/separation = 4
+
+[node name="Header" type="HBoxContainer" parent="BG/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 50)
+offset_left = 8.0
+offset_right = -8.0
+
+[node name="BackButton" type="Button" parent="BG/VBox/Header"]
+layout_mode = 2
+text = "<"
+theme_override_font_sizes/font_size = 22
+flat = true
+
+[node name="TitleLabel" type="Label" parent="BG/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Formación táctica"
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+
+[node name="FormationDrop" type="OptionButton" parent="BG/VBox/Header"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+
+[node name="ControlCards" type="HBoxContainer" parent="BG/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 60)
+theme_override_constants/separation = 8
+offset_left = 8.0
+offset_right = -8.0
+
+[node name="CaptainCard" type="PanelContainer" parent="BG/VBox/ControlCards"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CaptainVBox" type="VBoxContainer" parent="BG/VBox/ControlCards/CaptainCard"]
+layout_mode = 2
+
+[node name="CaptainTitle" type="Label" parent="BG/VBox/ControlCards/CaptainCard/CaptainVBox"]
+layout_mode = 2
+text = "Capitán ©"
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.54, 0.56, 0.63, 1)
+
+[node name="CaptainValue" type="Label" parent="BG/VBox/ControlCards/CaptainCard/CaptainVBox"]
+layout_mode = 2
+text = "—"
+theme_override_font_sizes/font_size = 13
+
+[node name="PressingCard" type="PanelContainer" parent="BG/VBox/ControlCards"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PressingVBox" type="VBoxContainer" parent="BG/VBox/ControlCards/PressingCard"]
+layout_mode = 2
+
+[node name="PressingTitle" type="Label" parent="BG/VBox/ControlCards/PressingCard/PressingVBox"]
+layout_mode = 2
+text = "Presión 🏃"
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.54, 0.56, 0.63, 1)
+
+[node name="PressingLabel" type="Label" parent="BG/VBox/ControlCards/PressingCard/PressingVBox"]
+layout_mode = 2
+text = "Normal"
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0, 0.722, 0.58, 1)
+
+[node name="FormationCard" type="PanelContainer" parent="BG/VBox/ControlCards"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FormationVBox" type="VBoxContainer" parent="BG/VBox/ControlCards/FormationCard"]
+layout_mode = 2
+
+[node name="FormationTitle" type="Label" parent="BG/VBox/ControlCards/FormationCard/FormationVBox"]
+layout_mode = 2
+text = "Táctica"
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.54, 0.56, 0.63, 1)
+
+[node name="FormationLabel" type="Label" parent="BG/VBox/ControlCards/FormationCard/FormationVBox"]
+layout_mode = 2
+text = "4-3-3"
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0, 0.722, 0.58, 1)
+
+[node name="SubsScroll" type="ScrollContainer" parent="BG/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 72)
+
+[node name="SubsList" type="HBoxContainer" parent="BG/VBox/SubsScroll"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Pitch" type="ColorRect" parent="BG/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color(0.18, 0.55, 0.27, 1)
+
+[node name="PitchLines" type="Control" parent="BG/VBox/Pitch"]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="TitleLabel" type="Label" parent="VBox"]
-layout_mode = 2
-text = "Táctica"
-
-[node name="FormationDropdown" type="OptionButton" parent="VBox"]
+[node name="SlidersPanel" type="PanelContainer" parent="BG/VBox"]
 layout_mode = 2
 
-[node name="PitchContainer" type="Control" parent="VBox"]
+[node name="SlidersGrid" type="GridContainer" parent="BG/VBox/SlidersPanel"]
 layout_mode = 2
+columns = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 4
+
+[node name="PressingLbl" type="Label" parent="BG/VBox/SlidersPanel/SlidersGrid"]
+layout_mode = 2
+text = "Presión"
+theme_override_font_sizes/font_size = 12
+
+[node name="PressingBar" type="ProgressBar" parent="BG/VBox/SlidersPanel/SlidersGrid"]
+layout_mode = 2
+min_value = 0.0
+max_value = 100.0
+value = 50.0
 size_flags_horizontal = 3
-size_flags_vertical = 3
-custom_minimum_size = Vector2(0, 200)
 
-[node name="Sliders" type="VBoxContainer" parent="VBox"]
+[node name="TempoLbl" type="Label" parent="BG/VBox/SlidersPanel/SlidersGrid"]
 layout_mode = 2
+text = "Tempo"
+theme_override_font_sizes/font_size = 12
 
-[node name="PressingSlider" type="ProgressBar" parent="VBox/Sliders"]
-layout_mode = 2
-min_value = 0.0
-max_value = 100.0
-value = 50.0
-
-[node name="TempoSlider" type="ProgressBar" parent="VBox/Sliders"]
+[node name="TempoBar" type="ProgressBar" parent="BG/VBox/SlidersPanel/SlidersGrid"]
 layout_mode = 2
 min_value = 0.0
 max_value = 100.0
 value = 50.0
+size_flags_horizontal = 3
 
-[node name="WidthSlider" type="ProgressBar" parent="VBox/Sliders"]
+[node name="WidthLbl" type="Label" parent="BG/VBox/SlidersPanel/SlidersGrid"]
+layout_mode = 2
+text = "Amplitud"
+theme_override_font_sizes/font_size = 12
+
+[node name="WidthBar" type="ProgressBar" parent="BG/VBox/SlidersPanel/SlidersGrid"]
 layout_mode = 2
 min_value = 0.0
 max_value = 100.0
 value = 50.0
+size_flags_horizontal = 3
 
-[node name="DefensiveLineSlider" type="ProgressBar" parent="VBox/Sliders"]
+[node name="DefLineLbl" type="Label" parent="BG/VBox/SlidersPanel/SlidersGrid"]
+layout_mode = 2
+text = "Línea def."
+theme_override_font_sizes/font_size = 12
+
+[node name="DefLineBar" type="ProgressBar" parent="BG/VBox/SlidersPanel/SlidersGrid"]
 layout_mode = 2
 min_value = 0.0
 max_value = 100.0
 value = 50.0
+size_flags_horizontal = 3
 
-[node name="PredictionPanel" type="VBoxContainer" parent="VBox"]
+[node name="BottomBar" type="HBoxContainer" parent="BG/VBox"]
 layout_mode = 2
+custom_minimum_size = Vector2(0, 60)
+theme_override_constants/separation = 8
+offset_left = 8.0
+offset_right = -8.0
 
-[node name="PredictionText" type="Label" parent="VBox/PredictionPanel"]
+[node name="RatingCard" type="PanelContainer" parent="BG/VBox/BottomBar"]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="RatingRow" type="HBoxContainer" parent="BG/VBox/BottomBar/RatingCard"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TeamOVR" type="Label" parent="BG/VBox/BottomBar/RatingCard/RatingRow"]
+layout_mode = 2
+text = "78"
+theme_override_font_sizes/font_size = 20
+
+[node name="VsLabel" type="Label" parent="BG/VBox/BottomBar/RatingCard/RatingRow"]
+layout_mode = 2
+text = "vs"
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.54, 0.56, 0.63, 1)
+
+[node name="OppOVR" type="Label" parent="BG/VBox/BottomBar/RatingCard/RatingRow"]
+layout_mode = 2
+text = "70"
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.54, 0.56, 0.63, 1)
+
+[node name="PredictionPanel" type="PanelContainer" parent="BG/VBox/BottomBar"]
+layout_mode = 2
+size_flags_horizontal = 2
+visible = false
+
+[node name="PredText" type="Label" parent="BG/VBox/BottomBar/PredictionPanel"]
 layout_mode = 2
 text = "Predicción: —"
+theme_override_font_sizes/font_size = 11
 
-[node name="BackButton" type="Button" parent="VBox"]
+[node name="PlayButton" type="Button" parent="BG/VBox/BottomBar"]
 layout_mode = 2
-text = "Volver"
+size_flags_horizontal = 3
+text = "⚽  Jugar partido"
+theme_override_font_sizes/font_size = 16

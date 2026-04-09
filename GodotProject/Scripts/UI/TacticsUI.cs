@@ -32,6 +32,21 @@ namespace FutbolJuego.UI
         [ExportGroup("Navigation")]
         [Export] public Button backButton;
 
+        [ExportGroup("Top Controls")]
+        [Export] public Label captainNameLabel;
+        [Export] public OptionButton captainDropdown;
+        [Export] public Label pressingLabel;
+        [Export] public Label formationLabel;
+
+        [ExportGroup("Substitutes")]
+        [Export] public Control substituteContainer;
+        [Export] public PackedScene substituteDotPrefab;
+
+        [ExportGroup("Bottom Bar")]
+        [Export] public Button playMatchButton;
+        [Export] public Label teamRatingLabel;
+        [Export] public Label opponentRatingLabel;
+
         private TacticData currentTactic;
         private List<PlayerData> currentSquad = new List<PlayerData>();
 
@@ -44,6 +59,29 @@ namespace FutbolJuego.UI
             if (tempoSlider != null)         tempoSlider.ValueChanged         += v => OnTacticParameterChanged("tempo",         (int)v);
             if (widthSlider != null)         widthSlider.ValueChanged         += v => OnTacticParameterChanged("width",         (int)v);
             if (defensiveLineSlider != null) defensiveLineSlider.ValueChanged += v => OnTacticParameterChanged("defensiveLine", (int)v);
+
+            if (playMatchButton != null)
+                playMatchButton.Pressed += () => FutbolJuego.Core.SceneNavigator.Instance?.GoToMatch();
+            if (formationDropdown != null)
+                formationDropdown.ItemSelected += (idx) =>
+                {
+                    var formations = (Formation[])System.Enum.GetValues(typeof(Formation));
+                    if (idx < formations.Length) OnFormationChanged(formations[idx]);
+                };
+
+            // Style the play button teal
+            var playBtn2 = GetNodeOrNull<Button>("BG/VBox/BottomBar/PlayButton");
+            if (playBtn2 != null)
+            {
+                var sb2 = UITheme.MakeCardStyle(UITheme.AccentTeal, 10);
+                sb2.ContentMarginTop    = 14f;
+                sb2.ContentMarginBottom = 14f;
+                playBtn2.AddThemeStyleboxOverride("normal",  sb2);
+                playBtn2.AddThemeStyleboxOverride("hover",   UITheme.MakeCardStyle(UITheme.AccentTealDark, 10));
+                playBtn2.AddThemeStyleboxOverride("pressed", UITheme.MakeCardStyle(UITheme.AccentTealDark, 10));
+            }
+
+            RefreshTopControls();
         }
 
         // ── Display methods ────────────────────────────────────────────────────
@@ -182,6 +220,26 @@ namespace FutbolJuego.UI
             PlayerRarity.AllTimeGreat => UITheme.RarityAllTimeGreat,
             _                         => UITheme.RarityNormal
         };
+
+        public void RefreshTopControls()
+        {
+            if (currentTactic == null) return;
+            if (formationLabel != null)
+                formationLabel.Text = currentTactic.formation.ToString().Replace("F", "").Replace("_", "-");
+            if (pressingLabel != null)
+                pressingLabel.Text = currentTactic.pressing switch
+                {
+                    <= 30 => "Suave",
+                    <= 60 => "Normal",
+                    _     => "Alto"
+                };
+        }
+
+        public void SetTeamRatings(int myOvr, int opponentOvr)
+        {
+            if (teamRatingLabel     != null) teamRatingLabel.Text     = myOvr.ToString();
+            if (opponentRatingLabel != null) opponentRatingLabel.Text = opponentOvr.ToString();
+        }
 
         private void OnBack() => FutbolJuego.Core.SceneNavigator.Instance?.GoToDashboard();
     }

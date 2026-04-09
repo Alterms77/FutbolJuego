@@ -8,87 +8,192 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1_script")
-mainPanel = NodePath("MainPanel")
-settingsPanel = NodePath("SettingsPanel")
-loadPanel = NodePath("LoadPanel")
+mainPanel = NodePath("BG/MainPanel")
+settingsPanel = NodePath("BG/SettingsPanel")
+loadPanel = NodePath("BG/LoadPanel")
 
-[node name="MainPanel" type="VBoxContainer" parent="."]
+[node name="BG" type="ColorRect" parent="."]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.3
-anchor_right = 0.7
-anchor_top = 0.15
-anchor_bottom = 0.85
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.11, 0.13, 0.20, 1)
 
-[node name="TitleLabel" type="Label" parent="MainPanel"]
+[node name="MainPanel" type="VBoxContainer" parent="BG"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 0.0
+offset_right = -20.0
+offset_bottom = 0.0
+theme_override_constants/separation = 16
+
+[node name="TopSpacer" type="Control" parent="BG/MainPanel"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 60)
+
+[node name="LogoArea" type="HBoxContainer" parent="BG/MainPanel"]
+layout_mode = 2
+alignment = 1
+
+[node name="LogoCircle" type="ColorRect" parent="BG/MainPanel/LogoArea"]
+layout_mode = 2
+custom_minimum_size = Vector2(64, 64)
+color = Color(0, 0.722, 0.58, 1)
+
+[node name="TitleLabel" type="Label" parent="BG/MainPanel"]
 layout_mode = 2
 text = "FutbolJuego"
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
 
-[node name="PlayButton" type="Button" parent="MainPanel"]
+[node name="Spacer1" type="Control" parent="BG/MainPanel"]
 layout_mode = 2
-text = "Nueva Partida"
+custom_minimum_size = Vector2(0, 20)
 
-[node name="ContinueButton" type="Button" parent="MainPanel"]
+[node name="CoinsRow" type="HBoxContainer" parent="BG/MainPanel"]
 layout_mode = 2
-text = "Continuar"
+alignment = 1
 
-[node name="SettingsButton" type="Button" parent="MainPanel"]
+[node name="CoinIcon" type="Label" parent="BG/MainPanel/CoinsRow"]
 layout_mode = 2
-text = "Ajustes"
+text = "🪙"
+theme_override_font_sizes/font_size = 22
 
-[node name="LoadButton" type="Button" parent="MainPanel"]
+[node name="CoinsLabel" type="Label" parent="BG/MainPanel/CoinsRow"]
 layout_mode = 2
-text = "Cargar Partida"
+text = "498"
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(1, 0.84, 0, 1)
 
-[node name="SettingsPanel" type="VBoxContainer" parent="."]
+[node name="DailyLabel" type="Label" parent="BG/MainPanel"]
+layout_mode = 2
+text = "Recompensa diaria disponible"
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.54, 0.56, 0.63, 1)
+horizontal_alignment = 1
+
+[node name="Spacer2" type="Control" parent="BG/MainPanel"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 20)
+
+[node name="SaveCard" type="PanelContainer" parent="BG/MainPanel"]
+layout_mode = 2
+
+[node name="SaveCardInner" type="HBoxContainer" parent="BG/MainPanel/SaveCard"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TeamLogo" type="ColorRect" parent="BG/MainPanel/SaveCard/SaveCardInner"]
+layout_mode = 2
+custom_minimum_size = Vector2(56, 56)
+color = Color(0, 0.722, 0.58, 1)
+
+[node name="SaveInfo" type="VBoxContainer" parent="BG/MainPanel/SaveCard/SaveCardInner"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SaveTeamLabel" type="Label" parent="BG/MainPanel/SaveCard/SaveCardInner/SaveInfo"]
+layout_mode = 2
+text = "Tu Equipo"
+theme_override_font_sizes/font_size = 16
+
+[node name="SavePlayerLabel" type="Label" parent="BG/MainPanel/SaveCard/SaveCardInner/SaveInfo"]
+layout_mode = 2
+text = "Carrera guardada"
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.54, 0.56, 0.63, 1)
+
+[node name="SaveDateLabel" type="Label" parent="BG/MainPanel/SaveCard/SaveCardInner/SaveInfo"]
+layout_mode = 2
+text = "—"
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.54, 0.56, 0.63, 1)
+
+[node name="ContinueButton" type="Button" parent="BG/MainPanel/SaveCard/SaveCardInner"]
+layout_mode = 2
+text = "Cargar"
+theme_override_font_sizes/font_size = 14
+
+[node name="Spacer3" type="Control" parent="BG/MainPanel"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 12)
+
+[node name="NewGameButton" type="Button" parent="BG/MainPanel"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 52)
+text = "Nueva partida"
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+
+[node name="SettingsButton" type="Button" parent="BG/MainPanel"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 44)
+text = "⚙  Ajustes"
+theme_override_font_sizes/font_size = 15
+
+[node name="BottomSpacer" type="Control" parent="BG/MainPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BottomNav" type="HBoxContainer" parent="BG/MainPanel"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 52)
+alignment = 1
+theme_override_constants/separation = 32
+
+[node name="GridIcon" type="Label" parent="BG/MainPanel/BottomNav"]
+layout_mode = 2
+text = "⊞"
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.54, 0.56, 0.63, 1)
+
+[node name="ShopIcon" type="Label" parent="BG/MainPanel/BottomNav"]
+layout_mode = 2
+text = "🏪"
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.54, 0.56, 0.63, 1)
+
+[node name="SettingsPanel" type="VBoxContainer" parent="BG"]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.3
-anchor_right = 0.7
-anchor_top = 0.15
-anchor_bottom = 0.85
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_right = -20.0
 visible = false
 
-[node name="SettingsTitle" type="Label" parent="SettingsPanel"]
+[node name="SettingsTitle" type="Label" parent="BG/SettingsPanel"]
 layout_mode = 2
 text = "Ajustes"
+theme_override_font_sizes/font_size = 24
 
-[node name="BackButton" type="Button" parent="SettingsPanel"]
+[node name="SettingsBackButton" type="Button" parent="BG/SettingsPanel"]
 layout_mode = 2
-text = "Volver"
+text = "← Volver"
 
-[node name="LoadPanel" type="VBoxContainer" parent="."]
+[node name="LoadPanel" type="VBoxContainer" parent="BG"]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.3
-anchor_right = 0.7
-anchor_top = 0.15
-anchor_bottom = 0.85
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_right = -20.0
 visible = false
 
-[node name="LoadTitle" type="Label" parent="LoadPanel"]
+[node name="LoadTitle" type="Label" parent="BG/LoadPanel"]
 layout_mode = 2
 text = "Cargar Partida"
+theme_override_font_sizes/font_size = 24
 
-[node name="BackButton" type="Button" parent="LoadPanel"]
+[node name="LoadBackButton" type="Button" parent="BG/LoadPanel"]
 layout_mode = 2
-text = "Volver"
+text = "← Volver"
 
-[connection signal="pressed" from="MainPanel/PlayButton" to="." method="OnPlayButton"]
-[connection signal="pressed" from="MainPanel/ContinueButton" to="." method="OnContinueButton"]
-[connection signal="pressed" from="MainPanel/SettingsButton" to="." method="OnSettingsButton"]
-[connection signal="pressed" from="MainPanel/LoadButton" to="." method="OnLoadGameButton"]
-[connection signal="pressed" from="SettingsPanel/BackButton" to="." method="OnBackButton"]
-[connection signal="pressed" from="LoadPanel/BackButton" to="." method="OnBackButton"]
+[connection signal="pressed" from="BG/MainPanel/NewGameButton" to="." method="OnPlayButton"]
+[connection signal="pressed" from="BG/MainPanel/SaveCard/SaveCardInner/ContinueButton" to="." method="OnContinueButton"]
+[connection signal="pressed" from="BG/MainPanel/SettingsButton" to="." method="OnSettingsButton"]
+[connection signal="pressed" from="BG/SettingsPanel/SettingsBackButton" to="." method="OnBackButton"]
+[connection signal="pressed" from="BG/LoadPanel/LoadBackButton" to="." method="OnBackButton"]
