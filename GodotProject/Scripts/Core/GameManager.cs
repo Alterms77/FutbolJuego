@@ -45,6 +45,8 @@ namespace FutbolJuego.Core
             ServiceLocator.Register<CareerSystem>(careerSystem);
             var matchEngine = new MatchSimulationEngine();
             ServiceLocator.Register<MatchSimulationEngine>(matchEngine);
+            var tacticalSystem = new TacticalSystem();
+            ServiceLocator.Register<TacticalSystem>(tacticalSystem);
             var transferSystem = new TransferMarketSystem();
             ServiceLocator.Register<TransferMarketSystem>(transferSystem);
             var trainingSystem = new TrainingSystem();
@@ -55,7 +57,9 @@ namespace FutbolJuego.Core
             ServiceLocator.Register<MoraleSystem>(moraleSystem);
             var economySystem = new EconomySystem();
             ServiceLocator.Register<EconomySystem>(economySystem);
-            var seasonSystem = new SeasonSystem();
+            var playerRatingSystem = new PlayerRatingSystem();
+            ServiceLocator.Register<PlayerRatingSystem>(playerRatingSystem);
+            var seasonSystem = new SeasonSystem(playerRatingSystem);
             ServiceLocator.Register<SeasonSystem>(seasonSystem);
             var competitionSystem = new CompetitionSystem();
             ServiceLocator.Register<CompetitionSystem>(competitionSystem);
@@ -65,6 +69,10 @@ namespace FutbolJuego.Core
             ServiceLocator.Register<ProgressionSystem>(progressionSystem);
             var currencySystem = new CurrencySystem();
             ServiceLocator.Register<CurrencySystem>(currencySystem);
+            var liveEventSystem = new LiveEventSystem();
+            ServiceLocator.Register<LiveEventSystem>(liveEventSystem);
+            var predictorSystem = new MatchPredictorSystem(matchEngine, tacticalSystem);
+            ServiceLocator.Register<MatchPredictorSystem>(predictorSystem);
             var aiManager = new AIManager();
             ServiceLocator.Register<AIManager>(aiManager);
             await Task.Yield();
