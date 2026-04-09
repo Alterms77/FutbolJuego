@@ -1,17 +1,96 @@
 [gd_scene load_steps=2 format=3 uid="uid://teamselection"]
+
 [ext_resource type="Script" path="res://Scripts/UI/TeamSelectionUI.cs" id="1_script"]
+
 [node name="TeamSelection" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1_script")
+leagueDropdown = NodePath("VBox/LeagueDropdown")
+leagueInfoText = NodePath("VBox/LeagueInfoText")
+teamListContainer = NodePath("VBox/Content/TeamListContainer")
+teamInfoPanel = NodePath("VBox/Content/TeamInfoPanel")
+teamNameText = NodePath("VBox/Content/TeamInfoPanel/TeamNameText")
+teamBudgetText = NodePath("VBox/Content/TeamInfoPanel/TeamBudgetText")
+teamCurrencyText = NodePath("VBox/Content/TeamInfoPanel/TeamCurrencyText")
+teamBalanceText = NodePath("VBox/Content/TeamInfoPanel/TeamBalanceText")
+teamStadiumText = NodePath("VBox/Content/TeamInfoPanel/TeamStadiumText")
+previousClubsText = NodePath("VBox/Content/TeamInfoPanel/PreviousClubsText")
+feedbackText = NodePath("VBox/FeedbackText")
+backButton = NodePath("VBox/Buttons/BackButton")
+confirmButton = NodePath("VBox/Buttons/ConfirmButton")
+
 [node name="VBox" type="VBoxContainer" parent="."]
-layout_mode = 1
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+
 [node name="TitleLabel" type="Label" parent="VBox"]
-text = "TeamSelection"
-[node name="BackButton" type="Button" parent="VBox"]
-text = "Back"
+layout_mode = 2
+text = "Selecciona tu Equipo"
+
+[node name="LeagueDropdown" type="OptionButton" parent="VBox"]
+layout_mode = 2
+
+[node name="LeagueInfoText" type="Label" parent="VBox"]
+layout_mode = 2
+text = ""
+
+[node name="Content" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TeamListContainer" type="VBoxContainer" parent="VBox/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TeamInfoPanel" type="VBoxContainer" parent="VBox/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+visible = false
+
+[node name="TeamNameText" type="Label" parent="VBox/Content/TeamInfoPanel"]
+layout_mode = 2
+text = ""
+
+[node name="TeamBudgetText" type="Label" parent="VBox/Content/TeamInfoPanel"]
+layout_mode = 2
+text = ""
+
+[node name="TeamCurrencyText" type="Label" parent="VBox/Content/TeamInfoPanel"]
+layout_mode = 2
+text = ""
+
+[node name="TeamBalanceText" type="Label" parent="VBox/Content/TeamInfoPanel"]
+layout_mode = 2
+text = ""
+
+[node name="TeamStadiumText" type="Label" parent="VBox/Content/TeamInfoPanel"]
+layout_mode = 2
+text = ""
+
+[node name="PreviousClubsText" type="Label" parent="VBox/Content/TeamInfoPanel"]
+layout_mode = 2
+text = ""
+
+[node name="FeedbackText" type="Label" parent="VBox"]
+layout_mode = 2
+text = ""
+
+[node name="Buttons" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+text = "Volver"
+
+[node name="ConfirmButton" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+text = "Confirmar"
+disabled = true

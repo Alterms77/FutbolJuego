@@ -1,17 +1,140 @@
 [gd_scene load_steps=2 format=3 uid="uid://match"]
+
 [ext_resource type="Script" path="res://Scripts/UI/MatchDayUI.cs" id="1_script"]
+
 [node name="Match" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1_script")
+previewPanel = NodePath("VBox/PreviewPanel")
+homeTeamLabel = NodePath("VBox/PreviewPanel/TeamsRow/HomeTeamLabel")
+awayTeamLabel = NodePath("VBox/PreviewPanel/TeamsRow/AwayTeamLabel")
+matchDateLabel = NodePath("VBox/PreviewPanel/MatchDateLabel")
+speed3MinButton = NodePath("VBox/PreviewPanel/SpeedButtons/Speed3MinButton")
+speed4MinButton = NodePath("VBox/PreviewPanel/SpeedButtons/Speed4MinButton")
+speed6MinButton = NodePath("VBox/PreviewPanel/SpeedButtons/Speed6MinButton")
+speedIndicatorText = NodePath("VBox/SpeedIndicatorText")
+livePanel = NodePath("VBox/LivePanel")
+scoreLabel = NodePath("VBox/LivePanel/ScoreLabel")
+minuteLabel = NodePath("VBox/LivePanel/MinuteLabel")
+manAdvantageLabel = NodePath("VBox/LivePanel/ManAdvantageLabel")
+possessionLabel = NodePath("VBox/LivePanel/Stats/PossessionLabel")
+xGLabel = NodePath("VBox/LivePanel/Stats/XGLabel")
+shotsLabel = NodePath("VBox/LivePanel/Stats/ShotsLabel")
+eventFeed = NodePath("VBox/LivePanel/EventFeed")
+summaryPanel = NodePath("VBox/SummaryPanel")
+summaryText = NodePath("VBox/SummaryPanel/SummaryText")
+simulateButton = NodePath("VBox/ActionButtons/SimulateButton")
+returnButton = NodePath("VBox/ActionButtons/ReturnButton")
+
 [node name="VBox" type="VBoxContainer" parent="."]
-layout_mode = 1
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-[node name="TitleLabel" type="Label" parent="VBox"]
-text = "Match"
-[node name="BackButton" type="Button" parent="VBox"]
-text = "Back"
+
+[node name="PreviewPanel" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MatchDateLabel" type="Label" parent="VBox/PreviewPanel"]
+layout_mode = 2
+text = "Fecha"
+
+[node name="TeamsRow" type="HBoxContainer" parent="VBox/PreviewPanel"]
+layout_mode = 2
+
+[node name="HomeTeamLabel" type="Label" parent="VBox/PreviewPanel/TeamsRow"]
+layout_mode = 2
+text = "Local"
+size_flags_horizontal = 3
+
+[node name="VsLabel" type="Label" parent="VBox/PreviewPanel/TeamsRow"]
+layout_mode = 2
+text = "vs"
+
+[node name="AwayTeamLabel" type="Label" parent="VBox/PreviewPanel/TeamsRow"]
+layout_mode = 2
+text = "Visitante"
+size_flags_horizontal = 3
+
+[node name="SpeedButtons" type="HBoxContainer" parent="VBox/PreviewPanel"]
+layout_mode = 2
+
+[node name="Speed3MinButton" type="Button" parent="VBox/PreviewPanel/SpeedButtons"]
+layout_mode = 2
+text = "3 min"
+
+[node name="Speed4MinButton" type="Button" parent="VBox/PreviewPanel/SpeedButtons"]
+layout_mode = 2
+text = "4 min"
+
+[node name="Speed6MinButton" type="Button" parent="VBox/PreviewPanel/SpeedButtons"]
+layout_mode = 2
+text = "6 min"
+
+[node name="SpeedIndicatorText" type="Label" parent="VBox"]
+layout_mode = 2
+text = "▶ 4 min"
+
+[node name="LivePanel" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+visible = false
+
+[node name="ScoreLabel" type="Label" parent="VBox/LivePanel"]
+layout_mode = 2
+text = "0 – 0"
+
+[node name="MinuteLabel" type="Label" parent="VBox/LivePanel"]
+layout_mode = 2
+text = "0'"
+
+[node name="ManAdvantageLabel" type="Label" parent="VBox/LivePanel"]
+layout_mode = 2
+text = ""
+
+[node name="Stats" type="HBoxContainer" parent="VBox/LivePanel"]
+layout_mode = 2
+
+[node name="PossessionLabel" type="Label" parent="VBox/LivePanel/Stats"]
+layout_mode = 2
+text = "Posesión"
+size_flags_horizontal = 3
+
+[node name="XGLabel" type="Label" parent="VBox/LivePanel/Stats"]
+layout_mode = 2
+text = "xG"
+size_flags_horizontal = 3
+
+[node name="ShotsLabel" type="Label" parent="VBox/LivePanel/Stats"]
+layout_mode = 2
+text = "Tiros"
+size_flags_horizontal = 3
+
+[node name="EventFeed" type="VBoxContainer" parent="VBox/LivePanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SummaryPanel" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+visible = false
+
+[node name="SummaryText" type="Label" parent="VBox/SummaryPanel"]
+layout_mode = 2
+text = ""
+autowrap_mode = 3
+
+[node name="ActionButtons" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="SimulateButton" type="Button" parent="VBox/ActionButtons"]
+layout_mode = 2
+text = "Simular"
+
+[node name="ReturnButton" type="Button" parent="VBox/ActionButtons"]
+layout_mode = 2
+text = "Volver al Dashboard"

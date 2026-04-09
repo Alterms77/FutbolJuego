@@ -1,17 +1,69 @@
 [gd_scene load_steps=2 format=3 uid="uid://shop"]
+
 [ext_resource type="Script" path="res://Scripts/UI/ShopUI.cs" id="1_script"]
+
 [node name="Shop" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1_script")
+tabCoinsButton = NodePath("VBox/Tabs/TabCoinsButton")
+tabCurrencyButton = NodePath("VBox/Tabs/TabCurrencyButton")
+tabPacksButton = NodePath("VBox/Tabs/TabPacksButton")
+itemContainer = NodePath("VBox/ItemContainer")
+feedbackText = NodePath("VBox/FeedbackText")
+balanceText = NodePath("VBox/BalanceRow/BalanceText")
+exchangeRateText = NodePath("VBox/BalanceRow/ExchangeRateText")
+backButton = NodePath("VBox/BackButton")
+
 [node name="VBox" type="VBoxContainer" parent="."]
-layout_mode = 1
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+
 [node name="TitleLabel" type="Label" parent="VBox"]
-text = "Shop"
+layout_mode = 2
+text = "Tienda"
+
+[node name="BalanceRow" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="BalanceText" type="Label" parent="VBox/BalanceRow"]
+layout_mode = 2
+text = "Balance: —"
+size_flags_horizontal = 3
+
+[node name="ExchangeRateText" type="Label" parent="VBox/BalanceRow"]
+layout_mode = 2
+text = "Tipo de cambio: —"
+
+[node name="Tabs" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="TabCoinsButton" type="Button" parent="VBox/Tabs"]
+layout_mode = 2
+text = "Monedas"
+
+[node name="TabCurrencyButton" type="Button" parent="VBox/Tabs"]
+layout_mode = 2
+text = "Moneda Premium"
+
+[node name="TabPacksButton" type="Button" parent="VBox/Tabs"]
+layout_mode = 2
+text = "Packs"
+
+[node name="ItemContainer" type="GridContainer" parent="VBox"]
+layout_mode = 2
+columns = 3
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="FeedbackText" type="Label" parent="VBox"]
+layout_mode = 2
+text = ""
+
 [node name="BackButton" type="Button" parent="VBox"]
-text = "Back"
+layout_mode = 2
+text = "Volver"

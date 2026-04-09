@@ -1,17 +1,109 @@
 [gd_scene load_steps=2 format=3 uid="uid://competitions"]
+
 [ext_resource type="Script" path="res://Scripts/UI/CompetitionsUI.cs" id="1_script"]
+
 [node name="Competitions" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1_script")
+leagueDropdown = NodePath("VBox/Header/LeagueDropdown")
+leagueNameText = NodePath("VBox/Header/LeagueNameText")
+matchdayText = NodePath("VBox/Header/MatchdayText")
+tabLeagueButton = NodePath("VBox/Tabs/TabLeagueButton")
+tabCupsButton = NodePath("VBox/Tabs/TabCupsButton")
+tabTrophiesButton = NodePath("VBox/Tabs/TabTrophiesButton")
+tableContainer = NodePath("VBox/LeagueContent/TableContainer")
+cupsPanel = NodePath("VBox/CupsPanel")
+cupListContainer = NodePath("VBox/CupsPanel/CupListContainer")
+trophiesPanel = NodePath("VBox/TrophiesPanel")
+trophyContainer = NodePath("VBox/TrophiesPanel/TrophyContainer")
+trophyTeamInput = NodePath("VBox/TrophiesPanel/SearchRow/TrophyTeamInput")
+trophySearchButton = NodePath("VBox/TrophiesPanel/SearchRow/TrophySearchButton")
+backButton = NodePath("VBox/BackButton")
+
 [node name="VBox" type="VBoxContainer" parent="."]
-layout_mode = 1
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+
 [node name="TitleLabel" type="Label" parent="VBox"]
-text = "Competitions"
+layout_mode = 2
+text = "Competiciones"
+
+[node name="Header" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="LeagueDropdown" type="OptionButton" parent="VBox/Header"]
+layout_mode = 2
+
+[node name="LeagueNameText" type="Label" parent="VBox/Header"]
+layout_mode = 2
+text = ""
+size_flags_horizontal = 3
+
+[node name="MatchdayText" type="Label" parent="VBox/Header"]
+layout_mode = 2
+text = ""
+
+[node name="Tabs" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="TabLeagueButton" type="Button" parent="VBox/Tabs"]
+layout_mode = 2
+text = "Liga"
+
+[node name="TabCupsButton" type="Button" parent="VBox/Tabs"]
+layout_mode = 2
+text = "Copas"
+
+[node name="TabTrophiesButton" type="Button" parent="VBox/Tabs"]
+layout_mode = 2
+text = "Trofeos"
+
+[node name="LeagueContent" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TableContainer" type="VBoxContainer" parent="VBox/LeagueContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CupsPanel" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+visible = false
+
+[node name="CupListContainer" type="VBoxContainer" parent="VBox/CupsPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TrophiesPanel" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+visible = false
+
+[node name="SearchRow" type="HBoxContainer" parent="VBox/TrophiesPanel"]
+layout_mode = 2
+
+[node name="TrophyTeamInput" type="LineEdit" parent="VBox/TrophiesPanel/SearchRow"]
+layout_mode = 2
+placeholder_text = "ID del equipo"
+size_flags_horizontal = 3
+
+[node name="TrophySearchButton" type="Button" parent="VBox/TrophiesPanel/SearchRow"]
+layout_mode = 2
+text = "Buscar"
+
+[node name="TrophyContainer" type="VBoxContainer" parent="VBox/TrophiesPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
 [node name="BackButton" type="Button" parent="VBox"]
-text = "Back"
+layout_mode = 2
+text = "Volver"

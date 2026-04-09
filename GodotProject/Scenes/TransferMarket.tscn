@@ -1,17 +1,127 @@
 [gd_scene load_steps=2 format=3 uid="uid://transfermarket"]
+
 [ext_resource type="Script" path="res://Scripts/UI/TransferMarketUI.cs" id="1_script"]
+
 [node name="TransferMarket" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1_script")
+buyTabButton = NodePath("VBox/Tabs/BuyTabButton")
+sellTabButton = NodePath("VBox/Tabs/SellTabButton")
+playerListContainer = NodePath("VBox/PlayerListContainer")
+positionFilterDropdown = NodePath("VBox/Filters/PositionFilterDropdown")
+maxPriceInput = NodePath("VBox/Filters/MaxPriceInput")
+applyFilterButton = NodePath("VBox/Filters/ApplyFilterButton")
+clearFilterButton = NodePath("VBox/Filters/ClearFilterButton")
+negotiationPanel = NodePath("VBox/NegotiationPanel")
+negotiationText = NodePath("VBox/NegotiationPanel/NegotiationText")
+bidInput = NodePath("VBox/NegotiationPanel/BidInput")
+confirmBidButton = NodePath("VBox/NegotiationPanel/BidButtons/ConfirmBidButton")
+cancelBidButton = NodePath("VBox/NegotiationPanel/BidButtons/CancelBidButton")
+sellPanel = NodePath("VBox/SellPanel")
+sellDetailText = NodePath("VBox/SellPanel/SellDetailText")
+confirmSellButton = NodePath("VBox/SellPanel/SellButtons/ConfirmSellButton")
+cancelSellButton = NodePath("VBox/SellPanel/SellButtons/CancelSellButton")
+balanceText = NodePath("VBox/BalanceText")
+resultMessage = NodePath("VBox/ResultMessage")
+backButton = NodePath("VBox/BackButton")
+
 [node name="VBox" type="VBoxContainer" parent="."]
-layout_mode = 1
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+
 [node name="TitleLabel" type="Label" parent="VBox"]
-text = "TransferMarket"
+layout_mode = 2
+text = "Mercado de Fichajes"
+
+[node name="BalanceText" type="Label" parent="VBox"]
+layout_mode = 2
+text = "Balance: —"
+
+[node name="Tabs" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="BuyTabButton" type="Button" parent="VBox/Tabs"]
+layout_mode = 2
+text = "Comprar"
+
+[node name="SellTabButton" type="Button" parent="VBox/Tabs"]
+layout_mode = 2
+text = "Vender"
+
+[node name="Filters" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="PositionFilterDropdown" type="OptionButton" parent="VBox/Filters"]
+layout_mode = 2
+
+[node name="MaxPriceInput" type="LineEdit" parent="VBox/Filters"]
+layout_mode = 2
+placeholder_text = "Precio máximo"
+
+[node name="ApplyFilterButton" type="Button" parent="VBox/Filters"]
+layout_mode = 2
+text = "Filtrar"
+
+[node name="ClearFilterButton" type="Button" parent="VBox/Filters"]
+layout_mode = 2
+text = "Limpiar"
+
+[node name="PlayerListContainer" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="NegotiationPanel" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+visible = false
+
+[node name="NegotiationText" type="Label" parent="VBox/NegotiationPanel"]
+layout_mode = 2
+text = ""
+
+[node name="BidInput" type="LineEdit" parent="VBox/NegotiationPanel"]
+layout_mode = 2
+placeholder_text = "Oferta en €"
+
+[node name="BidButtons" type="HBoxContainer" parent="VBox/NegotiationPanel"]
+layout_mode = 2
+
+[node name="ConfirmBidButton" type="Button" parent="VBox/NegotiationPanel/BidButtons"]
+layout_mode = 2
+text = "Confirmar Oferta"
+
+[node name="CancelBidButton" type="Button" parent="VBox/NegotiationPanel/BidButtons"]
+layout_mode = 2
+text = "Cancelar"
+
+[node name="SellPanel" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+visible = false
+
+[node name="SellDetailText" type="Label" parent="VBox/SellPanel"]
+layout_mode = 2
+text = ""
+
+[node name="SellButtons" type="HBoxContainer" parent="VBox/SellPanel"]
+layout_mode = 2
+
+[node name="ConfirmSellButton" type="Button" parent="VBox/SellPanel/SellButtons"]
+layout_mode = 2
+text = "Confirmar Venta"
+
+[node name="CancelSellButton" type="Button" parent="VBox/SellPanel/SellButtons"]
+layout_mode = 2
+text = "Cancelar"
+
+[node name="ResultMessage" type="Label" parent="VBox"]
+layout_mode = 2
+text = ""
+
 [node name="BackButton" type="Button" parent="VBox"]
-text = "Back"
+layout_mode = 2
+text = "Volver"

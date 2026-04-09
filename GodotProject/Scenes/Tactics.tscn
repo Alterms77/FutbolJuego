@@ -1,17 +1,76 @@
 [gd_scene load_steps=2 format=3 uid="uid://tactics"]
+
 [ext_resource type="Script" path="res://Scripts/UI/TacticsUI.cs" id="1_script"]
+
 [node name="Tactics" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1_script")
+formationDropdown = NodePath("VBox/FormationDropdown")
+pitchContainer = NodePath("VBox/PitchContainer")
+pressingSlider = NodePath("VBox/Sliders/PressingSlider")
+tempoSlider = NodePath("VBox/Sliders/TempoSlider")
+widthSlider = NodePath("VBox/Sliders/WidthSlider")
+defensiveLineSlider = NodePath("VBox/Sliders/DefensiveLineSlider")
+predictionPanel = NodePath("VBox/PredictionPanel")
+predictionText = NodePath("VBox/PredictionPanel/PredictionText")
+backButton = NodePath("VBox/BackButton")
+
 [node name="VBox" type="VBoxContainer" parent="."]
-layout_mode = 1
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+
 [node name="TitleLabel" type="Label" parent="VBox"]
-text = "Tactics"
+layout_mode = 2
+text = "Táctica"
+
+[node name="FormationDropdown" type="OptionButton" parent="VBox"]
+layout_mode = 2
+
+[node name="PitchContainer" type="Control" parent="VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_minimum_size = Vector2(0, 200)
+
+[node name="Sliders" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="PressingSlider" type="ProgressBar" parent="VBox/Sliders"]
+layout_mode = 2
+min_value = 0.0
+max_value = 100.0
+value = 50.0
+
+[node name="TempoSlider" type="ProgressBar" parent="VBox/Sliders"]
+layout_mode = 2
+min_value = 0.0
+max_value = 100.0
+value = 50.0
+
+[node name="WidthSlider" type="ProgressBar" parent="VBox/Sliders"]
+layout_mode = 2
+min_value = 0.0
+max_value = 100.0
+value = 50.0
+
+[node name="DefensiveLineSlider" type="ProgressBar" parent="VBox/Sliders"]
+layout_mode = 2
+min_value = 0.0
+max_value = 100.0
+value = 50.0
+
+[node name="PredictionPanel" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="PredictionText" type="Label" parent="VBox/PredictionPanel"]
+layout_mode = 2
+text = "Predicción: —"
+
 [node name="BackButton" type="Button" parent="VBox"]
-text = "Back"
+layout_mode = 2
+text = "Volver"
