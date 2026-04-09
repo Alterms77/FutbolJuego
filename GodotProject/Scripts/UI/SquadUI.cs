@@ -26,6 +26,15 @@ namespace FutbolJuego.UI
         [ExportGroup("Navigation")]
         [Export] public Button backButton;
 
+        [ExportGroup("Team Header")]
+        [Export] public Label teamNameHeaderLabel;
+        [Export] public Label leagueMatchHeaderLabel;
+        [Export] public Label squadCountLabel;
+        [Export] public Label balanceHeaderLabel;
+
+        [ExportGroup("Bottom Bar")]
+        [Export] public Button playMatchBottomButton;
+
         private List<PlayerData> allPlayers = new List<PlayerData>();
         private PlayerData selectedPlayer;
 
@@ -42,6 +51,23 @@ namespace FutbolJuego.UI
                     positionFilterDropdown.AddItem(pos.ToString());
                 positionFilterDropdown.ItemSelected += (idx) => OnFilterChanged((int)idx);
             }
+
+            if (playMatchBottomButton != null)
+                playMatchBottomButton.Pressed += () => FutbolJuego.Core.SceneNavigator.Instance?.GoToMatch();
+
+            // Style the play button teal
+            var playBtn = GetNodeOrNull<Button>("BG/VBox/BottomBar/PlayBtn");
+            if (playBtn != null)
+            {
+                var sb = UITheme.MakeCardStyle(UITheme.AccentTeal, 10);
+                sb.ContentMarginTop    = 12f;
+                sb.ContentMarginBottom = 12f;
+                playBtn.AddThemeStyleboxOverride("normal",  sb);
+                playBtn.AddThemeStyleboxOverride("hover",   UITheme.MakeCardStyle(UITheme.AccentTealDark, 10));
+                playBtn.AddThemeStyleboxOverride("pressed", UITheme.MakeCardStyle(UITheme.AccentTealDark, 10));
+            }
+
+            RefreshHeader();
         }
 
         // ── Navigation ─────────────────────────────────────────────────────────
@@ -128,10 +154,22 @@ namespace FutbolJuego.UI
 
             foreach (var player in players)
             {
-                var row  = playerRowPrefab.Instantiate<Control>();
+                var row = playerRowPrefab.Instantiate<Control>();
                 playerListContainer.AddChild(row);
 
-                var card = row as PlayerCard;
+                // Rich row
+                var rowItem = row as FutbolJuego.UI.Components.PlayerRowItem;
+                if (rowItem != null)
+                {
+                    rowItem.Setup(player);
+                    var captured = player;
+                    if (rowItem.selectButton != null)
+                        rowItem.selectButton.Pressed += () => OnPlayerSelected(captured);
+                    continue;
+                }
+
+                // PlayerCard fallback
+                var card = row as FutbolJuego.UI.Components.PlayerCard;
                 if (card != null)
                 {
                     card.Setup(player);
@@ -148,6 +186,32 @@ namespace FutbolJuego.UI
                 {
                     var captured = player;
                     btn.Pressed += () => OnPlayerSelected(captured);
+                }
+            }
+        }
+
+        private void RefreshHeader()
+        {
+            var teams  = FutbolJuego.Data.DataLoader.LoadAllTeams();
+            var career = FutbolJuego.Core.ServiceLocator.Get<FutbolJuego.Systems.CareerSystem>()?.ActiveCareer;
+            if (teams == null || teams.Count == 0) return;
+            var team = teams[0];
+
+            if (teamNameHeaderLabel != null) teamNameHeaderLabel.Text = team.name;
+            string currSymbol = career?.CurrencySymbol ?? "€";
+            if (balanceHeaderLabel != null)
+                balanceHeaderLabel.Text = career != null ? career.FormattedBalance : $"{currSymbol}—";
+            int squadSize = team.playerIds?.Count ?? 0;
+            if (squadCountLabel != null) squadCountLabel.Text = $"{squadSize}/29";
+
+            var leagues = FutbolJuego.Data.DataLoader.LoadAllLeagues();
+            foreach (var l in leagues)
+            {
+                if (l.teamIds != null && l.teamIds.Contains(team.id))
+                {
+                    if (leagueMatchHeaderLabel != null)
+                        leagueMatchHeaderLabel.Text = $"MD {l.currentMatchday} — {l.name}";
+                    break;
                 }
             }
         }

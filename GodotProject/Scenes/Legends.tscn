@@ -1,17 +1,127 @@
 [gd_scene load_steps=2 format=3 uid="uid://legends"]
+
 [ext_resource type="Script" path="res://Scripts/UI/LegendsUI.cs" id="1_script"]
+
 [node name="Legends" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1_script")
+leagueFilterDropdown = NodePath("VBox/Filters/LeagueFilterDropdown")
+eraFilterDropdown = NodePath("VBox/Filters/EraFilterDropdown")
+tierFilterDropdown = NodePath("VBox/Filters/TierFilterDropdown")
+legendListContainer = NodePath("VBox/Content/LegendListContainer")
+detailPanel = NodePath("VBox/Content/DetailPanel")
+detailNameText = NodePath("VBox/Content/DetailPanel/DetailNameText")
+detailLifespanText = NodePath("VBox/Content/DetailPanel/DetailLifespanText")
+detailNationalityText = NodePath("VBox/Content/DetailPanel/DetailNationalityText")
+detailPositionText = NodePath("VBox/Content/DetailPanel/DetailPositionText")
+detailOverallText = NodePath("VBox/Content/DetailPanel/DetailOverallText")
+detailEraText = NodePath("VBox/Content/DetailPanel/DetailEraText")
+detailClubText = NodePath("VBox/Content/DetailPanel/DetailClubText")
+detailLegacyText = NodePath("VBox/Content/DetailPanel/DetailLegacyText")
+detailCostText = NodePath("VBox/Content/DetailPanel/DetailCostText")
+purchaseButton = NodePath("VBox/Content/DetailPanel/PurchaseButton")
+premiumCoinsText = NodePath("VBox/Wallet/PremiumCoinsText")
+inGameBalanceText = NodePath("VBox/Wallet/InGameBalanceText")
+feedbackText = NodePath("VBox/FeedbackText")
+backButton = NodePath("VBox/BackButton")
+
 [node name="VBox" type="VBoxContainer" parent="."]
-layout_mode = 1
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+
 [node name="TitleLabel" type="Label" parent="VBox"]
-text = "Legends"
+layout_mode = 2
+text = "Sala de Leyendas"
+
+[node name="Wallet" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="PremiumCoinsText" type="Label" parent="VBox/Wallet"]
+layout_mode = 2
+text = "🪙 —"
+size_flags_horizontal = 3
+
+[node name="InGameBalanceText" type="Label" parent="VBox/Wallet"]
+layout_mode = 2
+text = "Balance: —"
+
+[node name="Filters" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="LeagueFilterDropdown" type="OptionButton" parent="VBox/Filters"]
+layout_mode = 2
+
+[node name="EraFilterDropdown" type="OptionButton" parent="VBox/Filters"]
+layout_mode = 2
+
+[node name="TierFilterDropdown" type="OptionButton" parent="VBox/Filters"]
+layout_mode = 2
+
+[node name="Content" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LegendListContainer" type="VBoxContainer" parent="VBox/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="DetailPanel" type="VBoxContainer" parent="VBox/Content"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 3
+visible = false
+
+[node name="DetailNameText" type="Label" parent="VBox/Content/DetailPanel"]
+layout_mode = 2
+text = ""
+
+[node name="DetailLifespanText" type="Label" parent="VBox/Content/DetailPanel"]
+layout_mode = 2
+text = ""
+
+[node name="DetailNationalityText" type="Label" parent="VBox/Content/DetailPanel"]
+layout_mode = 2
+text = ""
+
+[node name="DetailPositionText" type="Label" parent="VBox/Content/DetailPanel"]
+layout_mode = 2
+text = ""
+
+[node name="DetailOverallText" type="Label" parent="VBox/Content/DetailPanel"]
+layout_mode = 2
+text = ""
+
+[node name="DetailEraText" type="Label" parent="VBox/Content/DetailPanel"]
+layout_mode = 2
+text = ""
+
+[node name="DetailClubText" type="Label" parent="VBox/Content/DetailPanel"]
+layout_mode = 2
+text = ""
+
+[node name="DetailLegacyText" type="Label" parent="VBox/Content/DetailPanel"]
+layout_mode = 2
+text = ""
+
+[node name="DetailCostText" type="Label" parent="VBox/Content/DetailPanel"]
+layout_mode = 2
+text = ""
+
+[node name="PurchaseButton" type="Button" parent="VBox/Content/DetailPanel"]
+layout_mode = 2
+text = "Comprar Leyenda"
+
+[node name="FeedbackText" type="Label" parent="VBox"]
+layout_mode = 2
+text = ""
+
 [node name="BackButton" type="Button" parent="VBox"]
-text = "Back"
+layout_mode = 2
+text = "Volver"

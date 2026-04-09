@@ -1,36 +1,105 @@
 [gd_scene load_steps=2 format=3 uid="uid://dashboard"]
+
 [ext_resource type="Script" path="res://Scripts/UI/DashboardUI.cs" id="1_script"]
+
 [node name="Dashboard" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1_script")
+teamNameText = NodePath("VBox/TeamNameText")
+leagueText = NodePath("VBox/LeagueText")
+leaguePositionText = NodePath("VBox/LeaguePositionText")
+budgetText = NodePath("VBox/BudgetText")
+overallRatingText = NodePath("VBox/OverallRatingText")
+nextMatchText = NodePath("VBox/NextMatchText")
+careerBalanceText = NodePath("VBox/CareerBalanceText")
+premiumCoinsText = NodePath("VBox/PremiumCoinsText")
+playMatchButton = NodePath("VBox/Buttons/PlayMatchButton")
+squadButton = NodePath("VBox/Buttons/SquadButton")
+tacticsButton = NodePath("VBox/Buttons/TacticsButton")
+marketButton = NodePath("VBox/Buttons/MarketButton")
+financesButton = NodePath("VBox/Buttons/FinancesButton")
+competitionsButton = NodePath("VBox/Buttons/CompetitionsButton")
+shopButton = NodePath("VBox/Buttons/ShopButton")
+legendsButton = NodePath("VBox/Buttons/LegendsButton")
+resignButton = NodePath("VBox/Buttons/ResignButton")
+
 [node name="VBox" type="VBoxContainer" parent="."]
-layout_mode = 1
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-[node name="ClubNameLabel" type="Label" parent="VBox"]
-text = "Club Name"
-[node name="BalanceLabel" type="Label" parent="VBox"]
-text = "Balance: $0"
-[node name="SeasonLabel" type="Label" parent="VBox"]
-text = "Season 1"
-[node name="MoraleLabel" type="Label" parent="VBox"]
-text = "Morale: 50"
-[node name="RankingLabel" type="Label" parent="VBox"]
-text = "Ranking: 1"
-[node name="Buttons" type="HBoxContainer" parent="VBox"]
-[node name="SquadButton" type="Button" parent="Buttons"]
-text = "Squad"
-[node name="TacticsButton" type="Button" parent="Buttons"]
-text = "Tactics"
-[node name="MatchButton" type="Button" parent="Buttons"]
-text = "Match"
-[node name="TransferButton" type="Button" parent="Buttons"]
-text = "Transfers"
-[node name="FinancesButton" type="Button" parent="Buttons"]
-text = "Finances"
-[node name="TrainingButton" type="Button" parent="Buttons"]
-text = "Training"
+
+[node name="TeamNameText" type="Label" parent="VBox"]
+layout_mode = 2
+text = "Club"
+
+[node name="LeagueText" type="Label" parent="VBox"]
+layout_mode = 2
+text = "Liga"
+
+[node name="LeaguePositionText" type="Label" parent="VBox"]
+layout_mode = 2
+text = "#1"
+
+[node name="BudgetText" type="Label" parent="VBox"]
+layout_mode = 2
+text = "Presupuesto: —"
+
+[node name="OverallRatingText" type="Label" parent="VBox"]
+layout_mode = 2
+text = "OVR —"
+
+[node name="NextMatchText" type="Label" parent="VBox"]
+layout_mode = 2
+text = "Próximo partido: —"
+
+[node name="CareerBalanceText" type="Label" parent="VBox"]
+layout_mode = 2
+text = "Balance: —"
+
+[node name="PremiumCoinsText" type="Label" parent="VBox"]
+layout_mode = 2
+text = "🪙 —"
+
+[node name="Buttons" type="GridContainer" parent="VBox"]
+layout_mode = 2
+columns = 3
+
+[node name="PlayMatchButton" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+text = "Jugar Partido"
+
+[node name="SquadButton" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+text = "Plantilla"
+
+[node name="TacticsButton" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+text = "Táctica"
+
+[node name="MarketButton" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+text = "Mercado"
+
+[node name="FinancesButton" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+text = "Finanzas"
+
+[node name="CompetitionsButton" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+text = "Competiciones"
+
+[node name="ShopButton" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+text = "Tienda"
+
+[node name="LegendsButton" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+text = "Leyendas"
+
+[node name="ResignButton" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+text = "Dimitir"

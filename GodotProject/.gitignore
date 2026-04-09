@@ -1,2 +1,5 @@
 # Godot 4+ specific ignores
 .godot/
+
+# Override the root *.csproj exclusion — the Godot C# project file must be tracked
+!*.csproj

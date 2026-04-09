@@ -1,17 +1,38 @@
 [gd_scene load_steps=2 format=3 uid="uid://training"]
+
 [ext_resource type="Script" path="res://Scripts/UI/TrainingUI.cs" id="1_script"]
+
 [node name="Training" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1_script")
+optionsContainer = NodePath("VBox/OptionsContainer")
+fatigueContainer = NodePath("VBox/FatigueContainer")
+infoLabel = NodePath("VBox/InfoLabel")
+
 [node name="VBox" type="VBoxContainer" parent="."]
-layout_mode = 1
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+
 [node name="TitleLabel" type="Label" parent="VBox"]
-text = "Training"
+layout_mode = 2
+text = "Entrenamiento"
+
+[node name="OptionsContainer" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="FatigueContainer" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="InfoLabel" type="Label" parent="VBox"]
+layout_mode = 2
+text = ""
+
 [node name="BackButton" type="Button" parent="VBox"]
-text = "Back"
+layout_mode = 2
+text = "Volver"

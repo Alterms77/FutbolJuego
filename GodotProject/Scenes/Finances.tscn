@@ -1,17 +1,64 @@
 [gd_scene load_steps=2 format=3 uid="uid://finances"]
+
 [ext_resource type="Script" path="res://Scripts/UI/FinancesUI.cs" id="1_script"]
+
 [node name="Finances" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1_script")
+balanceLabel = NodePath("VBox/Summary/BalanceLabel")
+transferBudgetLabel = NodePath("VBox/Summary/TransferBudgetLabel")
+wageBudgetLabel = NodePath("VBox/Summary/WageBudgetLabel")
+monthlyIncomeLabel = NodePath("VBox/Summary/MonthlyIncomeLabel")
+monthlyExpenseLabel = NodePath("VBox/Summary/MonthlyExpenseLabel")
+historyContainer = NodePath("VBox/HistoryContainer")
+budgetAllocationText = NodePath("VBox/BudgetAllocationText")
+backButton = NodePath("VBox/BackButton")
+
 [node name="VBox" type="VBoxContainer" parent="."]
-layout_mode = 1
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+
 [node name="TitleLabel" type="Label" parent="VBox"]
-text = "Finances"
+layout_mode = 2
+text = "Finanzas"
+
+[node name="Summary" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="BalanceLabel" type="Label" parent="VBox/Summary"]
+layout_mode = 2
+text = "Balance: —"
+
+[node name="TransferBudgetLabel" type="Label" parent="VBox/Summary"]
+layout_mode = 2
+text = "Presupuesto de fichajes: —"
+
+[node name="WageBudgetLabel" type="Label" parent="VBox/Summary"]
+layout_mode = 2
+text = "Presupuesto de salarios: —"
+
+[node name="MonthlyIncomeLabel" type="Label" parent="VBox/Summary"]
+layout_mode = 2
+text = "Ingresos mensuales: —"
+
+[node name="MonthlyExpenseLabel" type="Label" parent="VBox/Summary"]
+layout_mode = 2
+text = "Gastos mensuales: —"
+
+[node name="BudgetAllocationText" type="Label" parent="VBox"]
+layout_mode = 2
+text = ""
+
+[node name="HistoryContainer" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
 [node name="BackButton" type="Button" parent="VBox"]
-text = "Back"
+layout_mode = 2
+text = "Volver"

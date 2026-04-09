@@ -1,17 +1,243 @@
-[gd_scene load_steps=2 format=3 uid="uid://squad"]
+[gd_scene load_steps=3 format=3 uid="uid://squad"]
+
 [ext_resource type="Script" path="res://Scripts/UI/SquadUI.cs" id="1_script"]
+[ext_resource type="PackedScene" path="res://Scenes/Prefabs/PlayerRow.tscn" id="2_playerrow"]
+
 [node name="Squad" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1_script")
-[node name="VBox" type="VBoxContainer" parent="."]
+playerListContainer = NodePath("BG/VBox/Scroll/PlayerList")
+playerRowPrefab = ExtResource("2_playerrow")
+playerDetailName = NodePath("BG/VBox/DetailPanel/DetailVBox/DetailName")
+playerDetailStats = NodePath("BG/VBox/DetailPanel/DetailVBox/DetailStats")
+playerDetailContract = NodePath("BG/VBox/DetailPanel/DetailVBox/DetailContract")
+positionFilterDropdown = NodePath("BG/VBox/ColHeaders/FilterDrop")
+backButton = NodePath("BG/VBox/BottomBar/BackBtn")
+teamNameHeaderLabel = NodePath("BG/VBox/TeamHeader/HeaderRow/HeaderInfo/TeamNameLabel")
+leagueMatchHeaderLabel = NodePath("BG/VBox/TeamHeader/HeaderRow/HeaderInfo/LeagueLabel")
+squadCountLabel = NodePath("BG/VBox/StatsRow/SquadCountLabel")
+balanceHeaderLabel = NodePath("BG/VBox/StatsRow/BalanceLabel")
+playMatchBottomButton = NodePath("BG/VBox/BottomBar/PlayBtn")
+
+[node name="BG" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-[node name="TitleLabel" type="Label" parent="VBox"]
-text = "Squad"
-[node name="BackButton" type="Button" parent="VBox"]
-text = "Back"
+color = Color(0.11, 0.13, 0.20, 1)
+
+[node name="VBox" type="VBoxContainer" parent="BG"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/separation = 0
+
+[node name="NavBar" type="HBoxContainer" parent="BG/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 52)
+theme_override_constants/separation = 0
+
+[node name="MenuBtn" type="Button" parent="BG/VBox/NavBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "≡"
+theme_override_font_sizes/font_size = 20
+flat = true
+
+[node name="SquadBtn" type="Button" parent="BG/VBox/NavBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "👥"
+theme_override_font_sizes/font_size = 18
+flat = true
+theme_override_colors/font_color = Color(0, 0.722, 0.58, 1)
+
+[node name="TrophyBtn" type="Button" parent="BG/VBox/NavBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🏆"
+theme_override_font_sizes/font_size = 18
+flat = true
+
+[node name="ShopBtn" type="Button" parent="BG/VBox/NavBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🏪"
+theme_override_font_sizes/font_size = 18
+flat = true
+
+[node name="FinanceBtn" type="Button" parent="BG/VBox/NavBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "$"
+theme_override_font_sizes/font_size = 18
+flat = true
+
+[node name="MarketBtn" type="Button" parent="BG/VBox/NavBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🌐"
+theme_override_font_sizes/font_size = 18
+flat = true
+
+[node name="TeamHeader" type="PanelContainer" parent="BG/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 80)
+
+[node name="HeaderRow" type="HBoxContainer" parent="BG/VBox/TeamHeader"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TeamLogoRect" type="ColorRect" parent="BG/VBox/TeamHeader/HeaderRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(60, 60)
+color = Color(0, 0.722, 0.58, 1)
+
+[node name="HeaderInfo" type="VBoxContainer" parent="BG/VBox/TeamHeader/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TeamNameLabel" type="Label" parent="BG/VBox/TeamHeader/HeaderRow/HeaderInfo"]
+layout_mode = 2
+text = "Mi Equipo"
+theme_override_font_sizes/font_size = 18
+
+[node name="LeagueLabel" type="Label" parent="BG/VBox/TeamHeader/HeaderRow/HeaderInfo"]
+layout_mode = 2
+text = "Liga"
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.54, 0.56, 0.63, 1)
+
+[node name="NextMatchBox" type="PanelContainer" parent="BG/VBox/TeamHeader/HeaderRow"]
+layout_mode = 2
+
+[node name="NextMatchLabel" type="Label" parent="BG/VBox/TeamHeader/HeaderRow/NextMatchBox"]
+layout_mode = 2
+text = "Próximo\npartido"
+theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0, 0.722, 0.58, 1)
+horizontal_alignment = 1
+
+[node name="StatsRow" type="HBoxContainer" parent="BG/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 36)
+theme_override_constants/separation = 16
+offset_left = 12.0
+offset_right = -12.0
+
+[node name="SquadCountLabel" type="Label" parent="BG/VBox/StatsRow"]
+layout_mode = 2
+text = "22/29"
+theme_override_font_sizes/font_size = 13
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.54, 0.56, 0.63, 1)
+
+[node name="BalanceLabel" type="Label" parent="BG/VBox/StatsRow"]
+layout_mode = 2
+text = "$ —"
+theme_override_font_sizes/font_size = 13
+size_flags_horizontal = 3
+horizontal_alignment = 2
+theme_override_colors/font_color = Color(0, 0.722, 0.58, 1)
+
+[node name="ColHeaders" type="HBoxContainer" parent="BG/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 30)
+offset_left = 4.0
+offset_right = -4.0
+theme_override_constants/separation = 0
+
+[node name="JugadoresLabel" type="Label" parent="BG/VBox/ColHeaders"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Jugadores"
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.54, 0.56, 0.63, 1)
+
+[node name="FilterDrop" type="OptionButton" parent="BG/VBox/ColHeaders"]
+layout_mode = 2
+text = "Posición"
+theme_override_font_sizes/font_size = 11
+
+[node name="SalarioLabel" type="Label" parent="BG/VBox/ColHeaders"]
+layout_mode = 2
+custom_minimum_size = Vector2(52, 0)
+text = "Salario"
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.54, 0.56, 0.63, 1)
+horizontal_alignment = 2
+
+[node name="EdadLabel" type="Label" parent="BG/VBox/ColHeaders"]
+layout_mode = 2
+custom_minimum_size = Vector2(28, 0)
+text = "Edad"
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.54, 0.56, 0.63, 1)
+horizontal_alignment = 2
+
+[node name="PoderLabel" type="Label" parent="BG/VBox/ColHeaders"]
+layout_mode = 2
+custom_minimum_size = Vector2(36, 0)
+text = "Poder"
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0, 0.722, 0.58, 1)
+horizontal_alignment = 2
+
+[node name="Scroll" type="ScrollContainer" parent="BG/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PlayerList" type="VBoxContainer" parent="BG/VBox/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="DetailPanel" type="PanelContainer" parent="BG/VBox"]
+layout_mode = 2
+visible = false
+
+[node name="DetailVBox" type="VBoxContainer" parent="BG/VBox/DetailPanel"]
+layout_mode = 2
+
+[node name="DetailName" type="Label" parent="BG/VBox/DetailPanel/DetailVBox"]
+layout_mode = 2
+text = ""
+theme_override_font_sizes/font_size = 15
+
+[node name="DetailStats" type="Label" parent="BG/VBox/DetailPanel/DetailVBox"]
+layout_mode = 2
+text = ""
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.54, 0.56, 0.63, 1)
+autowrap_mode = 3
+
+[node name="DetailContract" type="Label" parent="BG/VBox/DetailPanel/DetailVBox"]
+layout_mode = 2
+text = ""
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.54, 0.56, 0.63, 1)
+
+[node name="BottomBar" type="HBoxContainer" parent="BG/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 56)
+theme_override_constants/separation = 4
+
+[node name="BackBtn" type="Button" parent="BG/VBox/BottomBar"]
+layout_mode = 2
+size_flags_horizontal = 2
+text = "Táctica"
+theme_override_font_sizes/font_size = 13
+
+[node name="PlayBtn" type="Button" parent="BG/VBox/BottomBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Jugar"
+theme_override_font_sizes/font_size = 16
+
+[connection signal="pressed" from="BG/VBox/NavBar/TrophyBtn" to="." method="OnBack"]
+[connection signal="pressed" from="BG/VBox/NavBar/ShopBtn" to="." method="OnBack"]
+[connection signal="pressed" from="BG/VBox/NavBar/MarketBtn" to="." method="OnBack"]
