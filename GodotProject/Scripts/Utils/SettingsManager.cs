@@ -93,10 +93,15 @@ namespace FutbolJuego.Utils
         /// <summary>Deletes the settings file, reverting to defaults on next load.</summary>
         public static void Reset()
         {
-            if (FileAccess.FileExists(FilePath))
+            if (!FileAccess.FileExists(FilePath)) return;
+            var dir = DirAccess.Open("user://");
+            if (dir != null)
             {
-                DirAccess.RemoveAbsolute(ProjectSettings.GlobalizePath(FilePath));
-                GD.Print("[SettingsManager] Settings reset to defaults.");
+                Error err = dir.Remove("settings.cfg");
+                if (err == Error.Ok)
+                    GD.Print("[SettingsManager] Settings reset to defaults.");
+                else
+                    GD.PushError($"[SettingsManager] Failed to delete settings file: {err}");
             }
         }
     }

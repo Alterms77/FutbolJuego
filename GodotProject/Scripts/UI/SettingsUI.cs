@@ -63,13 +63,13 @@ namespace FutbolJuego.UI
 
         // ── Callbacks ──────────────────────────────────────────────────────────
 
-        /// <summary>Called when the player selects a language.</summary>
-        public void OnLanguageChanged(string lang)
+        /// <summary>Called with a language code (e.g. "en", "es") to change the active language.</summary>
+        public void OnLanguageChanged(string languageCode)
         {
-            _language = lang;
-            LocalizationManager.SetLanguage(lang);
+            _language = languageCode;
+            LocalizationManager.SetLanguage(languageCode);
             SaveCurrent();
-            ShowStatus($"Language set to {lang}");
+            ShowStatus($"Language set to {languageCode}");
         }
 
         /// <summary>Called from the language dropdown.</summary>
@@ -100,9 +100,7 @@ namespace FutbolJuego.UI
         public void OnSoundToggle(bool enabled)
         {
             _soundEnabled = enabled;
-            AudioServer.SetBusVolumeDb(
-                AudioServer.GetBusIndex("Master"),
-                Mathf.LinearToDb(enabled ? 1f : 0f));
+            ApplyMasterVolume(enabled);
             SaveCurrent();
             ShowStatus($"Sound {(enabled ? "ON" : "OFF")}");
         }
@@ -170,11 +168,17 @@ namespace FutbolJuego.UI
                 notificationsToggle.ButtonPressed = data.Notifications;
 
             // Apply audio immediately
-            AudioServer.SetBusVolumeDb(
-                AudioServer.GetBusIndex("Master"),
-                Mathf.LinearToDb(data.SoundEnabled ? 1f : 0f));
+            ApplyMasterVolume(data.SoundEnabled);
 
             LocalizationManager.SetLanguage(data.Language);
+        }
+
+        /// <summary>Sets the Master audio bus volume based on whether sound is enabled.</summary>
+        private static void ApplyMasterVolume(bool enabled)
+        {
+            AudioServer.SetBusVolumeDb(
+                AudioServer.GetBusIndex("Master"),
+                Mathf.LinearToDb(enabled ? 1f : 0f));
         }
 
         /// <summary>Persists the current field values via SettingsManager.</summary>
