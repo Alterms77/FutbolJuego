@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Godot;
 using FutbolJuego.Models;
+using FutbolJuego.Utils;
 
 namespace FutbolJuego.Systems
 {
@@ -193,7 +194,7 @@ namespace FutbolJuego.Systems
                 total += player.CalculateOverall();
             }
 
-            return total > 0f ? Mathf.Clamp01(score / total) : 0.5f;
+            return total > 0f ? Mathf.Clamp(score / total, 0f, 1f) : 0.5f;
         }
 
         /// <summary>

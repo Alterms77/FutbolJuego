@@ -42,7 +42,7 @@ namespace FutbolJuego.AI
         /// <summary>Player targeted for signing.</summary>
         public PlayerData targetPlayer;
         /// <summary>Proposed offer amount.</summary>
-        public int offerAmount;
+        public long offerAmount;
         /// <summary>Whether this is a buy (true) or release (false).</summary>
         public bool isBuy;
         /// <summary>Plain-language reason.</summary>
@@ -181,11 +181,11 @@ namespace FutbolJuego.AI
 
             foreach (var candidate in market)
             {
-                int candidateValue = transferSystem.CalculatePlayerValue(candidate);
+                long candidateValue = transferSystem.CalculatePlayerValue(candidate);
                 if (candidateValue > budget) continue;
                 if (candidate.CalculateOverall() < avgRating) continue;
 
-                int offer = (int)(candidateValue * (0.90f + (float)rng.NextDouble() * 0.10f));
+                long offer = (long)(candidateValue * (0.90f + (float)rng.NextDouble() * 0.10f));
 
                 return new TransferDecision
                 {

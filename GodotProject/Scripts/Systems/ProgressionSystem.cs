@@ -4,7 +4,7 @@ using Godot;
 namespace FutbolJuego.Systems
 {
     /// <summary>Hard currency types available in the game economy.</summary>
-    public enum CurrencyType { Coins, PremiumCurrency }
+    public enum RewardCurrencyType { Coins, PremiumCurrency }
 
     /// <summary>
     /// Handles manager XP, levelling, achievement unlocks, and currency rewards.
@@ -106,7 +106,7 @@ namespace FutbolJuego.Systems
         /// Grants currency of the specified type.  In production wires to the
         /// economy backend.
         /// </summary>
-        public void AwardCurrency(CurrencyType type, int amount)
+        public void AwardCurrency(RewardCurrencyType type, int amount)
         {
             GD.Print($"[Progression] Awarded {amount} {type}.");
         }

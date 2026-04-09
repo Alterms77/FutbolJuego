@@ -201,7 +201,7 @@ namespace FutbolJuego.UI
             string currSymbol = career?.CurrencySymbol ?? "€";
             if (balanceHeaderLabel != null)
                 balanceHeaderLabel.Text = career != null ? career.FormattedBalance : $"{currSymbol}—";
-            int squadSize = team.playerIds?.Count ?? 0;
+            int squadSize = team.squad?.Count ?? 0;
             if (squadCountLabel != null) squadCountLabel.Text = $"{squadSize}/29";
 
             var leagues = FutbolJuego.Data.DataLoader.LoadAllLeagues();

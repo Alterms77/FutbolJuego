@@ -54,12 +54,11 @@ namespace FutbolJuego.Utils
     /// Godot node pool for <see cref="Node"/>-derived components.
     /// Attach to a manager node and assign the <see cref="prefab"/>.
     /// </summary>
-    public partial class NodePool<T> : Node where T : Node
+    public partial class NodePool<T> : Node where T : CanvasItem
     {
-        [Tooltip("Prefab to pool.")]
-        [Export] private T prefab;
+        [Export] private CanvasItem prefabNode;
+        private T prefab => prefabNode as T;
 
-        [Tooltip("Objects to create during _Ready.")]
         [Export] private int prewarmCount = 10;
 
         private readonly Queue<T> pool = new Queue<T>();

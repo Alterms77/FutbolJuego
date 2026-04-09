@@ -172,7 +172,7 @@ namespace FutbolJuego.Systems
                 lossProbability    = awayWins / n,
                 expectedGoalsHome  = totalHomeXG / n,
                 expectedGoalsAway  = totalAwayXG / n,
-                confidenceScore    = Mathf.Clamp01(0.5f + qualityGap * 0.5f)
+                confidenceScore    = Mathf.Clamp(0.5f + qualityGap * 0.5f, 0f, 1f)
             };
         }
     }

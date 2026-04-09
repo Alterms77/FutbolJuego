@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Godot;
+using FutbolJuego.AI;
 using FutbolJuego.Systems;
 using FutbolJuego.Data;
 
@@ -73,7 +74,7 @@ namespace FutbolJuego.Core
             ServiceLocator.Register<LiveEventSystem>(liveEventSystem);
             var predictorSystem = new MatchPredictorSystem(matchEngine, tacticalSystem);
             ServiceLocator.Register<MatchPredictorSystem>(predictorSystem);
-            var aiManager = new AIManager();
+            var aiManager = new AIManager(AIDifficulty.Medium, tacticalSystem, transferSystem);
             ServiceLocator.Register<AIManager>(aiManager);
             await Task.Yield();
             _stateMachine = new GameStateMachine();
